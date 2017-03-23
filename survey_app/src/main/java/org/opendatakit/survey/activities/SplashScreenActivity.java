@@ -26,7 +26,6 @@ import org.opendatakit.application.AppAwareApplication;
 import org.opendatakit.properties.CommonToolProperties;
 import org.opendatakit.properties.PropertiesSingleton;
 import org.opendatakit.provider.FormsProviderAPI;
-import org.opendatakit.dependencies.DependencyChecker;
 import org.opendatakit.utilities.ODKFileUtils;
 import org.opendatakit.webkitserver.utilities.UrlUtils;
 import org.opendatakit.logging.WebLogger;
@@ -149,11 +148,6 @@ public class SplashScreenActivity extends BaseActivity {
       e.printStackTrace();
     }
 
-    DependencyChecker dc = new DependencyChecker(this);
-    boolean dependable = dc.checkDependencies();
-    if (!dependable) { // dependencies missing
-      return;
-    }
 
     PropertiesSingleton props = CommonToolProperties.get(getApplicationContext(), appName);
 
