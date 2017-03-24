@@ -64,6 +64,9 @@ android {
         debug {
             debuggable(true)
             testCoverageEnabled(testCoverage) // Allows AndroidTest JaCoCo reports to be generated
+            jackOptions {
+                enabled false
+            }
         }
     }
 
@@ -127,4 +130,9 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
 	androidTestCompile 'joda-time:joda-time:2.2'
 	testCompile 'joda-time:joda-time:2.2'
+    androidTestCompile 'com.android.support.test:runner:0.3'
+    androidTestCompile 'com.android.support.test:rules:0.3'
+    androidTestCompile fileTree(include: '*.jar', dir: 'libs')
+    androidTestCompile 'com.android.support:support-v13:23.1.0'
+    testCompile 'junit:junit:4.12'
 }

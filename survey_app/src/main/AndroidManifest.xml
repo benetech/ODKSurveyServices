@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.opendatakit.survey" >
-
+    package="org.opendatakit.survey">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -13,17 +12,10 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
-    
-    <permission
-          android:name="org.opendatakit.webkitserver.RUN_WEBSERVER"
-          android:protectionLevel="signature" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="org.opendatakit.webkitserver.RUN_WEBSERVER" />
-
-    <permission
-          android:name="org.opendatakit.database.RUN_DATABASE"
-          android:protectionLevel="signature" />
     <uses-permission android:name="org.opendatakit.database.RUN_DATABASE" />
-	
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -36,11 +28,57 @@
         android:icon="@drawable/snotes"
       	android:logo="@drawable/odk_logo"
         android:label="@string/app_name"
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:largeHeap="true"
         android:installLocation="auto"
         android:hardwareAccelerated="true"
     	android:theme="@style/Opendatakit" >
+
+        <provider
+            android:exported="true"
+            android:syncable="false"
+            android:initOrder="1"
+            android:process=":providers"
+            android:authorities="org.opendatakit.provider.tables"
+            android:name="org.opendatakit.services.tables.provider.TablesProvider" />
+        <provider
+            android:exported="true"
+            android:syncable="false"
+            android:initOrder="2"
+            android:process=":providers"
+            android:authorities="org.opendatakit.provider.forms"
+            android:name="org.opendatakit.services.forms.provider.FormsProvider" />
+        <provider
+            android:exported="true"
+            android:syncable="false"
+            android:initOrder="3"
+            android:process=":providers"
+            android:authorities="org.opendatakit.provider.instances"
+            android:name="org.opendatakit.services.instance.provider.InstanceProvider" />
+        <provider
+            android:exported="true"
+            android:syncable="false"
+            android:initOrder="4"
+            android:process=":providers"
+            android:authorities="org.opendatakit.provider.submission.xml;org.opendatakit.provider.submission.json"
+            android:name="org.opendatakit.services.submissions.provider.SubmissionProvider"
+            />
+
+        <service android:name="org.opendatakit.services.webkitservice.service.OdkWebkitServerService"
+            android:exported="true"
+            android:process=":webkitservice"
+            android:permission="org.opendatakit.webkitserver.RUN_WEBSERVER" >
+        </service>
+        <service android:name="org.opendatakit.services.database.service.OdkDatabaseService"
+            android:exported="true"
+            android:process=":databaseservice"
+            android:permission="org.opendatakit.database.RUN_DATABASE" >
+        </service>
+        <service android:name="org.opendatakit.services.sync.service.OdkSyncService"
+            android:exported="true"
+            android:process=":sync"
+            android:permission="org.opendatakit.sync.RUN_SYNC" >
+        </service>
 
         <activity
             android:name="org.opendatakit.survey.activities.MainMenuActivity"
@@ -102,16 +140,13 @@
             android:theme="@android:style/Theme.Dialog" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.PICK" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.dir/vnd.opendatakit.form" />
                 <data android:mimeType="vnd.android.cursor.item/vnd.opendatakit.form" />
                 <data android:mimeType="vnd.android.cursor.item/vnd.opendatakit.instance" />
@@ -124,7 +159,66 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
+        <!--Services related activities-->
+        <activity
+            android:name="org.opendatakit.services.MainActivity"
+            android:label="@string/app_name" />
+        <activity android:name="org.opendatakit.services.resolve.checkpoint.CheckpointResolutionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.opendatakit.services.resolve.conflict.ConflictResolutionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.opendatakit.services.resolve.conflict.AllConflictsResolutionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.opendatakit.services.sync.activities.AccountInfoActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.opendatakit.services.sync.activities.SyncActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.opendatakit.services.sync.activities.VerifyServerSettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.opendatakit.services.preferences.activities.AppPropertiesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.opendatakit.services.preferences.activities.ClearAppPropertiesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.opendatakit.services.preferences.activities.AdminPasswordChallengeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
