@@ -176,7 +176,6 @@ public class SplashScreenActivity extends BaseActivity {
 
     // do all the first run things
     if (((firstRun == null) ? true : firstRun) || ((showSplash == null) ? false : showSplash)) {
-      props.setBooleanProperty(toolFirstRunKey, false);
       props.writeProperties();
       startSplashScreen(splashPath);
     } else {
