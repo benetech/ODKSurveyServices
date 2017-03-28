@@ -36,9 +36,6 @@ public class FrontPageFragment extends Fragment implements Button.OnClickListene
     private OnFragmentInteractionListener mListener;
     private Button subMenu;
     private TextView counter;
-    private Boolean firstRun;
-    PropertiesSingleton props;
-    String toolFirstRunKey;
 
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(MainMenuActivity.ScreenList screen);
@@ -46,12 +43,6 @@ public class FrontPageFragment extends Fragment implements Button.OnClickListene
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        props = CommonToolProperties.get(getActivity(), ((MainMenuActivity) getActivity()).getAppName());
-        toolFirstRunKey = PropertiesSingleton.toolFirstRunPropertyName
-                (((AppAwareApplication) getActivity().getApplication()).getToolName());
-
-        firstRun = props.getBooleanProperty(toolFirstRunKey);
     }
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,17 +57,9 @@ public class FrontPageFragment extends Fragment implements Button.OnClickListene
         subMenu = (Button) view.findViewById(R.id.settings_btn);
         subMenu.setOnClickListener(this);
         counter = (TextView) view.findViewById(R.id.in_progress_counter);
-        if(firstRun==null) //looks abstract but the same solution already exists in odk code
-            firstRun=true;
-        counter.setText(Integer.toString(getFormInstancesCount("new_row", firstRun)));
+        counter.setText(Integer.toString(getFormInstancesCount("new_row")));
         counter = (TextView) view.findViewById(R.id.submitted_counter);
-        counter.setText(Integer.toString(getFormInstancesCount("synced", firstRun)));
-
-        if (firstRun) {
-            props.setBooleanProperty(toolFirstRunKey, false);
-            props.writeProperties();
-            this.firstRun = false;
-        }
+        counter.setText(Integer.toString(getFormInstancesCount("synced")));
         return view;
     }
 
@@ -126,46 +109,44 @@ public class FrontPageFragment extends Fragment implements Button.OnClickListene
 
     private void launchServicesSettings(){
         Intent settingsIntent = new Intent();
-        settingsIntent.setComponent(new ComponentName(IntentConsts.Survey.SURVEY_PACKAGE_NAME,
+        settingsIntent.setComponent(new ComponentName(IntentConsts.AppProperties.APPLICATION_NAME,
                 IntentConsts.AppProperties.ACTIVITY_NAME));
         settingsIntent.setAction(Intent.ACTION_DEFAULT);
         this.startActivity(settingsIntent);
     }
 
-    private int getFormInstancesCount(String arg, boolean firstRun){
+    private int getFormInstancesCount(String arg){
         int counter = 0;
 
-        if(!firstRun) {
-            Uri baseUri = Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, ((MainMenuActivity) getActivity()).getAppName());
-            Cursor c = null;
-            try {
-                c = getActivity().getContentResolver().query(baseUri, null, null, null, null);
+        Uri baseUri = Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, ((MainMenuActivity)getActivity()).getAppName());
+        Cursor c = null;
+        try {
+            c = getActivity().getContentResolver().query(baseUri, null, null, null, null);
 
-                if (c != null && c.moveToFirst()) {
-                    int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
-                    int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION);
-                    do {
-                        if (!c.getString(idxFormVersion).contains("sub")) {
-                            Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, ((MainMenuActivity) getActivity()).getAppName() + "/"
-                                    + c.getString(idxTableId));
+            if ( c != null && c.moveToFirst() ) {
+                int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
+                int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION);
+                do {
+                    if(!c.getString(idxFormVersion).contains("sub")) {
+                        Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, ((MainMenuActivity)getActivity()).getAppName() + "/"
+                                + c.getString(idxTableId) );
 
-                            String[] whereArgs = new String[]{
-                                    arg
-                            };
+                        String[] whereArgs = new String[] {
+                                arg
+                        };
 
-                            Cursor f = getActivity().getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, null);
-                            counter += f.getCount();
+                        Cursor f = getActivity().getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, null);
+                        counter += f.getCount();
 
-                            if (f != null) {
-                                f.close();
-                            }
+                        if(f!=null) {
+                            f.close();
                         }
-                    } while (c.moveToNext());
-                }
-            } finally {
-                if (c != null && !c.isClosed()) {
-                    c.close();
-                }
+                    }
+                } while ( c.moveToNext());
+            }
+        } finally {
+            if ( c != null && !c.isClosed() ) {
+                c.close();
             }
         }
         return counter;
