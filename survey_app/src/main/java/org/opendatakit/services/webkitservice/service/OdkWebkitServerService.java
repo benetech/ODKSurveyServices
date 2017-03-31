@@ -21,9 +21,9 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
-import org.opendatakit.consts.WebkitServerConsts;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.webkitserver.service.WebkitServerInterface;
+import org.opendatakit.demoAndroidlibraryClasses.consts.WebkitServerConsts;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.webkitserver.service.WebkitServerInterface;
 
 import java.io.File;
 import java.io.IOException;

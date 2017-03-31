@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="counter_background_blue">#1F87C3</color>
+    <color name="black">#ff000000</color>
+    <color name="blue">#770000ff</color>
+    <color name="green">#7700ff00</color>
+    <color name="red">#7f00</color>
+    <color name="solid_blue">#0000ff</color>
+    <color name="solid_green">#f0f0</color>
+    <color name="solid_red">#f00</color>
+    <color name="solid_yellow">#ffffff00</color>
+    <color name="white">#ffffffff</color>
+    <color name="yellow">#77ffff00</color>
 </resources>

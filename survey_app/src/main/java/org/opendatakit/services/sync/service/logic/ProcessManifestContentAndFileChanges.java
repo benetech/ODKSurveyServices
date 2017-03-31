@@ -16,18 +16,18 @@
 package org.opendatakit.services.sync.service.logic;
 
 import org.opendatakit.aggregate.odktables.rest.entity.*;
-import org.opendatakit.database.data.ColumnDefinition;
-import org.opendatakit.database.data.Row;
-import org.opendatakit.database.service.DbHandle;
-import org.opendatakit.exception.ServicesAvailabilityException;
-import org.opendatakit.provider.DataTableColumns;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.logging.WebLoggerIf;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.ColumnDefinition;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.Row;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.exception.ServicesAvailabilityException;
+import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
 import org.opendatakit.survey.R;
-import org.opendatakit.sync.service.SyncAttachmentState;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncAttachmentState;
 import org.opendatakit.services.sync.service.SyncExecutionContext;
-import org.opendatakit.sync.service.SyncProgressState;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncProgressState;
 import org.opendatakit.services.sync.service.exceptions.*;
 
 import java.io.*;
@@ -694,7 +694,7 @@ class ProcessManifestContentAndFileChanges {
    * @throws ServicesAvailabilityException
    */
   public boolean syncRowLevelFileAttachments(String serverInstanceFileUri, String tableId,
-      org.opendatakit.database.data.Row localRow,
+      Row localRow,
       ArrayList<ColumnDefinition> fileAttachmentColumns,
       SyncAttachmentState attachmentState) throws HttpClientWebException,
       IOException, ServicesAvailabilityException  {

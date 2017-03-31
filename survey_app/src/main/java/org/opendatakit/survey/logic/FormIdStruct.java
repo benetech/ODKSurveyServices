@@ -17,9 +17,9 @@ package org.opendatakit.survey.logic;
 import java.io.File;
 import java.util.Date;
 
-import org.opendatakit.provider.FormsColumns;
-import org.opendatakit.database.utilities.CursorUtils;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.database.utilities.CursorUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 
 import android.content.ContentResolver;
 import android.database.Cursor;

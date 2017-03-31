@@ -20,10 +20,10 @@ import android.content.Context;
 
 import org.opendatakit.services.database.OdkConnectionFactorySingleton;
 import org.opendatakit.services.database.OdkConnectionInterface;
-import org.opendatakit.database.utilities.CursorUtils;
+import org.opendatakit.demoAndroidlibraryClasses.database.utilities.CursorUtils;
 import org.opendatakit.services.database.utlities.ODKDatabaseImplUtils;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 
 import java.util.ArrayList;
 import java.util.UUID;

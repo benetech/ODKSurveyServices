@@ -19,7 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang3.CharEncoding;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 
 /**
  * Wrapper class for accessing Base64 functionality. This allows API Level 7

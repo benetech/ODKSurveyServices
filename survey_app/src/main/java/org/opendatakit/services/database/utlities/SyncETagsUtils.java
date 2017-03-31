@@ -18,10 +18,10 @@ package org.opendatakit.services.database.utlities;
 import android.database.Cursor;
 
 import org.opendatakit.aggregate.odktables.rest.TableConstants;
-import org.opendatakit.utilities.DataHelper;
-import org.opendatakit.database.DatabaseConstants;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.DataHelper;
+import org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants;
 import org.opendatakit.services.database.OdkConnectionInterface;
-import org.opendatakit.provider.SyncETagColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.SyncETagColumns;
 
 import java.net.URI;
 import java.util.ArrayList;

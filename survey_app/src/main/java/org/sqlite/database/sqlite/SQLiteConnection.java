@@ -29,11 +29,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import org.opendatakit.services.database.AppNameSharedStateContainer;
 import org.opendatakit.services.database.OperationLog;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 
 import android.database.Cursor;
-import org.opendatakit.logging.WebLoggerIf;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
 import org.sqlite.database.DatabaseErrorHandler;
 import org.sqlite.database.DefaultDatabaseErrorHandler;
 import android.os.CancellationSignal;

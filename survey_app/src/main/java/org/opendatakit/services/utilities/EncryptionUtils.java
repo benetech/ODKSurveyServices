@@ -55,10 +55,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.CharEncoding;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.utilities.FileSet;
-import org.opendatakit.utilities.FileSet.MimeFile;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.FileSet;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.FileSet.MimeFile;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;

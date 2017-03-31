@@ -27,10 +27,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.apache.commons.io.FileUtils;
-import org.opendatakit.activities.BaseActivity;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidCommonClasses.activities.BaseActivity;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.utilities.ColorPickerDialog;
 

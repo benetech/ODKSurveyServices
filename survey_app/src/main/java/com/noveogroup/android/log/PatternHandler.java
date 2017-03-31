@@ -31,8 +31,8 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Formatter;
 
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.logging.WebLoggerIf;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
 
 /**
  * The basic implementation of {@link Handler} interface.

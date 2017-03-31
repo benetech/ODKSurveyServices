@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.opendatakit.aggregate.odktables.rest.SyncState;
-import org.opendatakit.data.ColorRule;
-import org.opendatakit.provider.DataTableColumns;
+import org.opendatakit.demoAndroidlibraryClasses.data.ColorRule;
+import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
 
 import android.graphics.Color;
 

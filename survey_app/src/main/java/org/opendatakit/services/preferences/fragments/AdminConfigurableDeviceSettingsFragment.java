@@ -18,7 +18,7 @@ import android.os.Bundle;
 import android.preference.*;
 import android.preference.Preference.OnPreferenceChangeListener;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.survey.R;
 
 public class AdminConfigurableDeviceSettingsFragment extends PreferenceFragment implements

@@ -19,9 +19,10 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.preference.*;
 import android.preference.Preference.OnPreferenceChangeListener;
+
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.services.preferences.PasswordPreferenceScreen;
 import org.opendatakit.survey.R;
 

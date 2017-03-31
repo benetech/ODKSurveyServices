@@ -15,11 +15,13 @@
  */
 package org.opendatakit.sync.service;
 
-import org.opendatakit.logging.WebLogger;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncProgressEvent;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncProgressState;
 import org.opendatakit.survey.R;
 
 public final class SyncNotification {
@@ -42,7 +44,7 @@ public final class SyncNotification {
   }
 
   public synchronized void updateNotification(SyncProgressState pgrState, String text,
-      int maxProgress, int progress, boolean indeterminateProgress) {
+                                              int maxProgress, int progress, boolean indeterminateProgress) {
     int messageNum = 0;
     this.progressStatus = new SyncProgressEvent(messageNum, text, pgrState, progress, maxProgress);
     builder.setContentTitle(cntxt.getString(R.string.sync_notification_syncing, appName)).setContentText(text).setAutoCancel(false)

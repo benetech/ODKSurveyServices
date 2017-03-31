@@ -19,10 +19,10 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.StringRes;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.survey.R;
 import org.opendatakit.services.sync.activities.VerifyServerSettingsActivity;
 

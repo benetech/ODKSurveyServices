@@ -27,7 +27,7 @@ package org.sqlite.database.sqlite;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.StatFs;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 /* import android.os.SystemProperties; */
 
 /**

@@ -6,11 +6,11 @@ import android.widget.ArrayAdapter;
 
 import org.opendatakit.services.database.OdkConnectionFactorySingleton;
 import org.opendatakit.services.database.OdkConnectionInterface;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.services.database.utlities.ODKDatabaseImplUtils;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 import org.opendatakit.services.resolve.listener.ResolutionListener;
 import org.opendatakit.services.resolve.views.components.ResolveRowEntry;
 import org.opendatakit.survey.R;

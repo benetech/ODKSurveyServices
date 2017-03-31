@@ -32,10 +32,10 @@ import android.widget.Toast;
 
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FileUtils;
-import org.opendatakit.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.services.preferences.PasswordPreferenceScreen;
 import org.opendatakit.survey.R;
 import org.opendatakit.services.utilities.SettingsUtils;

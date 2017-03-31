@@ -15,7 +15,7 @@
 package org.opendatakit.survey.fragments;
 
 import android.widget.TextView;
-import org.opendatakit.listener.DatabaseConnectionListener;
+import org.opendatakit.demoAndroidCommonClasses.listener.DatabaseConnectionListener;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.application.Survey;
 

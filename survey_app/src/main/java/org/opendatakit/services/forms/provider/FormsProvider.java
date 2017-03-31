@@ -30,18 +30,18 @@ import android.util.Log;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.opendatakit.services.database.AndroidConnectFactory;
-import org.opendatakit.database.DatabaseConstants;
+import org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants;
 import org.opendatakit.services.database.OdkConnectionFactorySingleton;
 import org.opendatakit.services.database.OdkConnectionInterface;
-import org.opendatakit.database.utilities.CursorUtils;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.logging.WebLoggerIf;
+import org.opendatakit.demoAndroidlibraryClasses.database.utilities.CursorUtils;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
 import org.opendatakit.services.forms.FormInfo;
-import org.opendatakit.provider.FormsColumns;
-import org.opendatakit.provider.FormsProviderAPI;
-import org.opendatakit.database.service.DbHandle;
-import org.opendatakit.utilities.NameUtil;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.NameUtil;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.sqlite.database.sqlite.SQLiteException;
 
 import java.io.File;
@@ -512,7 +512,7 @@ public class FormsProvider extends ContentProvider {
       c.close();
       c = null;
 
-      // and now go through this list moving the directories 
+      // and now go through this list moving the directories
       // into the pending-deletion location and deleting them.
       for ( Entry<String, FormSpec> de : directories.entrySet() ) {
         String id = de.getKey();
@@ -569,7 +569,7 @@ public class FormsProvider extends ContentProvider {
       }
     }
 
-    // and now, go through all the files in the pending-deletion 
+    // and now, go through all the files in the pending-deletion
     // directory and try to release them.
 
     File destFolder = new File( ODKFileUtils.getPendingDeletionTablesFolder(pf.appName));
@@ -622,13 +622,13 @@ public class FormsProvider extends ContentProvider {
     WebLoggerIf logger = WebLogger.getLogger(pf.appName);
 
     /*
-     * First, find out what records match this query. Replicate the 
+     * First, find out what records match this query. Replicate the
      * ContentValues if there are multiple tableIds/formIds involved
      * and the contentValues do not have formId and tableId specified.
-     * 
+     *
      * Otherwise, it is an error to specify the tableId or formId in
      * the ContentValues and have those not match the where results.
-     * 
+     *
      */
     String contentTableId = (values != null && values.containsKey(FormsColumns.TABLE_ID)) ?
         values.getAsString(FormsColumns.TABLE_ID) : null;

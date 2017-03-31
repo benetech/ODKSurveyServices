@@ -32,17 +32,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.opendatakit.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
-import org.opendatakit.sync.service.OdkSyncServiceInterface;
-import org.opendatakit.sync.service.SyncOverallResult;
-import org.opendatakit.sync.service.SyncProgressEvent;
-import org.opendatakit.sync.service.SyncProgressState;
-import org.opendatakit.sync.service.SyncStatus;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.OdkSyncServiceInterface;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncOverallResult;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncProgressEvent;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncProgressState;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncStatus;
 
 /**
  * @author mitchellsundt@gmail.com

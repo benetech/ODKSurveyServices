@@ -21,8 +21,8 @@ import android.util.Log;
 
 import org.opendatakit.services.database.AndroidConnectFactory;
 import org.opendatakit.services.database.OdkConnectionFactorySingleton;
-import org.opendatakit.database.service.DbChunk;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbChunk;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 
 import java.util.*;
 

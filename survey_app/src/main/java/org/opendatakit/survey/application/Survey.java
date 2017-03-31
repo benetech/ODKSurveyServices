@@ -13,9 +13,7 @@
  */
 package org.opendatakit.survey.application;
 
-import org.opendatakit.application.CommonApplication;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidCommonClasses.application.CommonApplication;
 import org.opendatakit.survey.R;
 
 import android.annotation.SuppressLint;

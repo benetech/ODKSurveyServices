@@ -31,12 +31,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.services.utilities.SettingsUtils;
-import org.opendatakit.sync.service.*;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.*;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
 

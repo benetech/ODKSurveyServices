@@ -3,8 +3,8 @@ package org.opendatakit.survey.views;
 import android.content.Context;
 import android.os.Looper;
 import android.util.AttributeSet;
-import org.opendatakit.activities.IOdkDataActivity;
-import org.opendatakit.views.ODKWebView;
+import org.opendatakit.demoAndroidCommonClasses.activities.IOdkDataActivity;
+import org.opendatakit.demoAndroidCommonClasses.views.ODKWebView;
 import org.opendatakit.survey.activities.IOdkSurveyActivity;
 
 /**

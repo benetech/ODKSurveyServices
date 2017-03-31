@@ -17,13 +17,13 @@ package org.opendatakit.survey.activities;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.activities.BaseActivity;
-import org.opendatakit.provider.FormsColumns;
-import org.opendatakit.provider.FormsProviderAPI;
-import org.opendatakit.database.utilities.CursorUtils;
-import org.opendatakit.utilities.LocalizationUtils;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidCommonClasses.activities.BaseActivity;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.database.utilities.CursorUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.LocalizationUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.application.Survey;
 

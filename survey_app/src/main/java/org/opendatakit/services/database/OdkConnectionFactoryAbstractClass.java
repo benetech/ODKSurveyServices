@@ -14,10 +14,10 @@
 
 package org.opendatakit.services.database;
 
-import org.opendatakit.utilities.LocalizationUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.LocalizationUtils;
 import org.opendatakit.services.database.utlities.ODKDatabaseImplUtils;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 import org.sqlite.database.sqlite.SQLiteCantOpenDatabaseException;
 import org.sqlite.database.sqlite.SQLiteDatabaseLockedException;
 import org.sqlite.database.sqlite.SQLiteException;

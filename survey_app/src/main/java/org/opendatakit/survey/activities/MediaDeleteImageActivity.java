@@ -16,11 +16,11 @@ package org.opendatakit.survey.activities;
 
 import java.io.File;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.activities.BaseActivity;
-import org.opendatakit.utilities.MediaUtils;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidCommonClasses.activities.BaseActivity;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.MediaUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -27,10 +27,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
 
 /**

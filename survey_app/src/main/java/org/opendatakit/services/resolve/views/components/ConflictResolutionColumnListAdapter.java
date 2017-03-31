@@ -26,7 +26,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
 
 import java.util.ArrayList;

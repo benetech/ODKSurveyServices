@@ -14,7 +14,7 @@
 
 package org.opendatakit.services.database;
 
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 
 import java.util.*;
 import java.util.regex.Pattern;

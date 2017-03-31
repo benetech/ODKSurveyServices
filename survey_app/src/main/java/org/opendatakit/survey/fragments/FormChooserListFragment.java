@@ -14,8 +14,8 @@
 
 package org.opendatakit.survey.fragments;
 
-import org.opendatakit.activities.IAppAwareActivity;
-import org.opendatakit.provider.FormsProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.IOdkSurveyActivity;
 import org.opendatakit.survey.activities.MainMenuActivity;

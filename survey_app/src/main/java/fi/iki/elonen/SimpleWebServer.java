@@ -33,7 +33,7 @@ package fi.iki.elonen;
  * #L%
  */
 
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

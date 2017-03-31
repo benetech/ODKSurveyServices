@@ -23,15 +23,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.activities.IAppAwareActivity;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.services.database.AndroidConnectFactory;
-import org.opendatakit.fragment.AboutMenuFragment;
+import org.opendatakit.demoAndroidlibraryClasses.fragment.AboutMenuFragment;
 import org.opendatakit.survey.R;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.services.resolve.conflict.AllConflictsResolutionActivity;
-import org.opendatakit.services.sync.activities.SyncActivity;
 import org.opendatakit.services.preferences.activities.AppPropertiesActivity;
 import org.opendatakit.services.sync.activities.VerifyServerSettingsActivity;
 

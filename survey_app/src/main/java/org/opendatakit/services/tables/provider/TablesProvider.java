@@ -25,16 +25,16 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.opendatakit.services.database.AndroidConnectFactory;
-import org.opendatakit.database.DatabaseConstants;
+import org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants;
 import org.opendatakit.services.database.OdkConnectionFactorySingleton;
 import org.opendatakit.services.database.OdkConnectionInterface;
-import org.opendatakit.provider.TableDefinitionsColumns;
-import org.opendatakit.provider.TablesProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.provider.TableDefinitionsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.TablesProviderAPI;
 import org.opendatakit.services.database.utlities.ODKDatabaseImplUtils;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.logging.WebLoggerIf;
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 
 import java.io.File;
 import java.util.HashSet;

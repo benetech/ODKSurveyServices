@@ -37,7 +37,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.apache.commons.lang3.CharEncoding;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

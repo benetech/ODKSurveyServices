@@ -15,8 +15,8 @@
 package org.opendatakit.survey.activities;
 
 import android.net.Uri;
-import org.opendatakit.activities.IOdkCommonActivity;
-import org.opendatakit.activities.IOdkDataActivity;
+import org.opendatakit.demoAndroidCommonClasses.activities.IOdkCommonActivity;
+import org.opendatakit.demoAndroidCommonClasses.activities.IOdkDataActivity;
 
 /**
  * Interface that implements the survey-specific odkSurvey.js callbacks from the WebKit.

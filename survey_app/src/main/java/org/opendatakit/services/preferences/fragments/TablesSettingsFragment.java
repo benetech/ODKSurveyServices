@@ -17,10 +17,10 @@ package org.opendatakit.services.preferences.fragments;
 import android.os.Bundle;
 import android.preference.*;
 import android.preference.Preference.OnPreferenceChangeListener;
-import org.opendatakit.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.survey.R;
 
 public class TablesSettingsFragment extends PreferenceFragment {

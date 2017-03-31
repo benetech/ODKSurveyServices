@@ -20,15 +20,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.activities.BaseActivity;
-import org.opendatakit.application.AppAwareApplication;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
-import org.opendatakit.provider.FormsProviderAPI;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.webkitserver.utilities.UrlUtils;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidCommonClasses.activities.BaseActivity;
+import org.opendatakit.demoAndroidlibraryClasses.application.AppAwareApplication;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.UrlUtils;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
 
 import android.app.AlertDialog;

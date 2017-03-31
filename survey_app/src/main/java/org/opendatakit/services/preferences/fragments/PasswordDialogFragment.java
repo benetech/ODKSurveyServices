@@ -25,9 +25,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.survey.R;
+import org.opendatakit.survey.activities.MainMenuActivity;
 
 public class PasswordDialogFragment extends DialogFragment {
 

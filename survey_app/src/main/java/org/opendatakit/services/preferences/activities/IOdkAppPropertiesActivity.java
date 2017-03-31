@@ -14,7 +14,7 @@
 
 package org.opendatakit.services.preferences.activities;
 
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 
 /**
  * Interface that is available to all settings fragments that gives access to the

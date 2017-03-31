@@ -16,9 +16,9 @@
 package org.opendatakit.services.database.utlities;
 
 import android.database.Cursor;
-import org.opendatakit.database.DatabaseConstants;
+import org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants;
 import org.opendatakit.services.database.OdkConnectionInterface;
-import org.opendatakit.provider.ChoiceListColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.ChoiceListColumns;
 
 import java.util.ArrayList;
 

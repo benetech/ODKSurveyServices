@@ -25,11 +25,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.activities.IAppAwareActivity;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.services.database.AndroidConnectFactory;
-import org.opendatakit.fragment.AboutMenuFragment;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.fragment.AboutMenuFragment;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
 
 /**

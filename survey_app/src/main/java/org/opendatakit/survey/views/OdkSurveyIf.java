@@ -24,8 +24,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;

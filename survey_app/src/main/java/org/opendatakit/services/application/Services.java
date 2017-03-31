@@ -14,7 +14,7 @@
 
 package org.opendatakit.services.application;
 
-import org.opendatakit.application.AppAwareApplication;
+import org.opendatakit.demoAndroidlibraryClasses.application.AppAwareApplication;
 import org.opendatakit.survey.R;
 
 public class Services extends AppAwareApplication {

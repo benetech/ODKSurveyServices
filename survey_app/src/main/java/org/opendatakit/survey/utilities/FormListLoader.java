@@ -19,11 +19,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import org.opendatakit.provider.FormsColumns;
-import org.opendatakit.provider.FormsProviderAPI;
-import org.opendatakit.provider.InstanceProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
 import org.opendatakit.survey.R;
-import org.opendatakit.utilities.LocalizationUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.LocalizationUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

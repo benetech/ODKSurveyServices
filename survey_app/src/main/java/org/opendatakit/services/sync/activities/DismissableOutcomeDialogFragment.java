@@ -17,7 +17,8 @@ package org.opendatakit.services.sync.activities;
 import android.app.*;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import org.opendatakit.androidlibrary.R;
+
+import org.opendatakit.survey.R;
 
 /**
  * Fragment-version of AlertDialog

@@ -33,18 +33,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.opendatakit.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.services.preferences.activities.AppPropertiesActivity;
-import org.opendatakit.activities.IAppAwareActivity;
+import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
 import org.opendatakit.services.database.AndroidConnectFactory;
-import org.opendatakit.fragment.AboutMenuFragment;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.fragment.AboutMenuFragment;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.services.resolve.conflict.AllConflictsResolutionActivity;
 import org.opendatakit.survey.R;
-import org.opendatakit.sync.service.OdkSyncServiceInterface;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.OdkSyncServiceInterface;
 
 /**
  * An activity for verifying the server setings and

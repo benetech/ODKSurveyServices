@@ -31,14 +31,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.database.RoleConsts;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.database.RoleConsts;
 import org.opendatakit.aggregate.odktables.rest.ConflictType;
 import org.opendatakit.services.database.OdkConnectionFactorySingleton;
 import org.opendatakit.services.database.OdkConnectionInterface;
 import org.opendatakit.services.database.utlities.ODKDatabaseImplUtils;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 import org.opendatakit.services.resolve.ActiveUserAndLocale;
 import org.opendatakit.services.resolve.views.components.ConflictResolutionColumnListAdapter;
 import org.opendatakit.services.resolve.views.components.Resolution;

@@ -31,9 +31,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.opendatakit.consts.IntentConsts;
-import org.opendatakit.fragment.ProgressDialogFragment;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.fragment.ProgressDialogFragment;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.services.resolve.listener.ResolutionListener;
 import org.opendatakit.services.resolve.task.ConflictResolutionListTask;
 import org.opendatakit.services.resolve.views.components.ResolveRowEntry;

@@ -33,8 +33,8 @@ import org.opendatakit.aggregate.odktables.rest.entity.TableDefinition;
 import org.opendatakit.aggregate.odktables.rest.entity.TableDefinitionResource;
 import org.opendatakit.aggregate.odktables.rest.entity.TableResource;
 import org.opendatakit.aggregate.odktables.rest.entity.TableResourceList;
-import org.opendatakit.database.data.ColumnDefinition;
-import org.opendatakit.database.data.OrderedColumns;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.ColumnDefinition;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.OrderedColumns;
 import org.opendatakit.httpclientandroidlib.Header;
 import org.opendatakit.httpclientandroidlib.HeaderElement;
 import org.opendatakit.httpclientandroidlib.HttpEntity;
@@ -55,9 +55,9 @@ import org.opendatakit.httpclientandroidlib.entity.mime.MultipartEntityBuilder;
 import org.opendatakit.httpclientandroidlib.entity.mime.content.ByteArrayBody;
 import org.opendatakit.httpclientandroidlib.message.BasicNameValuePair;
 import org.opendatakit.httpclientandroidlib.util.EntityUtils;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.logging.WebLoggerIf;
-import org.opendatakit.provider.DataTableColumns;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
+import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
 import org.opendatakit.services.forms.RowList;
 import org.opendatakit.services.sync.service.SyncExecutionContext;
 import org.opendatakit.services.sync.service.exceptions.AccessDeniedException;
@@ -68,8 +68,8 @@ import org.opendatakit.services.sync.service.exceptions.HttpClientWebException;
 import org.opendatakit.services.sync.service.exceptions.InvalidAuthTokenException;
 import org.opendatakit.services.sync.service.exceptions.NetworkTransmissionException;
 import org.opendatakit.services.sync.service.exceptions.ServerDoesNotRecognizeAppNameException;
-import org.opendatakit.sync.service.SyncAttachmentState;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncAttachmentState;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -434,7 +434,7 @@ public class AggregateSynchronizer implements Synchronizer {
     }
   }
 
-  
+
   @Override
   public RowResourceList getChangeSet(TableResource table, String dataETag, boolean activeOnly, String websafeResumeCursor)
       throws HttpClientWebException, IOException {
@@ -504,10 +504,10 @@ public class AggregateSynchronizer implements Synchronizer {
 
   @Override
   public RowOutcomeList pushLocalRows(TableResource resource, OrderedColumns orderedColumns,
-      List<org.opendatakit.database.data.Row> rowsToInsertUpdateOrDelete) throws IOException, HttpClientWebException {
+      List<org.opendatakit.demoAndroidlibraryClasses.database.data.Row> rowsToInsertUpdateOrDelete) throws IOException, HttpClientWebException {
 
     ArrayList<Row> rows = new ArrayList<Row>();
-    for (org.opendatakit.database.data.Row rowToAlter : rowsToInsertUpdateOrDelete) {
+    for (org.opendatakit.demoAndroidlibraryClasses.database.data.Row rowToAlter : rowsToInsertUpdateOrDelete) {
 
       ArrayList<DataKeyValue> values = new ArrayList<DataKeyValue>();
       for (ColumnDefinition column : orderedColumns.getColumnDefinitions()) {

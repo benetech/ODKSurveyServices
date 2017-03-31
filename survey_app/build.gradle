@@ -97,42 +97,27 @@ allprojects {
 }
 
 dependencies {
-    compile fileTree(include: '*.jar', dir: 'libs')
-
-    if (libraryProjectPath.exists() && gradle.useLocal) { // Local project is favoured
-        compile project(libraryProjectName)
-    } else {
-        demoCompile(group: groupId, name: libraryDemoArtifactName, classifier: demoRelease,
-                version: latestVersion, ext: 'aar')
-        masterCompile(group: groupId, name: libraryMasterArtifactName, classifier: masterRelease,
-                version: masterArtifactVersion, ext: 'aar')
-        snapshotCompile(group: groupId, name: librarySnapshotArtifactName,
-                classifier: snapshotRelease, version: latestVersion, ext: 'aar')
-        uitestCompile(group: groupId, name: librarySnapshotArtifactName,
-                      classifier: snapshotRelease, version: latestVersion, ext: 'aar')
-    }
-
-    if (commonProjectPath.exists() && gradle.useLocal) { // Local project is favoured
-        compile project(commonProjectName)
-    } else {
-        demoCompile(group: groupId, name: commonDemoArtifactName, classifier: demoRelease,
-                version: latestVersion, ext: 'aar')
-        masterCompile(group: groupId, name: commonMasterArtifactName, classifier: masterRelease,
-                version: masterArtifactVersion, ext: 'aar')
-        snapshotCompile(group: groupId, name: commonSnapshotArtifactName,
-                classifier: snapshotRelease, version: latestVersion, ext: 'aar')
-        uitestCompile(group: groupId, name: commonSnapshotArtifactName,
-                      classifier: snapshotRelease, version: latestVersion, ext: 'aar')
-    }
-
     compile 'com.google.android.gms:play-services:' + gpsVersion
-
     // Testing dependencies
     androidTestCompile 'junit:junit:4.12'
-	androidTestCompile 'joda-time:joda-time:2.2'
-	testCompile 'joda-time:joda-time:2.2'
+    androidTestCompile 'joda-time:joda-time:2.2'
+    testCompile 'joda-time:joda-time:2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile fileTree(include: '*.jar', dir: 'libs')
     testCompile 'junit:junit:4.12'
+    compile files('libs/aggregate-rest-interface-2016-07-21.jar')
+    compile files('libs/commons-io-2.4.jar')
+    compile files('libs/commons-lang3-3.1.jar')
+    compile files('libs/jackson-annotations-2.4.1.jar')
+    compile files('libs/jackson-databind-2.4.1.3.jar')
+    compile files('libs/jackson-core-2.4.1.1.jar')
+    compile files('libs/joda-time-2.9.4.jar')
+    compile files('libs/slf4j-api-1.7.12.jar')
+    compile files('libs/httpclientandroidlib-4.5.2-1.jar')
+    compile files('libs/commons-fileupload-1.3.1.jar')
+    compile files('libs/gson-2.8.0.jar')
+    compile files('libs/jsr311-api-1.1.1.jar')
+    compile files('libs/slf4j-api-1.7.12.jar')
+    compile files('libs/jacocoagent.jar')
 }

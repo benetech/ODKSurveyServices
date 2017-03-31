@@ -27,9 +27,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.CharEncoding;
-import org.opendatakit.utilities.StaticStateManipulator;
-import org.opendatakit.utilities.StaticStateManipulator.IStaticFieldManipulator;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.StaticStateManipulator;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.StaticStateManipulator.IStaticFieldManipulator;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.httpclientandroidlib.Header;
 import org.opendatakit.httpclientandroidlib.HttpEntity;
 import org.opendatakit.httpclientandroidlib.HttpRequest;

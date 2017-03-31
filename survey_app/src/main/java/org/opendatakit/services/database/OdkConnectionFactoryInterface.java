@@ -1,6 +1,6 @@
 package org.opendatakit.services.database;
 
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 
 /**
  * Factory interface that provides database connections and manages them.

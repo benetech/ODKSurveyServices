@@ -1,11 +1,11 @@
 package org.opendatakit.services.sync.service.logic;
 
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.logging.WebLoggerIf;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
 import org.opendatakit.services.sync.service.SyncExecutionContext;
-import org.opendatakit.sync.service.SyncOutcome;
-import org.opendatakit.sync.service.SyncProgressState;
-import org.opendatakit.sync.service.TableLevelResult;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncOutcome;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncProgressState;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.TableLevelResult;
 
 /**
  * @author mitchellsundt@gmail.com

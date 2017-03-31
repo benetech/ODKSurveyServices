@@ -14,7 +14,7 @@
 
 package org.opendatakit.services.database;
 
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.sqlite.database.sqlite.SQLiteDebug;
 
 import java.util.ArrayList;

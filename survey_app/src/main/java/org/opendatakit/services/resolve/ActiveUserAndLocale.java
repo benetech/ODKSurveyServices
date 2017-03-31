@@ -15,8 +15,8 @@
 package org.opendatakit.services.resolve;
 
 import android.content.Context;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 
 /**
  * @author mitchellsundt@gmail.com

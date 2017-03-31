@@ -16,15 +16,15 @@ package org.opendatakit.survey.fragments;
 
 import java.util.ArrayList;
 
-import org.opendatakit.activities.IAppAwareActivity;
-import org.opendatakit.activities.IInitResumeActivity;
-import org.opendatakit.fragment.AlertDialogFragment;
-import org.opendatakit.fragment.AlertDialogFragment.ConfirmAlertDialog;
-import org.opendatakit.fragment.ProgressDialogFragment;
-import org.opendatakit.fragment.ProgressDialogFragment.CancelProgressDialog;
-import org.opendatakit.listener.DatabaseConnectionListener;
-import org.opendatakit.listener.InitializationListener;
-import org.opendatakit.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
+import org.opendatakit.demoAndroidCommonClasses.activities.IInitResumeActivity;
+import org.opendatakit.demoAndroidCommonClasses.fragment.AlertDialogFragment;
+import org.opendatakit.demoAndroidCommonClasses.fragment.AlertDialogFragment.ConfirmAlertDialog;
+import org.opendatakit.demoAndroidlibraryClasses.fragment.ProgressDialogFragment;
+import org.opendatakit.demoAndroidlibraryClasses.fragment.ProgressDialogFragment.CancelProgressDialog;
+import org.opendatakit.demoAndroidCommonClasses.listener.DatabaseConnectionListener;
+import org.opendatakit.demoAndroidCommonClasses.listener.InitializationListener;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.application.Survey;
 
