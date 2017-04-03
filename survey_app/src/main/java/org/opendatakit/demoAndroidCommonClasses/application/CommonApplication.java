@@ -73,11 +73,11 @@ public abstract class CommonApplication extends AppAwareApplication implements I
     public static void mockServiceConnected(CommonApplication app, String name, IBinder service) {
         ComponentName className = null;
         if(name.equals("org.opendatakit.services.webkitservice.service.OdkWebkitServerService")) {
-            className = new ComponentName("org.opendatakit.services", "org.opendatakit.services.webkitservice.service.OdkWebkitServerService");
+            className = new ComponentName("org.opendatakit.survey", "org.opendatakit.services.webkitservice.service.OdkWebkitServerService");
         }
 
         if(name.equals("org.opendatakit.services.database.service.OdkDatabaseService")) {
-            className = new ComponentName("org.opendatakit.services", "org.opendatakit.services.database.service.OdkDatabaseService");
+            className = new ComponentName("org.opendatakit.survey", "org.opendatakit.services.database.service.OdkDatabaseService");
         }
 
         if(className == null) {
@@ -90,11 +90,11 @@ public abstract class CommonApplication extends AppAwareApplication implements I
     public static void mockServiceDisconnected(CommonApplication app, String name) {
         ComponentName className = null;
         if(name.equals("org.opendatakit.services.webkitservice.service.OdkWebkitServerService")) {
-            className = new ComponentName("org.opendatakit.services", "org.opendatakit.services.webkitservice.service.OdkWebkitServerService");
+            className = new ComponentName("org.opendatakit.survey", "org.opendatakit.services.webkitservice.service.OdkWebkitServerService");
         }
 
         if(name.equals("org.opendatakit.services.database.service.OdkDatabaseService")) {
-            className = new ComponentName("org.opendatakit.services", "org.opendatakit.services.database.service.OdkDatabaseService");
+            className = new ComponentName("org.opendatakit.survey", "org.opendatakit.services.database.service.OdkDatabaseService");
         }
 
         if(className == null) {
@@ -225,8 +225,8 @@ public abstract class CommonApplication extends AppAwareApplication implements I
         if(!isMocked) {
             if(!this.shuttingDown) {
                 PackageManager pm = this.getPackageManager();
-                boolean useWebServer = pm.checkPermission("org.opendatakit.webkitserver.RUN_WEBSERVER", this.getPackageName()) == 0;
-                boolean useDatabase = pm.checkPermission("org.opendatakit.database.RUN_DATABASE", this.getPackageName()) == 0;
+                boolean useWebServer = pm.checkPermission("org.opendatakit.webkitserver.RUN_WEBSERVER", "org.opendatakit.survey") == 0;
+                boolean useDatabase = pm.checkPermission("org.opendatakit.database.RUN_DATABASE", "org.opendatakit.survey") == 0;
                 Log.i("CommonApplication", "bindToService -- useWebServer " + Boolean.toString(useWebServer) + " useDatabase " + Boolean.toString(useDatabase));
                 this.mBackgroundServices.bindToService(this, useWebServer, useDatabase);
             }
@@ -422,14 +422,14 @@ public abstract class CommonApplication extends AppAwareApplication implements I
             if(webkitServerBinder != null) {
                 Log.i("CommonApplication", "Attempting bind to WebkitServer service");
                 bind_intent = new Intent();
-                bind_intent.setClassName("org.opendatakit.services", "org.opendatakit.services.webkitservice.service.OdkWebkitServerService");
+                bind_intent.setClassName("org.opendatakit.survey", "org.opendatakit.services.webkitservice.service.OdkWebkitServerService");
                 application.bindService(bind_intent, webkitServerBinder, 1 | (VERSION.SDK_INT >= 14?128:0));
             }
 
             if(databaseBinder != null) {
                 Log.i("CommonApplication", "Attempting bind to Database service");
                 bind_intent = new Intent();
-                bind_intent.setClassName("org.opendatakit.services", "org.opendatakit.services.database.service.OdkDatabaseService");
+                bind_intent.setClassName("org.opendatakit.survey", "org.opendatakit.services.database.service.OdkDatabaseService");
                 application.bindService(bind_intent, databaseBinder, 1 | (VERSION.SDK_INT >= 14?128:0));
             }
 

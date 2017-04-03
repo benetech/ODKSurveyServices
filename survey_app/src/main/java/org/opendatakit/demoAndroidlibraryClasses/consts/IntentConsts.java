@@ -22,7 +22,7 @@ public class IntentConsts {
     }
 
     public class Database {
-        public static final String DATABASE_SERVICE_PACKAGE = "org.opendatakit.services";
+        public static final String DATABASE_SERVICE_PACKAGE = "org.opendatakit.survey";
         public static final String DATABASE_SERVICE_CLASS = "org.opendatakit.services.database.service.OdkDatabaseService";
 
         public Database() {
@@ -30,7 +30,7 @@ public class IntentConsts {
     }
 
     public class AppProperties {
-        public static final String APPLICATION_NAME = "org.opendatakit.services";
+        public static final String APPLICATION_NAME = "org.opendatakit.survey";
         public static final String ACTIVITY_NAME = "org.opendatakit.services.preferences.activities.AppPropertiesActivity";
 
         public AppProperties() {
@@ -38,9 +38,9 @@ public class IntentConsts {
     }
 
     public class Sync {
-        public static final String APPLICATION_NAME = "org.opendatakit.services";
+        public static final String APPLICATION_NAME = "org.opendatakit.survey";
         public static final String ACTIVITY_NAME = "org.opendatakit.services.sync.activities.SyncActivity";
-        public static final String SYNC_SERVICE_PACKAGE = "org.opendatakit.services";
+        public static final String SYNC_SERVICE_PACKAGE = "org.opendatakit.survey";
         public static final String SYNC_SERVICE_CLASS = "org.opendatakit.services.sync.service.OdkSyncService";
 
         public Sync() {
@@ -48,7 +48,7 @@ public class IntentConsts {
     }
 
     public class ResolveConflict {
-        public static final String APPLICATION_NAME = "org.opendatakit.services";
+        public static final String APPLICATION_NAME = "org.opendatakit.survey";
         public static final String ACTIVITY_NAME = "org.opendatakit.services.resolve.conflict.ConflictResolutionActivity";
 
         public ResolveConflict() {
@@ -56,7 +56,7 @@ public class IntentConsts {
     }
 
     public class ResolveCheckpoint {
-        public static final String APPLICATION_NAME = "org.opendatakit.services";
+        public static final String APPLICATION_NAME = "org.opendatakit.survey";
         public static final String ACTIVITY_NAME = "org.opendatakit.services.resolve.checkpoint.CheckpointResolutionActivity";
 
         public ResolveCheckpoint() {
