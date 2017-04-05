@@ -160,7 +160,7 @@ public class ColorRule {
                     compVal = Double.valueOf(doubleValue).compareTo(Double.valueOf(doubleRule));
                 }
 
-                switch(mOperator.ordinal()) {
+                switch(mOperator.ordinal() + 1) {
                     case 1:
                         return compVal < 0;
                     case 2:

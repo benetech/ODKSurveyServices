@@ -59,7 +59,7 @@ public abstract class ExecutorProcessor implements Runnable {
 
                     this.transId = UUID.randomUUID().toString();
                     this.context.registerActiveConnection(this.transId, this.dbHandle);
-                    switch(request.executorRequestType.ordinal()) {
+                    switch(request.executorRequestType.ordinal() + 1) {
                         case 1:
                             this.updateExecutorContext();
                             break;

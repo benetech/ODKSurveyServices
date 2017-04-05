@@ -45,7 +45,7 @@ public class ColorRuleGroup {
         String jsonRulesString = "[]";
         this.mAdminColumns = adminColumns;
         ArrayList entries = null;
-        switch(mType.ordinal()) {
+        switch(mType.ordinal() + 1) {
             case 1:
                 entries = ctxt.getDatabase().getTableMetadata(appName, db, this.mTableId, "ColumnColorRuleGroup", elementKey, "ColumnColorRuleGroup.ruleList", (String)null).getEntries();
                 break;
@@ -137,7 +137,7 @@ public class ColorRuleGroup {
                 try {
                     String e = mapper.writeValueAsString(this.ruleList);
                     KeyValueStoreEntry entry = null;
-                    switch(mType.ordinal()) {
+                    switch(mType.ordinal() + 1) {
                         case 1:
                             entry = KeyValueStoreUtils.buildEntry(this.mTableId, "ColumnColorRuleGroup", this.mElementKey, "ColumnColorRuleGroup.ruleList", ElementDataType.array, e);
                             break;
