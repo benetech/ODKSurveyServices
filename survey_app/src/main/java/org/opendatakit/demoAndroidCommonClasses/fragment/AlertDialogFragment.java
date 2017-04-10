@@ -52,7 +52,7 @@ public class AlertDialogFragment extends DialogFragment {
                 }
             }
         };
-        AlertDialog dlg = (new Builder(this.getActivity())).setIcon(17301659).setTitle(title).setMessage(message).setCancelable(false).setPositiveButton(this.getString(R.string.ok), quitListener).create();
+        AlertDialog dlg = (new Builder(this.getActivity())).setTitle(title).setMessage(message).setCancelable(false).setPositiveButton(this.getString(R.string.ok), quitListener).create();
         dlg.setCanceledOnTouchOutside(false);
         return dlg;
     }
