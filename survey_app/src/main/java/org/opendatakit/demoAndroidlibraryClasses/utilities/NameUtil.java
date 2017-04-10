@@ -10,7 +10,7 @@ import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 public class NameUtil {
     private static final String TAG = NameUtil.class.getSimpleName();
     private static final ArrayList<String> reservedNamesSortedList;
-    private static final Pattern letterFirstPattern = Pattern.compile("^\\p{L}\\p{M}*(\\p{L}\\p{M}*|\\p{Nd}|_)*$", 64);
+    private static final Pattern letterFirstPattern = Pattern.compile("^\\p{L}\\p{M}*(\\p{L}\\p{M}*|\\p{Nd}|_)*$", Pattern.UNICODE_CASE);
 
     public NameUtil() {
     }

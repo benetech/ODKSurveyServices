@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnShowListener;
 import android.os.Bundle;
+import android.view.View;
 
 import org.opendatakit.survey.R;
 
@@ -44,9 +45,9 @@ public class ProgressDialogFragment extends DialogFragment {
             public void onShow(DialogInterface dialog) {
                 ProgressDialogFragment f = ProgressDialogFragment.this;
                 if(f != null && f instanceof ProgressDialogFragment.CancelProgressDialog) {
-                    ((ProgressDialog)dialog).getButton(-1).setVisibility(0);
+                    ((ProgressDialog)dialog).getButton(-1).setVisibility(View.VISIBLE);
                 } else {
-                    ((ProgressDialog)dialog).getButton(-1).setVisibility(8);
+                    ((ProgressDialog)dialog).getButton(-1).setVisibility(View.GONE);
                 }
 
             }

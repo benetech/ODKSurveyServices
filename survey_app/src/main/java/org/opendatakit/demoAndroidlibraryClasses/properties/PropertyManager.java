@@ -31,7 +31,7 @@ public class PropertyManager {
     public static final String URI_FRAGMENT_NEW_INSTANCE_FILE = "urifragmentnewinstancefile:";
 
     public PropertyManager(Context context) {
-        TelephonyManager mTelephonyManager = (TelephonyManager)context.getSystemService("phone");
+        TelephonyManager mTelephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         String deviceId = mTelephonyManager.getDeviceId();
         String orDeviceId = null;
         if(deviceId != null) {
@@ -44,7 +44,7 @@ public class PropertyManager {
         }
 
         if(deviceId == null) {
-            WifiManager value = (WifiManager)context.getSystemService("wifi");
+            WifiManager value = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = value.getConnectionInfo();
             if(info != null) {
                 String macId = info.getMacAddress();

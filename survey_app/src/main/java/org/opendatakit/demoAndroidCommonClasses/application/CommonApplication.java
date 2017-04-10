@@ -3,6 +3,7 @@ package org.opendatakit.demoAndroidCommonClasses.application;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -423,14 +424,14 @@ public abstract class CommonApplication extends AppAwareApplication implements I
                 Log.i("CommonApplication", "Attempting bind to WebkitServer service");
                 bind_intent = new Intent();
                 bind_intent.setClassName("org.opendatakit.survey", "org.opendatakit.services.webkitservice.service.OdkWebkitServerService");
-                application.bindService(bind_intent, webkitServerBinder, 1 | (VERSION.SDK_INT >= 14?128:0));
+                application.bindService(bind_intent, webkitServerBinder, Context.BIND_AUTO_CREATE);
             }
 
             if(databaseBinder != null) {
                 Log.i("CommonApplication", "Attempting bind to Database service");
                 bind_intent = new Intent();
                 bind_intent.setClassName("org.opendatakit.survey", "org.opendatakit.services.database.service.OdkDatabaseService");
-                application.bindService(bind_intent, databaseBinder, 1 | (VERSION.SDK_INT >= 14?128:0));
+                application.bindService(bind_intent, databaseBinder, Context.BIND_AUTO_CREATE);
             }
 
         }

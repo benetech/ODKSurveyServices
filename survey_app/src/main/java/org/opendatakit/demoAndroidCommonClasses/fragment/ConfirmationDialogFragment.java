@@ -56,7 +56,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
 
             }
         };
-        AlertDialog dlg = (new Builder(this.getActivity())).setIcon(17301659).setTitle(title).setMessage(message).setCancelable(false).setPositiveButton(okButton, dialogYesNoListener).setNegativeButton(cancelButton, dialogYesNoListener).create();
+        AlertDialog dlg = (new Builder(this.getActivity())).setTitle(title).setMessage(message).setCancelable(false).setPositiveButton(okButton, dialogYesNoListener).setNegativeButton(cancelButton, dialogYesNoListener).create();
         dlg.setCanceledOnTouchOutside(false);
         return dlg;
     }

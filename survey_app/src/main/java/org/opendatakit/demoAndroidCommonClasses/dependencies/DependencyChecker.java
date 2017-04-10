@@ -76,7 +76,7 @@ public class DependencyChecker {
  PackageManager pm = context.getPackageManager();
 
  try {
- pm.getPackageInfo(packageName, 1);
+ pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
  return true;
  } catch (NameNotFoundException var4) {
  return false;
