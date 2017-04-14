@@ -2,13 +2,14 @@ package org.opendatakit.logic.test;
 
 import android.test.AndroidTestCase;
 
-import org.opendatakit.androidlibrary.R;
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.utilities.StaticStateManipulator;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.logging.desktop.WebLoggerDesktopFactoryImpl;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.StaticStateManipulator;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.desktop.WebLoggerDesktopFactoryImpl;
+import org.opendatakit.survey.R;
+
 
 /**
  * @author mitchellsundt@gmail.com

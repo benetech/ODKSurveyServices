@@ -2,13 +2,13 @@ package org.opendatakit.services.sync.service.logic;
 
 import android.test.ApplicationTestCase;
 
-import org.opendatakit.properties.CommonToolProperties;
-import org.opendatakit.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
+import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.survey.R;
 import org.opendatakit.services.application.Services;
 import org.opendatakit.services.sync.service.SyncExecutionContext;
 import org.opendatakit.sync.service.SyncNotification;
-import org.opendatakit.sync.service.SyncOverallResult;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncOverallResult;
 
 import java.net.URL;
 

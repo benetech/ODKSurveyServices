@@ -15,8 +15,8 @@
 package org.opendatakit.utilities.test;
 
 import org.opendatakit.aggregate.odktables.rest.entity.RowFilterScope;
-import org.opendatakit.database.data.OrderedColumns;
-import org.opendatakit.exception.ActionNotAuthorizedException;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.OrderedColumns;
+import org.opendatakit.demoAndroidlibraryClasses.exception.ActionNotAuthorizedException;
 import org.opendatakit.services.database.utlities.ODKDatabaseImplUtils;
 
 import java.util.ArrayList;

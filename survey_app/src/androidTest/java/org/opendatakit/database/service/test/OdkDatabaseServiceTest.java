@@ -13,16 +13,27 @@ import org.opendatakit.TestConsts;
 import org.opendatakit.aggregate.odktables.rest.ElementDataType;
 import org.opendatakit.aggregate.odktables.rest.entity.Column;
 import org.opendatakit.services.database.AndroidConnectFactory;
-import org.opendatakit.database.data.*;
-import org.opendatakit.database.service.AidlDbInterface;
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.Row;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.BaseTable;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.ColumnList;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.OrderedColumns;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.UserTable;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.AidlDbInterface;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 import org.opendatakit.services.database.service.OdkDatabaseService;
-import org.opendatakit.exception.ActionNotAuthorizedException;
-import org.opendatakit.exception.ServicesAvailabilityException;
-import org.opendatakit.database.service.UserDbInterface;
-import org.opendatakit.utilities.DateUtils;
+import org.opendatakit.demoAndroidlibraryClasses.exception.ActionNotAuthorizedException;
+import org.opendatakit.demoAndroidlibraryClasses.exception.ServicesAvailabilityException;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.UserDbInterface;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.DateUtils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.UUID;
 
 public class OdkDatabaseServiceTest extends ServiceTestCase<OdkDatabaseService> {
 

@@ -5,14 +5,14 @@ import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
 import org.opendatakit.services.database.AndroidConnectFactory;
-import org.opendatakit.database.DatabaseConstants;
 import org.opendatakit.services.database.OdkConnectionFactorySingleton;
 import org.opendatakit.services.database.OdkConnectionInterface;
-import org.opendatakit.provider.ColumnDefinitionsColumns;
-import org.opendatakit.provider.KeyValueStoreColumns;
-import org.opendatakit.provider.TableDefinitionsColumns;
-import org.opendatakit.utilities.ODKFileUtils;
-import org.opendatakit.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.provider.ColumnDefinitionsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.KeyValueStoreColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.TableDefinitionsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants;
 
 import java.io.File;
 

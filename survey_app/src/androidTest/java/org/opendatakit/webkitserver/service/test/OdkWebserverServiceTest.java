@@ -10,11 +10,11 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 
 import org.opendatakit.TestConsts;
-import org.opendatakit.consts.WebkitServerConsts;
-import org.opendatakit.logging.WebLogger;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.consts.WebkitServerConsts;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.httpclientandroidlib.HttpStatus;
-import org.opendatakit.webkitserver.service.WebkitServerInterface;
+import org.opendatakit.demoAndroidlibraryClasses.webkitserver.service.WebkitServerInterface;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,7 +26,7 @@ import java.net.URL;
 
 import android.test.ApplicationTestCase;
 import org.opendatakit.services.application.Services;
-import org.opendatakit.utilities.StaticStateManipulator;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.StaticStateManipulator;
 
 /**
  * @author mitchellsundt@gmail.com

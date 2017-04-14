@@ -17,8 +17,8 @@ package org.opendatakit.survey.logic;
 import java.io.File;
 import java.util.Date;
 
-import org.opendatakit.provider.FormsProviderAPI;
-import org.opendatakit.utilities.ODKFileUtils;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 
 import android.net.Uri;
 import android.test.AndroidTestCase;
