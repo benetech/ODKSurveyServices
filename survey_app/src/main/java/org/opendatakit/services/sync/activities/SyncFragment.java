@@ -555,7 +555,8 @@ public class SyncFragment extends Fragment implements ISyncOutcomeHandler {
       WebLogger.getLogger(getAppName()).e(TAG, "No regional office id set, aborting upload");
     } else {
       if (areCredentialsConfigured()) {
-        if (syncAttachmentState != SyncAttachmentState.UPLOAD || (getActivity().getIntent().getStringArrayListExtra("ids") != null && !getActivity().getIntent().getStringArrayListExtra("ids").isEmpty())) {
+        // Intent always contains one bundle with a key appName. If it contains anything more then it means there are some forms choosen to be synced.
+        if (syncAttachmentState != SyncAttachmentState.UPLOAD || (getActivity().getIntent().getExtras().keySet().size() > 1 && !getActivity().getIntent().getExtras().keySet().isEmpty())) {
           disableButtons();
           syncAction = SyncActions.SYNC;
           prepareForSyncAction();

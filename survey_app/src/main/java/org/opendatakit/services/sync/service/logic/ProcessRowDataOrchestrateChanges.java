@@ -38,6 +38,7 @@ import org.opendatakit.demoAndroidlibraryClasses.sync.service.TableLevelResult;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * SyncProcessor implements the cloud synchronization logic for Tables.
@@ -137,7 +138,7 @@ public class ProcessRowDataOrchestrateChanges {
    * @throws ServicesAvailabilityException
    */
   public void synchronizeDataRowsAndAttachments(List<TableResource> workingListOfTables,
-      SyncAttachmentState attachmentState, List<String> selectedFormsIds) throws ServicesAvailabilityException {
+      SyncAttachmentState attachmentState, Map<String, List<String>> selectedFormsIds) throws ServicesAvailabilityException {
     log.i(TAG, "entered synchronizeDataRowsAndAttachments()");
 
     DbHandle db = null;
@@ -149,23 +150,27 @@ public class ProcessRowDataOrchestrateChanges {
       // existed locally before we attempted downloading it.
 
       String tableId = tableResource.getTableId();
-      TableDefinitionEntry te;
-      OrderedColumns orderedDefns;
-      String displayName;
-      try {
-        db = sc.getDatabase();
-        te = sc.getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db,
-            tableId);
-        orderedDefns = sc.getDatabaseService().getUserDefinedColumns(sc.getAppName(), db, tableId);
-        displayName = sc.getTableDisplayName(tableId);
-      } finally {
-        sc.releaseDatabase(db);
-        db = null;
-      }
 
-      synchronizeTableDataRowsAndAttachments(te, orderedDefns, displayName,
-          attachmentState, selectedFormsIds);
-      sc.incMajorSyncStep();
+      // We want to sync only the tables from which the form instances where selected
+      if (selectedFormsIds.containsKey(tableId)) {
+        TableDefinitionEntry te;
+        OrderedColumns orderedDefns;
+        String displayName;
+        try {
+          db = sc.getDatabase();
+          te = sc.getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db,
+                  tableId);
+          orderedDefns = sc.getDatabaseService().getUserDefinedColumns(sc.getAppName(), db, tableId);
+          displayName = sc.getTableDisplayName(tableId);
+        } finally {
+          sc.releaseDatabase(db);
+          db = null;
+        }
+
+        synchronizeTableDataRowsAndAttachments(te, orderedDefns, displayName,
+                attachmentState, selectedFormsIds.get(tableId));
+        sc.incMajorSyncStep();
+      }
     }
   }
 
