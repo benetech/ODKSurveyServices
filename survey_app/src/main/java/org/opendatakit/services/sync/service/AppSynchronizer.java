@@ -43,6 +43,7 @@ import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,9 +66,9 @@ public class AppSynchronizer {
   private SyncTask curTask;
   private SyncNotification syncProgress;
   private SyncOverallResult syncResult;
-  private List<String> selectedFormsIds;
+  private Map<String, List<String>> selectedFormsIds;
 
-  AppSynchronizer(Service srvc, String appName, GlobalSyncNotificationManager notificationManager, List<String> selectedFormsIds) {
+  AppSynchronizer(Service srvc, String appName, GlobalSyncNotificationManager notificationManager, Map<String, List<String>> selectedFormsIds) {
     this.service = srvc;
     this.appName = appName;
     this.status = SyncStatus.NONE;
@@ -158,7 +159,7 @@ public class AppSynchronizer {
     private final boolean onlyVerifySettings;
     private final boolean push;
     private final SyncAttachmentState attachmentState;
-    private List<String> selectedFormsIds;
+    private Map<String, List<String>> selectedFormsIds;
 
     public SyncTask(AppAwareApplication application) {
       this.application = application;
@@ -167,7 +168,7 @@ public class AppSynchronizer {
       this.attachmentState = SyncAttachmentState.NONE;
     }
 
-    public SyncTask(AppAwareApplication application, boolean push, SyncAttachmentState attachmentState, List<String> selectedFormsIds) {
+    public SyncTask(AppAwareApplication application, boolean push, SyncAttachmentState attachmentState, Map<String, List<String>> selectedFormsIds) {
       this.application = application;
       this.onlyVerifySettings = false;
       this.push = push;
@@ -318,7 +319,7 @@ public class AppSynchronizer {
             WebLogger.getLogger(appName).printStackTrace(e);
           } finally {
             for (TableLevelResult tlr : syncResult.getTableLevelResults()) {
-              if (tlr.getSyncOutcome() == SyncOutcome.WORKING) {
+              if (tlr.getSyncOutcome() == SyncOutcome.WORKING && selectedFormsIds.containsKey(tlr.getTableId())) {
                 WebLogger.getLogger(appName).e(TAG, "Abandoning data row update " + tlr.getTableId()
                         + " -- exception aborts processing!");
                 tlr.setSyncOutcome(SyncOutcome.FAILURE);
@@ -358,31 +359,35 @@ public class AppSynchronizer {
       int attachmentsFailed = 0;
       SyncStatus finalStatus = resolveOutcome(syncResult.getAppLevelSyncOutcome());
       for (TableLevelResult result : syncResult.getTableLevelResults()) {
-        SyncOutcome tableOutcome = result.getSyncOutcome();
-        if (tableOutcome == SyncOutcome.WORKING) {
-          result.setSyncOutcome(SyncOutcome.FAILURE);
-          tableOutcome = SyncOutcome.FAILURE;
-        }
-        // determine the status from this table..
-        SyncStatus tableStatus = resolveOutcome(tableOutcome);
-        switch (tableStatus) {
-          default:
-            ++tablesWithProblems;
-            break;
-          case SYNCING:
-          case SYNC_COMPLETE:
-            tableStatus = SyncStatus.SYNCING;
-            break;
-          case SYNC_COMPLETE_PENDING_ATTACHMENTS:
-            ++attachmentsFailed;
-        }
+        // We are only interested in the result of sync for the tables from which the form
+        // instances where selected to be synced.
+        if (selectedFormsIds.containsKey(result.getTableId())) {
+          SyncOutcome tableOutcome = result.getSyncOutcome();
+          if (tableOutcome == SyncOutcome.WORKING) {
+            result.setSyncOutcome(SyncOutcome.FAILURE);
+            tableOutcome = SyncOutcome.FAILURE;
+          }
+          // determine the status from this table..
+          SyncStatus tableStatus = resolveOutcome(tableOutcome);
+          switch (tableStatus) {
+            default:
+              ++tablesWithProblems;
+              break;
+            case SYNCING:
+            case SYNC_COMPLETE:
+              tableStatus = SyncStatus.SYNCING;
+              break;
+            case SYNC_COMPLETE_PENDING_ATTACHMENTS:
+              ++attachmentsFailed;
+          }
 
-        // update the overall status to the first error we find.
-        // track pending attachments, but allow more serious errors
-        // to override that status outcome.
-        if ((finalStatus == SyncStatus.SYNCING || finalStatus == SyncStatus.SYNC_COMPLETE_PENDING_ATTACHMENTS)
-                && (tableStatus != SyncStatus.SYNCING)) {
-          finalStatus = tableStatus;
+          // update the overall status to the first error we find.
+          // track pending attachments, but allow more serious errors
+          // to override that status outcome.
+          if ((finalStatus == SyncStatus.SYNCING || finalStatus == SyncStatus.SYNC_COMPLETE_PENDING_ATTACHMENTS)
+                  && (tableStatus != SyncStatus.SYNCING)) {
+            finalStatus = tableStatus;
+          }
         }
       }
 

@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
@@ -68,7 +69,7 @@ public class OdkSyncService extends Service {
   private boolean shutdownActorNotYetStarted = true;
   private boolean isBound = true;
   private Intent intent;
-  private List<String> selectedFormsIds;
+  private Map<String, List<String>> selectedFormsIds;
 
   // Scheduled Executor Runnable that runs every RETENTION_PERIOD / 5 intervals
   // to determine whether or not the service can be shut down.
@@ -153,8 +154,38 @@ public class OdkSyncService extends Service {
     WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG,
         "Sync Service onBind new client");
     possiblyWaitForSyncServiceDebugger();
-    this.intent=intent;
-    this.selectedFormsIds =intent.getStringArrayListExtra("ids");
+    this.intent = intent;
+
+    // Map stores keys (form ids) and values (ids of instances of a particular form that are going to be synced)
+    Map<String, List<String>> ids = new HashMap<>();
+
+    // read selected ids and form names from intent
+    Bundle extras = intent.getExtras();
+
+    // If there are some extras then the forms are going to be synced.
+    // If not then only the user permissions are going to be verified.
+    if (extras != null) {
+      WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "Extras: (toString: " + extras.toString() + ", extras.keySet.size: " + extras.keySet().size() + ")\n");
+
+      // Remove the default app name map object
+      Object value = extras.get(IntentConsts.INTENT_KEY_APP_NAME);
+      WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "Value: " + value.toString());
+      extras.keySet().remove(IntentConsts.INTENT_KEY_APP_NAME);
+
+      WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "Extras po usunieciu INTENT_KEY_APP_NAME: (toString: " + extras.toString() + ", extras.keySet.size: " + extras.keySet().size() + ")\n");
+
+      if (!extras.keySet().isEmpty()) {
+        WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "ELO LECIMY Z MAPA:");
+        for (String key : extras.keySet()) {
+          ids.put(key, (List<String>) extras.getSerializable(key));
+          WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "key: " + key + " value: " + extras.getSerializable(key));
+        }
+        WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "map.size: " + ids.size());
+      }
+
+    }
+
+    this.selectedFormsIds = ids;
     boolean wasShutdownActorNotYetStarted;
     synchronized (syncs) {
       wasShutdownActorNotYetStarted = shutdownActorNotYetStarted;
