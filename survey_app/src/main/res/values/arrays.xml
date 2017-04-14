@@ -8,16 +8,6 @@
 	the specific language governing permissions and limitations under the License. -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 	<!-- DO NOT translate protocol_entry_values - only used internally -->
-	<string-array tools:ignore="MissingTranslation"
-		name="protocol_entry_values">
-		<item>odk_default</item>
-		<item></item>
-	</string-array>
-	<string-array
-		name="protocol_entries">
-		<item>@string/server_platform_odk_aggregate</item>
-		<item>@string/server_platform_other</item>
-	</string-array>
 	<!-- DO NOT alter font_size_entry_values - used internally in preferences activity -->
 	<string-array tools:ignore="MissingTranslation"
 		name="font_size_entry_values">
