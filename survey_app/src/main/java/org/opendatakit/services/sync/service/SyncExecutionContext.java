@@ -21,10 +21,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.provider.Settings.Secure;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,8 +32,6 @@ import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidlibraryClasses.exception.ServicesAvailabilityException;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
-import org.opendatakit.services.preferences.fragments.ServerSettingsFragment;
-import org.opendatakit.services.utilities.SettingsUtils;
 import org.opendatakit.sync.service.SyncNotification;
 import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncOutcome;
 import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncOverallResult;
@@ -52,11 +48,7 @@ import org.opendatakit.services.sync.service.logic.Synchronizer;
 import org.opendatakit.services.sync.service.logic.Synchronizer.SynchronizerStatus;
 import org.sqlite.database.sqlite.SQLiteException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 public class SyncExecutionContext implements SynchronizerStatus {
@@ -90,7 +82,6 @@ public class SyncExecutionContext implements SynchronizerStatus {
   private final String deviceId;
 
   private final SyncNotification syncProgress;
-  private SettingsUtils settingsUtils;
 
   // set this later
   private Synchronizer synchronizer;
@@ -116,8 +107,7 @@ public class SyncExecutionContext implements SynchronizerStatus {
     this.googleAccount = props.getProperty(CommonToolProperties.KEY_ACCOUNT);
     this.username = props.getProperty(CommonToolProperties.KEY_USERNAME);
     this.password = props.getProperty(CommonToolProperties.KEY_PASSWORD);
-    this.settingsUtils = new SettingsUtils(context);
-    this.officeId = settingsUtils.getOfficeIdFromFile();
+    this.officeId = props.getProperty(CommonToolProperties.KEY_OFFICE_ID);
     this.deviceId = Secure.getString(context.getContentResolver(),
               Secure.ANDROID_ID);
 

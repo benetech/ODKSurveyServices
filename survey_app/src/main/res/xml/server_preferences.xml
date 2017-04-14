@@ -39,7 +39,7 @@
 			android:persistent="false" />
 		<EditTextPreference
 			android:id="@+id/officeID"
-			android:key="common.officeID"
+			android:key="common.office_id"
 			android:title="Office ID"
 			android:inputType="textNoSuggestions"
 			android:dialogTitle="Change Office ID"

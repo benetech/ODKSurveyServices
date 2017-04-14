@@ -34,7 +34,6 @@ import android.widget.*;
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
-import org.opendatakit.services.utilities.SettingsUtils;
 import org.opendatakit.demoAndroidlibraryClasses.sync.service.*;
 import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
@@ -78,7 +77,8 @@ public class SyncFragment extends Fragment implements ISyncOutcomeHandler {
 
   private SyncAttachmentState syncAttachmentState = SyncAttachmentState.DOWNLOAD;
   private SyncActions syncAction = SyncActions.IDLE;
-  private SettingsUtils settingsUtils;
+
+  private PropertiesSingleton props;
 
   @Override
   public void onSaveInstanceState(Bundle outState) {
@@ -94,6 +94,7 @@ public class SyncFragment extends Fragment implements ISyncOutcomeHandler {
 
     Intent incomingIntent = getActivity().getIntent();
     mAppName = incomingIntent.getStringExtra(IntentConsts.INTENT_KEY_APP_NAME);
+    props = CommonToolProperties.get(getActivity(), mAppName);
     if ( mAppName == null || mAppName.length() == 0 ) {
       getActivity().setResult(Activity.RESULT_CANCELED);
       getActivity().finish();
@@ -118,7 +119,6 @@ public class SyncFragment extends Fragment implements ISyncOutcomeHandler {
       }
     }
     disableButtons();
-    this.settingsUtils = new SettingsUtils(getActivity().getApplicationContext());
   }
 
   @Override
@@ -550,7 +550,7 @@ public class SyncFragment extends Fragment implements ISyncOutcomeHandler {
   public void onClickSyncNow(View v) {
     WebLogger.getLogger(getAppName()).d(TAG,
         "[" + getId() + "] [onClickSyncNow] timestamp: " + System.currentTimeMillis());
-    if(settingsUtils.getOfficeIdFromFile()==null || settingsUtils.getOfficeIdFromFile().equals("null")){
+    if(props.getProperty(CommonToolProperties.KEY_OFFICE_ID).isEmpty()){
       Toast.makeText(getActivity(), R.string.sync_no_regional_office_id_set, Toast.LENGTH_SHORT).show();
       WebLogger.getLogger(getAppName()).e(TAG, "No regional office id set, aborting upload");
     } else {

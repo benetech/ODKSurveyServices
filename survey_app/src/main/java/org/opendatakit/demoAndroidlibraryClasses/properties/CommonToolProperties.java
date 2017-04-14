@@ -37,6 +37,7 @@ public class CommonToolProperties {
     public static final String KEY_ROLES_LIST = "common.roles";
     public static final String KEY_USERS_LIST = "common.users";
     public static final String KEY_ADMIN_PW = "common.admin_pw";
+    public static final String KEY_OFFICE_ID = "common.office_id";
     private static CommonToolProperties.CommonPropertiesSingletonFactory factory = null;
 
     public CommonToolProperties() {
@@ -56,6 +57,7 @@ public class CommonToolProperties {
         deviceProperties.put("common.auth_credentials", "none");
         deviceProperties.put("common.account", "");
         deviceProperties.put("common.username", "");
+        deviceProperties.put("common.office_id", "");
         deviceProperties.put(PropertiesSingleton.toolVersionPropertyName("survey"), "");
         deviceProperties.put(PropertiesSingleton.toolVersionPropertyName("scan"), "");
         deviceProperties.put(PropertiesSingleton.toolVersionPropertyName("tables"), "");

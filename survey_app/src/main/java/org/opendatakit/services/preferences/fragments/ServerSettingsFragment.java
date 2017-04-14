@@ -19,9 +19,7 @@ import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.*;
@@ -30,7 +28,6 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.widget.Toast;
 
-import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FileUtils;
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
@@ -38,19 +35,11 @@ import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.services.preferences.PasswordPreferenceScreen;
 import org.opendatakit.survey.R;
-import org.opendatakit.services.utilities.SettingsUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 public class ServerSettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener {
 
@@ -61,7 +50,6 @@ public class ServerSettingsFragment extends PreferenceFragment implements OnPref
   private EditTextPreference mUsernamePreference;
   private ListPreference mSelectedGoogleAccountPreference;
   private EditTextPreference mOfficeId;
-  private SettingsUtils settingsUtils;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -285,15 +273,12 @@ public class ServerSettingsFragment extends PreferenceFragment implements OnPref
       serverCategory.setTitle(R.string.server_restrictions_apply);
     }
 
-      mOfficeId = (EditTextPreference) findPreference("common.officeID");
-    this.settingsUtils = new SettingsUtils(getActivity().getApplicationContext());
-      String officeId = settingsUtils.getOfficeIdFromFile();
-      if(officeId != null && !officeId.equals("null")) {
-          mOfficeId.setSummary(officeId);
-          mOfficeId.setText(officeId);
-      }
+    mOfficeId = (EditTextPreference) findPreference("common.office_id");
+    String officeId = props.getProperty(CommonToolProperties.KEY_OFFICE_ID);
+    mOfficeId.setSummary(officeId);
+    mOfficeId.setText(officeId);
 
-      mOfficeId.setOnPreferenceChangeListener(this);
+    mOfficeId.setOnPreferenceChangeListener(this);
   }
 
   @Override
@@ -356,10 +341,9 @@ public class ServerSettingsFragment extends PreferenceFragment implements OnPref
       builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-              settingsUtils.deleteAllForms();
-              settingsUtils.saveOfficeIdToFile(newValue.toString());
+              deleteAllForms();
               preference.setSummary((CharSequence) newValue);
-              mOfficeId.setText(newValue.toString());
+              //mOfficeId.setText(newValue.toString());
               dialog.dismiss();
           }
       });
@@ -373,6 +357,19 @@ public class ServerSettingsFragment extends PreferenceFragment implements OnPref
       builder.create().show();
   }
 
+  private void deleteAllForms()
+  {
+    File tables = new File(Environment.getExternalStorageDirectory() + "/opendatakit/default/config/tables");
+    File data = new File(Environment.getExternalStorageDirectory() + "/opendatakit/default/data");
+    try {
+      FileUtils.cleanDirectory(tables);
+      FileUtils.cleanDirectory(data);
+    } catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Generic listener that sets the summary to the newly selected/entered value
    */
@@ -384,11 +381,11 @@ public class ServerSettingsFragment extends PreferenceFragment implements OnPref
       props.setProperty(preference.getKey(), newValue.toString());
       props.setProperty(CommonToolProperties.KEY_ROLES_LIST, "");
       props.setProperty(CommonToolProperties.KEY_USERS_LIST, "");
-    } else if(preference.getKey().equals("common.officeID")) {
-      createOfficeIdConfirmChangeDialog(preference, newValue);
-      return false;
     } else {
       throw new IllegalStateException("Unexpected case");
+    }
+    if(preference.getKey().equals("common.office_id")) {
+      createOfficeIdConfirmChangeDialog(preference, newValue);
     }
     return true;
   }
