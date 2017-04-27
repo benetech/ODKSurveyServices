@@ -11,4 +11,7 @@
     <color name="solid_yellow">#ffffff00</color>
     <color name="white">#ffffffff</color>
     <color name="yellow">#77ffff00</color>
+    <color name="tool_bar_background">#0288D1</color>
+    <color name="navigation_bar_header_background">#5B9BD5</color>
+    <color name="navigation_bar_menu_background">#8497B0</color>
 </resources>

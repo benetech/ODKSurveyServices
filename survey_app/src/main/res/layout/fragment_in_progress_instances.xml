@@ -23,17 +23,18 @@ the License.
         android:id="@+id/status_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#DDDDDD"
-        android:paddingBottom="4dip"
-        android:paddingLeft="8dip"
-        android:paddingRight="8dip"
-        android:paddingTop="4dip"
-        android:textSize="14sp" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/surveys_in_progress"
+        android:textSize="20dp" />
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:divider="@null"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"/>
 
     <TextView
         android:id="@android:id/empty"

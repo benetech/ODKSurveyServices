@@ -188,7 +188,7 @@
 <string name="expansion_failed">Unable to expand APK expansion files</string>
 <string name="application">(Application)</string>
 <string name="invalid_app_name">Invalid application name: %1$s</string>
-<string name="select_form_to_edit">Select the form to open</string>
+<string name="submitted_forms">SUBMITTED</string>
 <string name="choose_table_to_upload">Choose table data to upload</string>
 <string name="choose_row_to_upload">Select the instances to upload</string>
 <string name="select_form_to_delete">Select the form definition to delete</string>
@@ -225,11 +225,14 @@
 <string name="do_not_exit">Cancel</string>
 <string name="save_and_close">Save and Close</string>
 <string name="reset_image">Reset</string>
-<string name="new_survey">New Survey</string>
-<string name="surveys_in_progress">In Progress Surveys</string>
-<string name="submitted_surveys">Submitted Surveys</string>
-<string name="settings">Settings</string>
+<string name="new_survey">NEW SURVEY</string>
+<string name="surveys_in_progress">IN PROGRESS</string>
+<string name="settings">SETTINGS</string>
 <string name="sync">Sync</string>
+<string name="poverty">poverty</string>
+<string name="stoplight">stoplight</string>
+<string name="navigation_drawer_open">Open navigation drawer</string>
+<string name="navigation_drawer_close">Close navigation drawer</string>
 
 <!-- unique strings from services apk -->
 
@@ -489,7 +492,7 @@
     user identity settings will be cleared and all tools will re-run their
     initialization logic.\n\nDo you wish to proceed?</string>
 <!-- legacy submission logic -->
-<string name="office_id">Office ID</string>
+<string name="office_id">Office ID:</string>
 <string name="change_office_id">Change Office ID</string>
 <!-- strings from merged libraries -->
 <string name="abort_error_accessing_database">Aborted: Error accessing database</string>

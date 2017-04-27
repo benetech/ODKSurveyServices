@@ -1,7 +1,11 @@
-<resources>
+<resources  xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- We shouldn't change those, but it is the only way to make it look as we want to -->
+    <dimen name="design_navigation_icon_size">40dp</dimen>
+    <dimen name="design_navigation_separator_vertical_padding">20dp</dimen>
+    <dimen name="design_navigation_icon_padding">15dp</dimen>
 
 </resources>

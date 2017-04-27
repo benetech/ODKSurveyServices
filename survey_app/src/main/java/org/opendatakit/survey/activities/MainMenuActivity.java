@@ -15,7 +15,6 @@
 package org.opendatakit.survey.activities;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -26,49 +25,61 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.view.Menu;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
-import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
-import org.opendatakit.demoAndroidCommonClasses.activities.BaseActivity;
 import org.opendatakit.demoAndroidCommonClasses.application.CommonApplication;
+import org.opendatakit.demoAndroidCommonClasses.listener.DatabaseConnectionListener;
+import org.opendatakit.demoAndroidCommonClasses.views.ExecutorContext;
+import org.opendatakit.demoAndroidCommonClasses.views.ExecutorProcessor;
+import org.opendatakit.demoAndroidCommonClasses.views.ODKWebView;
+import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.SerializationUtils;
+import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.SerializationUtils.MacroStringExpander;
+import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.UrlUtils;
+import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidlibraryClasses.database.data.OrderedColumns;
 import org.opendatakit.demoAndroidlibraryClasses.database.data.UserTable;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.TableHealthInfo;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.TableHealthStatus;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.UserDbInterface;
 import org.opendatakit.demoAndroidlibraryClasses.exception.ActionNotAuthorizedException;
 import org.opendatakit.demoAndroidlibraryClasses.exception.ServicesAvailabilityException;
 import org.opendatakit.demoAndroidlibraryClasses.fragment.AboutMenuFragment;
-import org.opendatakit.demoAndroidCommonClasses.listener.DatabaseConnectionListener;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.DynamicPropertiesCallback;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertyManager;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
-import org.opendatakit.survey.fragments.FrontPageFragment;
-import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.SerializationUtils;
-import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.SerializationUtils.MacroStringExpander;
+import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
-import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.UrlUtils;
-import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
-import org.opendatakit.demoAndroidlibraryClasses.logging.WebLoggerIf;
-import org.opendatakit.demoAndroidCommonClasses.views.ExecutorContext;
-import org.opendatakit.demoAndroidCommonClasses.views.ExecutorProcessor;
-import org.opendatakit.demoAndroidCommonClasses.views.ODKWebView;
-import org.opendatakit.demoAndroidlibraryClasses.database.service.UserDbInterface;
-import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
-import org.opendatakit.demoAndroidlibraryClasses.database.service.TableHealthInfo;
-import org.opendatakit.demoAndroidlibraryClasses.database.service.TableHealthStatus;
+import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.application.Survey;
 import org.opendatakit.survey.fragments.BackPressWebkitConfirmationDialogFragment;
-import org.opendatakit.survey.fragments.FormChooserListFragment;
+import org.opendatakit.survey.fragments.FrontPageFragment;
+import org.opendatakit.survey.fragments.InProgressInstancesFragment;
 import org.opendatakit.survey.fragments.InitializationFragment;
 import org.opendatakit.survey.fragments.WebViewFragment;
 import org.opendatakit.survey.logic.FormIdStruct;
@@ -88,7 +99,7 @@ import java.util.UUID;
  *
  * @author mitchellsundt@gmail.com
  */
-public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity, FrontPageFragment.OnFragmentInteractionListener{
+public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity, IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener {
 
   private static final String t = "MainMenuActivity";
 
@@ -124,11 +135,6 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   /** tables that have conflict rows */
   public static final String CONFLICT_TABLES = "conflictTables";
 
-  // menu options
-
-  private static final int MENU_CLOUD_FORMS = Menu.FIRST ;
-  private static final int MENU_ABOUT = Menu.FIRST + 1;
-
   // activity callback codes
   private static final int HANDLER_ACTIVITY_CODE = 20;
   private static final int INTERNAL_ACTIVITY_CODE = 21;
@@ -136,6 +142,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private static final int CONFLICT_ACTIVITY_CODE = 23;
 
   private static final String BACKPRESS_DIALOG_TAG = "backPressDialog";
+
+  private PropertiesSingleton mProps;
+  private NavigationView mNavigationViewTop;
+  private NavigationView mNavigationViewBottom;
+  private DrawerLayout mDrawerLayout;
+  private TextView inProgress;
+  private TextView submitted;
 
   private static final boolean EXIT = true;
 
@@ -246,6 +259,8 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
   // no need to preserve
   private AlertDialog mAlertDialog;
+
+  PropertiesSingleton props;
 
   @Override
   protected void onPause() {
@@ -363,10 +378,11 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   protected void onStart() {
     super.onStart();
+    updateCounters();
   }
 
   public void scanForConflictAllTables() {
-    
+
     UserDbInterface db = ((Survey) getApplication()).getDatabase();
     if ( db != null ) {
       List<TableHealthInfo> info;
@@ -386,7 +402,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
           WebLogger.getLogger(appName).printStackTrace(e);
         }
       }
-      
+
       if ( info != null ) {
 
         Bundle conflictTables = new Bundle();
@@ -398,7 +414,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
               conflictTables.putString(tableInfo.getTableId(), tableInfo.getTableId());
           }
         }
-        
+
         mConflictTables = conflictTables;
       }
     }
@@ -542,7 +558,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   public String getUrlBaseLocation(boolean ifChanged) {
     // Find the formPath for the framework formDef.json
-    File frameworkFormDef = new File( ODKFileUtils.getFormFolder(appName, 
+    File frameworkFormDef = new File( ODKFileUtils.getFormFolder(appName,
         FormsColumns.COMMON_BASE_FORM_ID, FormsColumns.COMMON_BASE_FORM_ID), "formDef.json");
 
     // formPath always begins ../ -- strip that off to get explicit path
@@ -601,9 +617,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   public String getUrlLocationHash() {
     if (currentForm == null) {
       // we want framework...
-      File frameworkFormDef = new File( ODKFileUtils.getFormFolder(appName, 
+      File frameworkFormDef = new File( ODKFileUtils.getFormFolder(appName,
           FormsColumns.COMMON_BASE_FORM_ID, FormsColumns.COMMON_BASE_FORM_ID), "formDef.json");
-      
+
       String hashUrl = "#formPath="
           + StringEscapeUtils.escapeHtml4(ODKFileUtils.getRelativeFormPath(appName, frameworkFormDef))
           + ((instanceId == null) ? "" : "&instanceId=" + StringEscapeUtils.escapeHtml4(instanceId))
@@ -658,6 +674,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       // must be at the beginning of any activity that can be called from an
       // external intent
       setAppName(ODKFileUtils.getOdkDefaultAppName());
+      props = ((IOdkAppPropertiesActivity)this).getProps();
       Uri uri = getIntent().getData();
       Uri formUri = null;
       if (uri != null) {
@@ -800,8 +817,46 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     } finally {
       setContentView(R.layout.main_screen);
 
-      ActionBar actionBar = getActionBar();
-      actionBar.show();
+      // Initializing Toolbar and setting it as the actionbar
+      Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+      toolbar.setTitle("");
+      setSupportActionBar(toolbar);
+
+      //Initializing NavigationView
+      mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+      android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(
+              this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+      mDrawerLayout.setDrawerListener(toggle);
+      toggle.syncState();
+
+      mNavigationViewTop = (NavigationView) findViewById(R.id.navigation_view_top);
+      mNavigationViewBottom = (NavigationView) findViewById(R.id.navigation_view_bottom);
+      mNavigationViewTop.setNavigationItemSelectedListener(this);
+      mNavigationViewBottom.setNavigationItemSelectedListener(this);
+      mNavigationViewTop.setItemIconTintList(null);
+      mNavigationViewBottom.setItemIconTintList(null);
+      mNavigationViewTop.setCheckedItem(R.id.in_progress_menuitem);
+      //Currently, the only way to disable overscroll efect, android bug
+      for (int i = 0; i < mNavigationViewTop.getChildCount(); i++) {
+        mNavigationViewTop.getChildAt(i).setOverScrollMode(View.OVER_SCROLL_NEVER);
+      }
+      for (int i = 0; i < mNavigationViewBottom.getChildCount(); i++) {
+        mNavigationViewBottom.getChildAt(i).setOverScrollMode(View.OVER_SCROLL_NEVER);
+      }
+
+      inProgress = (TextView) MenuItemCompat.getActionView(mNavigationViewTop.getMenu().findItem(R.id.in_progress_menuitem));
+      inProgress.setGravity(Gravity.CENTER_VERTICAL);
+      inProgress.setTypeface(null, Typeface.BOLD);
+      inProgress.setTextColor(getResources().getColor(R.color.white));
+      submitted = (TextView) MenuItemCompat.getActionView(mNavigationViewTop.getMenu().findItem(R.id.submitted_menuitem));
+      submitted.setGravity(Gravity.CENTER_VERTICAL);
+      submitted.setTypeface(null, Typeface.BOLD);
+      submitted.setTextColor(getResources().getColor(R.color.white));
+      updateCounters();
+
+      TextView office_id_name = (TextView) mNavigationViewTop.getHeaderView(0).findViewById(R.id.office_id_name);
+      String office_id = props.getProperty(CommonToolProperties.KEY_OFFICE_ID);
+      office_id_name.setText(office_id);
     }
   }
 
@@ -809,6 +864,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   public void onResume() {
     super.onResume();
 
+    updateCounters();
     ((Survey) getApplication()).establishDoNotFireDatabaseConnectionListener(this);
 
     swapToFragmentView(currentFragment);
@@ -821,54 +877,17 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    super.onCreateOptionsMenu(menu);
-    PropertiesSingleton props = CommonToolProperties.get(this, getAppName());
-
-    int showOption = MenuItem.SHOW_AS_ACTION_IF_ROOM;
-    MenuItem item;
-    if (currentFragment != ScreenList.WEBKIT) {
-      ActionBar actionBar = getActionBar();
-      actionBar.setCustomView(R.layout.action_bar);
-      actionBar.setDisplayShowCustomEnabled(true);
-      actionBar.show();
-
-      item = menu.add(Menu.NONE, MENU_CLOUD_FORMS, Menu.NONE, R.string.sync);
-      item.setIcon(R.drawable.ic_cached_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
-      item = menu.add(Menu.NONE, MENU_ABOUT, Menu.NONE, R.string.about);
-      item.setIcon(R.drawable.ic_info_outline_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-    } else {
-      ActionBar actionBar = getActionBar();
-      actionBar.hide();
-    }
-
-    return true;
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
 
-    if (item.getItemId() == MENU_CLOUD_FORMS) {
-      try {
-        Intent syncIntent = new Intent();
-        syncIntent.setComponent(new ComponentName(
-            IntentConsts.Sync.APPLICATION_NAME,
-            IntentConsts.Sync.ACTIVITY_NAME));
-        syncIntent.setAction(Intent.ACTION_DEFAULT);
-        Bundle bundle = new Bundle();
-        bundle.putString(IntentConsts.INTENT_KEY_APP_NAME, appName);
-        syncIntent.putExtras(bundle);
-        this.startActivityForResult(syncIntent, SYNC_ACTIVITY_CODE);
-      } catch (ActivityNotFoundException e) {
-        WebLogger.getLogger(getAppName()).printStackTrace(e);
-        Toast.makeText(this, R.string.sync_not_found, Toast.LENGTH_LONG).show();
-      }
-      return true;
-    } else if (item.getItemId() == MENU_ABOUT) {
-      swapToFragmentView(ScreenList.ABOUT_MENU);
-      return true;
+    switch (id) {
+      case android.R.id.home:
+        mDrawerLayout.openDrawer(GravityCompat.START);
+        return true;
+      case R.id.action_settings:
+        return true;
     }
+
     return super.onOptionsItemSelected(item);
   }
 
@@ -932,22 +951,26 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
   @Override
   public void onBackPressed() {
-    if ( (currentFragment == ScreenList.WEBKIT) &&
-        getInstanceId() != null && getCurrentForm() != null &&
-        getCurrentForm().tableId != null) {
-
-      // try to retrieve the active dialog
-      DialogFragment dialog = (DialogFragment)
-          getFragmentManager().findFragmentByTag(BACKPRESS_DIALOG_TAG);
-
-      if (dialog != null && dialog.getDialog() != null) {
-        // as-is
-      } else {
-        dialog = new BackPressWebkitConfirmationDialogFragment();
-      }
-      dialog.show(getFragmentManager(), BACKPRESS_DIALOG_TAG);
+    if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+      mDrawerLayout.closeDrawer(GravityCompat.START);
     } else {
-      popBackStack();
+      if ((currentFragment == ScreenList.WEBKIT) &&
+              getInstanceId() != null && getCurrentForm() != null &&
+              getCurrentForm().tableId != null) {
+
+        // try to retrieve the active dialog
+        DialogFragment dialog = (DialogFragment)
+                getFragmentManager().findFragmentByTag(BACKPRESS_DIALOG_TAG);
+
+        if (dialog != null && dialog.getDialog() != null) {
+          // as-is
+        } else {
+          dialog = new BackPressWebkitConfirmationDialogFragment();
+        }
+        dialog.show(getFragmentManager(), BACKPRESS_DIALOG_TAG);
+      } else {
+        popBackStack();
+      }
     }
   }
 
@@ -1061,12 +1084,12 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     } else if (newScreenType == ScreenList.FORM_CHOOSER) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
-        newFragment = new FormChooserListFragment();
+        newFragment = new FrontPageFragment();
       }
     } else if (newScreenType == ScreenList.FRONT_PAGE) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
-        newFragment = new FrontPageFragment();
+        newFragment = new InProgressInstancesFragment();
       }
     } else if (newScreenType == ScreenList.INITIALIZATION_DIALOG) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
@@ -1118,7 +1141,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       trans.addToBackStack(currentFragment.name());
     }
 
-    
+
     // and see if we should re-initialize...
     if ((currentFragment != ScreenList.INITIALIZATION_DIALOG)
         && ((Survey) getApplication()).shouldRunInitializationTask(getAppName())) {
@@ -1126,7 +1149,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       // and immediately clear the should-run flag...
       ((Survey) getApplication()).clearRunInitializationTask(getAppName());
       // OK we should swap to the InitializationFragment view
-      // this will skip the transition to whatever screen we were trying to 
+      // this will skip the transition to whatever screen we were trying to
       // go to and will instead show the InitializationFragment view. We
       // restore to the desired screen via the setFragmentToShowNext()
       //
@@ -1460,23 +1483,23 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
 
     try {
-      
+
       String uriKey = "uri";
       String extrasKey = "extras";
       String packageKey = "package";
       String typeKey = "type";
       String dataKey = "data";
-      
+
       JSONObject valueMap = null;
       if (valueContentMap != null) {
-        
+
         // do type first, as it says in the spec this call deletes any other
         // data (eg by setData()) on the intent.
         if (valueContentMap.has(typeKey)) {
           String type = valueContentMap.getString(typeKey);
           i.setType(type);
         }
-        
+
         if (valueContentMap.has(uriKey) || valueContentMap.has(dataKey)) {
           // as it currently stands, the data property can be in either the uri
           // or data keys.
@@ -1493,20 +1516,20 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
             i.setData(uri);
           }
         }
-        
+
         if (valueContentMap.has(extrasKey)) {
           valueMap = valueContentMap.getJSONObject(extrasKey);
         }
-        
+
         if (valueContentMap.has(packageKey)) {
           String packageStr = valueContentMap.getString(packageKey);
           i.setPackage(packageStr);
         }
-        
+
       }
 
       if (valueMap != null) {
-        Bundle b;    
+        Bundle b;
         PropertiesSingleton props = CommonToolProperties.get(MainMenuActivity.this, getAppName());
 
         final DynamicPropertiesCallback cb = new DynamicPropertiesCallback(getAppName(),
@@ -1565,12 +1588,12 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       return "Application not found";
     }
   }
-  
+
   @Override
   public void queueActionOutcome(String outcome) {
     queuedActions.addLast(outcome);
   }
-  
+
   @Override
   public void queueUrlChange(String hash) {
     try {
@@ -1580,10 +1603,10 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       e.printStackTrace();
     }
   }
-  
+
   @Override
   public String viewFirstQueuedAction() {
-    String outcome = 
+    String outcome =
         queuedActions.isEmpty() ? null : queuedActions.getFirst();
     return outcome;
   }
@@ -1680,10 +1703,10 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         result.put("dispatchString", dispatchStringWaitingForData);
         result.put("action",  actionWaitingForData);
         result.put("jsonValue", jsonValue);
-        
+
         String actionOutcome = result.toString();
         this.queueActionOutcome(actionOutcome);
-        
+
         WebLogger.getLogger(getAppName()).i(t, "HANDLER_ACTIVITY_CODE: " + jsonObject);
 
         view.signalQueuedActionAvailable();
@@ -1723,5 +1746,71 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
   public void setSubmenuPage(String value){
     this.submenuPage =value;
+  }
+
+  public String countFormsInstances(String arg){
+    int counter = 0;
+
+    Uri baseUri = Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, getAppName());
+    Cursor c = null;
+    try {
+      c = getContentResolver().query(baseUri, null, null, null, null);
+
+      if ( c.moveToFirst() ) {
+        int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
+        int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION);
+        do {
+          if(!c.getString(idxFormVersion).contains("sub")) {
+            Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, getAppName() + "/"
+                    + c.getString(idxTableId) );
+
+            String[] whereArgs = new String[] {
+                    arg
+            };
+
+            Cursor f = getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, null);
+            counter += f.getCount();
+
+            if(f!=null) {
+              f.close();
+            }
+          }
+        } while ( c.moveToNext());
+      }
+    } finally {
+      if ( c != null && !c.isClosed() ) {
+        c.close();
+      }
+    }
+
+    return Integer.toString(counter);
+  }
+
+  @Override
+  public PropertiesSingleton getProps() {
+
+    if ( mProps == null ) {
+      mProps = CommonToolProperties.get(this, getAppName());
+    }
+
+    return mProps;
+  }
+
+  private void updateCounters(){
+    //Gravity property aligns the text
+    inProgress.setText(countFormsInstances("new_row"));
+    submitted.setText(countFormsInstances("synced"));
+  }
+
+  @Override
+  public boolean onNavigationItemSelected(MenuItem item) {
+    // Handle navigation view item clicks here.
+    int id = item.getItemId();
+
+    //switch with handling clicks in future
+
+    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    drawer.closeDrawer(GravityCompat.START);
+    return true;
   }
 }
