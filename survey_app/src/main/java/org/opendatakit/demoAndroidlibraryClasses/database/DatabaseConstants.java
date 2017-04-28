@@ -10,6 +10,12 @@ public class DatabaseConstants {
     public static final String SYNC_ETAGS_TABLE_NAME = "_sync_etags";
     public static final String CHOICE_LIST_TABLE_NAME = "_choice_lists";
     public static final int PARCEL_SIZE = 946176;
+    public static final String FORM_UUID_COLUMN = "form_uuid";
+    public static final String FORM_TABLE_ID_COLUMN = "form_table_id";
+    public static final String SUBFORM_UUID_COLUMN = "subform_uuid";
+    public static final String SUBFORM_TABLE_ID_COLUMN = "subform_table_id";
+    public static final String FORM_SUBFORM_PAIRS_TABLE_ID = "_form_subform_pairs";
+    public static final String MAIN_FORM_TABLE_ID = "_main_form";
 
     public DatabaseConstants() {
     }

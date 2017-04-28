@@ -2,6 +2,8 @@ package org.opendatakit.demoAndroidCommonClasses.views;
 
 import android.os.Bundle;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import org.opendatakit.demoAndroidCommonClasses.activities.IOdkDataActivity;
@@ -142,6 +144,7 @@ public class OdkData {
     }
 
     public void deleteRow(String tableId, String stringifiedJSON, String rowId, String callbackJSON) {
+        //TODO should delete row from form-subform table
         this.logDebug("deleteRow: " + tableId + " _id: " + rowId);
         ExecutorRequest request = new ExecutorRequest(ExecutorRequestType.USER_TABLE_DELETE_ROW, tableId, stringifiedJSON, rowId, callbackJSON);
         this.queueRequest(request);

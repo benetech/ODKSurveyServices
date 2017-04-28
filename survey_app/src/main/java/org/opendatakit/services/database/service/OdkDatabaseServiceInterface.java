@@ -48,7 +48,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-class OdkDatabaseServiceInterface extends AidlDbInterface.Stub {
+public class OdkDatabaseServiceInterface extends AidlDbInterface.Stub {
 
   private static final String TAG = OdkDatabaseServiceInterface.class.getSimpleName();
 

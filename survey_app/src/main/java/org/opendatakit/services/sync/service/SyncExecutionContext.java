@@ -85,12 +85,11 @@ public class SyncExecutionContext implements SynchronizerStatus {
 
   // set this later
   private Synchronizer synchronizer;
-
+  private final ServiceConnectionWrapper odkDbServiceConnection;
   private DbHandle odkDbHandle = null;
 
   public SyncExecutionContext(Context context, String versionCode, String appName,
-      SyncNotification syncProgress,
-      SyncOverallResult syncResult) {
+      SyncNotification syncProgress, SyncOverallResult syncResult) {
     this.application = context;
     this.appName = appName;
     this.versionCode = versionCode;
@@ -98,6 +97,7 @@ public class SyncExecutionContext implements SynchronizerStatus {
     this.userAgent = "Sync " + versionCode + " (gzip)";
     this.syncProgress = syncProgress;
     this.synchronizer = null;
+    this.odkDbServiceConnection = new ServiceConnectionWrapper(context, appName);
     this.mUserResult = syncResult;
 
     PropertiesSingleton props = CommonToolProperties.get(context, appName);
@@ -108,10 +108,9 @@ public class SyncExecutionContext implements SynchronizerStatus {
     this.username = props.getProperty(CommonToolProperties.KEY_USERNAME);
     this.password = props.getProperty(CommonToolProperties.KEY_PASSWORD);
     this.officeId = props.getProperty(CommonToolProperties.KEY_OFFICE_ID);
-    this.deviceId = Secure.getString(context.getContentResolver(),
-              Secure.ANDROID_ID);
+    this.deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
 
-      this.nMajorSyncSteps = 1;
+    this.nMajorSyncSteps = 1;
     this.GRAINS_PER_MAJOR_SYNC_STEP = (OVERALL_PROGRESS_BAR_LENGTH / nMajorSyncSteps);
     this.iMajorSyncStep = 0;
   }
@@ -262,7 +261,7 @@ public class SyncExecutionContext implements SynchronizerStatus {
 
   public synchronized DbHandle getDatabase() throws ServicesAvailabilityException {
     if ( odkDbHandle == null ) {
-      odkDbHandle = getDatabaseService().openDatabase(appName);
+      odkDbHandle = odkDbServiceConnection.getDatabaseService().openDatabase(appName);
     }
     if ( odkDbHandle == null ) {
       throw new IllegalStateException("Unable to obtain database handle from Services Services!");
@@ -279,7 +278,7 @@ public class SyncExecutionContext implements SynchronizerStatus {
       --refCount;
       if ( refCount == 0 ) {
         try {
-          getDatabaseService().closeDatabase(appName, odkDbHandle);
+          odkDbServiceConnection.getDatabaseService().closeDatabase(appName, odkDbHandle);
           this.odkDbHandle = null;
         } catch ( Exception e ) {
           WebLogger.getLogger(appName).printStackTrace(e);
@@ -295,7 +294,7 @@ public class SyncExecutionContext implements SynchronizerStatus {
       db = getDatabase();
 
       List<KeyValueStoreEntry> displayNameList =
-          getDatabaseService().getTableMetadata(appName, db, tableId,
+          odkDbServiceConnection.getDatabaseService().getTableMetadata(appName, db, tableId,
               KeyValueStoreConstants.PARTITION_TABLE,
               KeyValueStoreConstants.ASPECT_DEFAULT,
               KeyValueStoreConstants.TABLE_DISPLAY_NAME, null).getEntries();
@@ -316,93 +315,8 @@ public class SyncExecutionContext implements SynchronizerStatus {
     }
   }
 
-  private class ServiceConnectionWrapper implements ServiceConnection {
-
-    @Override public void onServiceConnected(ComponentName name, IBinder service) {
-
-      if (!name.getClassName().equals(IntentConsts.Database.DATABASE_SERVICE_CLASS)) {
-        WebLogger.getLogger(getAppName()).e(TAG, "Unrecognized service");
-        return;
-      }
-      synchronized (odkDbInterfaceBindComplete) {
-        try {
-          odkDbInterface = (service == null) ? null : new UserDbInterface(AidlDbInterface
-              .Stub.asInterface(service));
-        } catch (IllegalArgumentException e) {
-          odkDbInterface = null;
-        }
-
-        active = false;
-        odkDbInterfaceBindComplete.notify();
-      }
-    }
-
-    @Override public void onServiceDisconnected(ComponentName name) {
-      synchronized (odkDbInterfaceBindComplete) {
-        odkDbInterface = null;
-        active = false;
-        odkDbInterfaceBindComplete.notify();
-      }
-    }
-  }
-
-  private final ServiceConnectionWrapper odkDbServiceConnection = new ServiceConnectionWrapper();
-  private final Object odkDbInterfaceBindComplete = new Object();
-  private UserDbInterface odkDbInterface;
-  private boolean active = false;
-
-
-  /**
-   * Work-around for jacoco ART issue https://code.google.com/p/android/issues/detail?id=80961
-   */
-  private UserDbInterface invokeBindService() throws InterruptedException {
-
-    Log.i(TAG, "Attempting or polling on bind to Database service");
-    Intent bind_intent = new Intent();
-    bind_intent.setClassName(IntentConsts.Database.DATABASE_SERVICE_PACKAGE,
-        IntentConsts.Database.DATABASE_SERVICE_CLASS);
-
-    synchronized (odkDbInterfaceBindComplete) {
-      if ( !active ) {
-        active = true;
-        application.bindService(bind_intent, odkDbServiceConnection,
-            Context.BIND_AUTO_CREATE | ((Build.VERSION.SDK_INT >= 14) ?
-                Context.BIND_ADJUST_WITH_ACTIVITY :
-                0));
-      }
-
-      odkDbInterfaceBindComplete.wait();
-
-      if (odkDbInterface != null) {
-        return odkDbInterface;
-      }
-    }
-    return null;
-  }
-
-  public UserDbInterface getDatabaseService() {
-
-    // block waiting for it to be bound...
-    for (;;) {
-      try {
-
-        synchronized (odkDbInterfaceBindComplete) {
-          if (odkDbInterface != null) {
-            return odkDbInterface;
-          }
-        }
-
-        // call method that waits on odkDbInterfaceBindComplete
-        // Work-around for jacoco ART issue https://code.google.com/p/android/issues/detail?id=80961
-        UserDbInterface userDbInterface = invokeBindService();
-        if ( userDbInterface != null ) {
-          return userDbInterface;
-        }
-
-      } catch (InterruptedException e) {
-        // expected if we are waiting. Ignore because we log bind attempt if spinning.
-      }
-    }
+  public ServiceConnectionWrapper getOdkDbServiceConnection() {
+    return odkDbServiceConnection;
   }
 
   public void resetMajorSyncSteps(int nMajorSyncSteps) {

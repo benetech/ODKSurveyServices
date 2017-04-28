@@ -1,6 +1,9 @@
 package org.opendatakit.demoAndroidCommonClasses.views;
 
 import android.webkit.JavascriptInterface;
+
+import com.noveogroup.android.log.Log;
+
 import java.lang.ref.WeakReference;
 
 public class OdkDataIf {

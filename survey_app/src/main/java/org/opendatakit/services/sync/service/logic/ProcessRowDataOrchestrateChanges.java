@@ -158,9 +158,9 @@ public class ProcessRowDataOrchestrateChanges {
         String displayName;
         try {
           db = sc.getDatabase();
-          te = sc.getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db,
+          te = sc.getOdkDbServiceConnection().getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db,
                   tableId);
-          orderedDefns = sc.getDatabaseService().getUserDefinedColumns(sc.getAppName(), db, tableId);
+          orderedDefns = sc.getOdkDbServiceConnection().getDatabaseService().getUserDefinedColumns(sc.getAppName(), db, tableId);
           displayName = sc.getTableDisplayName(tableId);
         } finally {
           sc.releaseDatabase(db);
@@ -317,7 +317,7 @@ public class ProcessRowDataOrchestrateChanges {
         DbHandle db = null;
         try {
           db = sc.getDatabase();
-          BaseTable bt = sc.getDatabaseService().arbitrarySqlQuery(sc.getAppName(), db, null,
+          BaseTable bt = sc.getOdkDbServiceConnection().getDatabaseService().arbitrarySqlQuery(sc.getAppName(), db, null,
               b.toString(), null, 1, 0);
           if ( bt.getNumberOfRows() != 0 ) {
             tableLevelResult.setMessage(sc.getString(R.string.sync_table_contains_checkpoints));
@@ -342,7 +342,7 @@ public class ProcessRowDataOrchestrateChanges {
         DbHandle db = null;
         try {
           db = sc.getDatabase();
-          BaseTable bt = sc.getDatabaseService().arbitrarySqlQuery(sc.getAppName(), db, null,
+          BaseTable bt = sc.getOdkDbServiceConnection().getDatabaseService().arbitrarySqlQuery(sc.getAppName(), db, null,
               b.toString(), bindArgs, 1, 0);
           if ( bt.getNumberOfRows() != 0 ) {
             tableLevelResult.setSyncOutcome(SyncOutcome.TABLE_CONTAINS_CONFLICTS);

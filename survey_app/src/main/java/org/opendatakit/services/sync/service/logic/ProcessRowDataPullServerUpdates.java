@@ -155,8 +155,8 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
             String local_id_table = "L__" + tableId;
 
             // create the table (drop it first -- to get an empty table)
-            sc.getDatabaseService().deleteLocalOnlyTable(sc.getAppName(), db, local_id_table);
-            sc.getDatabaseService()
+            sc.getOdkDbServiceConnection().getDatabaseService().deleteLocalOnlyTable(sc.getAppName(), db, local_id_table);
+            sc.getOdkDbServiceConnection().getDatabaseService()
                 .createLocalOnlyTableWithColumns(sc.getAppName(), db, local_id_table, columnList);
 
             // insert the row ids from the server
@@ -165,7 +165,7 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
               for (String id : changedServerRows.keySet()) {
                 cv.clear();
                 cv.put(ID_COLUMN, id);
-                sc.getDatabaseService().insertLocalOnlyRow(sc.getAppName(), db, local_id_table, cv);
+                sc.getOdkDbServiceConnection().getDatabaseService().insertLocalOnlyRow(sc.getAppName(), db, local_id_table, cv);
               }
             }
 
@@ -174,7 +174,7 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
             b.append(DataTableColumns.ID).append(" IN (SELECT ").append(ID_COLUMN)
                 .append(" FROM ").append(local_id_table).append(")");
 
-            localDataTable = sc.getDatabaseService()
+            localDataTable = sc.getOdkDbServiceConnection().getDatabaseService()
                 .privilegedSimpleQuery(sc.getAppName(), db, tableId, orderedColumns, b.toString(),
                     empty, empty, null, new String[] { DataTableColumns.ID }, new String[] { "ASC" },
                     null, null);
@@ -243,7 +243,7 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
           values.put(DataTableColumns.FILTER_VALUE, serverRow.getRowFilterScope().getValue());
           values.putNull(DataTableColumns.CONFLICT_TYPE);
 
-          sc.getDatabaseService().privilegedPerhapsPlaceRowIntoConflictWithId(sc.getAppName(), sc
+          sc.getOdkDbServiceConnection().getDatabaseService().privilegedPerhapsPlaceRowIntoConflictWithId(sc.getAppName(), sc
               .getDatabase(), tableId, orderedColumns, values, rowId);
 
           // remove this server row from the map of changes reported by the server.
@@ -296,7 +296,7 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
             values.put(DataTableColumns.FILTER_VALUE, serverRow.getRowFilterScope().getValue());
             values.putNull(DataTableColumns.CONFLICT_TYPE);
 
-            sc.getDatabaseService().privilegedInsertRowWithId(sc.getAppName(), db,
+            sc.getOdkDbServiceConnection().getDatabaseService().privilegedInsertRowWithId(sc.getAppName(), db,
                 tableId, orderedColumns, values, serverRow.getRowId(), false);
             tableLevelResult.incLocalInserts();
 
@@ -429,7 +429,7 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
           db = sc.getDatabase();
           // update the dataETag to the one returned by the first
           // of the fetch queries, above.
-          sc.getDatabaseService().privilegedUpdateTableETags(sc.getAppName(), db, tableId,
+          sc.getOdkDbServiceConnection().getDatabaseService().privilegedUpdateTableETags(sc.getAppName(), db, tableId,
               tableResource.getSchemaETag(), lastDataETag);
           // the above will throw a ServicesAvailabilityException if the change is not committed
           // and be sure to update our in-memory objects...

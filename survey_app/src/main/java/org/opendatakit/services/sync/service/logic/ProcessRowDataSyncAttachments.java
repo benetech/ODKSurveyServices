@@ -130,8 +130,8 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
         ColumnList columnList = new ColumnList(columns);
 
         // create the table (drop it first -- to get an empty table)
-        sc.getDatabaseService().deleteLocalOnlyTable(sc.getAppName(), db, local_id_table);
-        sc.getDatabaseService()
+        sc.getOdkDbServiceConnection().getDatabaseService().deleteLocalOnlyTable(sc.getAppName(), db, local_id_table);
+        sc.getOdkDbServiceConnection().getDatabaseService()
             .createLocalOnlyTableWithColumns(sc.getAppName(), db, local_id_table, columnList);
 
 
@@ -152,13 +152,13 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
         }
 
         // create the list of IDs
-        sc.getDatabaseService().privilegedExecute(sc.getAppName(), db, sqlCommand, bindArgs);
+        sc.getOdkDbServiceConnection().getDatabaseService().privilegedExecute(sc.getAppName(), db, sqlCommand, bindArgs);
 
         // now count the number
         StringBuilder b = new StringBuilder();
         b.append("SELECT COUNT(*) as rowCount FROM ").append(local_id_table);
 
-        BaseTable bt = sc.getDatabaseService().arbitrarySqlQuery(sc.getAppName(), db, null,
+        BaseTable bt = sc.getOdkDbServiceConnection().getDatabaseService().arbitrarySqlQuery(sc.getAppName(), db, null,
             b.toString(), null, null, null);
         if ( bt.getNumberOfRows() != 1 || bt.getColumnIndexOfElementKey("rowCount") != 0 ) {
           tableLevelResult
@@ -208,7 +208,7 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
               String[] empty = {};
               Object[] bindArgs = new Object[] {fetchLimit, fetchOffset};
 
-              localDataTable = sc.getDatabaseService()
+              localDataTable = sc.getOdkDbServiceConnection().getDatabaseService()
                   .privilegedSimpleQuery(sc.getAppName(), db, tableId, orderedColumns, whereClause,
                       bindArgs, empty, null, new String[] { DataTableColumns.ID },
                       new String[] { "ASC" }, fetchLimit, fetchOffset);
@@ -267,7 +267,7 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
                     DbHandle db = null;
                     try {
                       db = sc.getDatabase();
-                      sc.getDatabaseService()
+                      sc.getOdkDbServiceConnection().getDatabaseService()
                           .privilegedUpdateRowETagAndSyncState(sc.getAppName(), db, tableId,
                               localRow.getDataByKey(DataTableColumns.ID), localRow.getDataByKey(DataTableColumns.ROW_ETAG),
                               SyncState.synced.name());
