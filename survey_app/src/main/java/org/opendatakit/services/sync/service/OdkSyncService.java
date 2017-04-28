@@ -165,24 +165,17 @@ public class OdkSyncService extends Service {
     // If there are some extras then the forms are going to be synced.
     // If not then only the user permissions are going to be verified.
     if (extras != null) {
-      WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "Extras: (toString: " + extras.toString() + ", extras.keySet.size: " + extras.keySet().size() + ")\n");
-
       // Remove the default app name map object
       Object value = extras.get(IntentConsts.INTENT_KEY_APP_NAME);
       WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "Value: " + value.toString());
       extras.keySet().remove(IntentConsts.INTENT_KEY_APP_NAME);
 
-      WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "Extras po usunieciu INTENT_KEY_APP_NAME: (toString: " + extras.toString() + ", extras.keySet.size: " + extras.keySet().size() + ")\n");
-
       if (!extras.keySet().isEmpty()) {
-        WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "ELO LECIMY Z MAPA:");
         for (String key : extras.keySet()) {
           ids.put(key, (List<String>) extras.getSerializable(key));
           WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "key: " + key + " value: " + extras.getSerializable(key));
         }
-        WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "map.size: " + ids.size());
       }
-
     }
 
     this.selectedFormsIds = ids;

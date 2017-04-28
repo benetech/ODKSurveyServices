@@ -1394,6 +1394,7 @@ public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyAct
 
   @Override
   public void saveAllChangesCompleted(String instanceId, final boolean asComplete) {
+    WebLogger.getLogger(getAppName()).i(t, "MainMenuActivity:saveAllChangesCompleted");
     Intent result = new Intent();
     result.putExtra("instanceId", instanceId);
     result.putExtra("savepoint_type", "COMPLETE");

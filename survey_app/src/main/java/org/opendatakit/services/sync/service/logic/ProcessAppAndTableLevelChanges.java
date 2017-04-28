@@ -96,7 +96,7 @@ public class ProcessAppAndTableLevelChanges {
             // stored type is a string -- the choiceListId
             entry.type = ElementDataType.string.name();
             if ((entry.value != null) && (entry.value.trim().length() != 0)) {
-              String choiceListId = sc.getDatabaseService().setChoiceList(sc.getAppName(),
+              String choiceListId = sc.getOdkDbServiceConnection().getDatabaseService().setChoiceList(sc.getAppName(),
                   sc.getDatabase(), entry.value);
               entry.value = choiceListId;
             } else {
@@ -105,7 +105,7 @@ public class ProcessAppAndTableLevelChanges {
           }
         }
 
-        sc.getDatabaseService().createOrOpenTableWithColumnsAndProperties(sc.getAppName(),
+        sc.getOdkDbServiceConnection().getDatabaseService().createOrOpenTableWithColumnsAndProperties(sc.getAppName(),
             sc.getDatabase(), tableId, dtd.columnList, dtd.kvsEntries, true);
       } catch (Exception e) {
         this.reloadingException = e;
@@ -280,7 +280,7 @@ public class ProcessAppAndTableLevelChanges {
     DbHandle db = null;
     try {
       db = sc.getDatabase();
-      localTableIds = sc.getDatabaseService().getAllTableIds(sc.getAppName(), db);
+      localTableIds = sc.getOdkDbServiceConnection().getDatabaseService().getAllTableIds(sc.getAppName(), db);
     } catch (Exception e) {
       sc.setAppLevelSyncOutcome(sc.exceptionEquivalentOutcome(e));
       log.e(TAG,
@@ -408,8 +408,8 @@ public class ProcessAppAndTableLevelChanges {
           // no need to verify schema match -- just sync files...
           try {
             db = sc.getDatabase();
-            entry = sc.getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db, serverTableId);
-            orderedDefns = sc.getDatabaseService().getUserDefinedColumns(sc.getAppName(), db, serverTableId);
+            entry = sc.getOdkDbServiceConnection().getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db, serverTableId);
+            orderedDefns = sc.getOdkDbServiceConnection().getDatabaseService().getUserDefinedColumns(sc.getAppName(), db, serverTableId);
             if (table.getSchemaETag().equals(entry.getSchemaETag())) {
               isLocalMatch = true;
             }
@@ -441,7 +441,7 @@ public class ProcessAppAndTableLevelChanges {
               db = sc.getDatabase();
               orderedDefns = addTableFromDefinitionResource(db, definitionResource, doesNotExistLocally);
               // NOTE: get entry after addTableFromDefinitionResource() because that may update tableSchemaETag
-              entry = sc.getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db, serverTableId);
+              entry = sc.getOdkDbServiceConnection().getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db, serverTableId);
             } finally {
               if (db != null) {
                 try {
@@ -493,7 +493,7 @@ public class ProcessAppAndTableLevelChanges {
         try {
           db = sc.getDatabase();
           // this is an atomic action -- no need to gain transaction before invoking it
-          sc.getDatabaseService().deleteTableAndAllData(sc.getAppName(), db, localTableId);
+          sc.getOdkDbServiceConnection().getDatabaseService().deleteTableAndAllData(sc.getAppName(), db, localTableId);
           tableLevelDeleteSuccess = true;
         } catch (Exception e) {
           exception("synchronizeConfigurationAndContent - exception while deleting table definition",
@@ -608,7 +608,7 @@ public class ProcessAppAndTableLevelChanges {
         try {
           db = sc.getDatabase();
           // update schemaETag to that on server (dataETag is null already).
-          sc.getDatabaseService().privilegedUpdateTableETags(sc.getAppName(), db, tableId,
+          sc.getOdkDbServiceConnection().getDatabaseService().privilegedUpdateTableETags(sc.getAppName(), db, tableId,
               schemaETag, null);
         } finally {
           sc.releaseDatabase(db);
@@ -651,7 +651,7 @@ public class ProcessAppAndTableLevelChanges {
           // this also updates the data rows so they will sync
           orderedDefns = addTableFromDefinitionResource(db, definitionResource, false);
           // NOTE: get tde after addTableFromDefinitionResource() because that may update tableSchemaETag
-          tde = sc.getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db, tableId);
+          tde = sc.getOdkDbServiceConnection().getDatabaseService().getTableDefinitionEntry(sc.getAppName(), db, tableId);
 
           log.w(TAG,
               "database schema has changed. Structural modifications, if any, were successful.");
@@ -678,7 +678,7 @@ public class ProcessAppAndTableLevelChanges {
          * Since the md5Hash of the file identifies identical properties, ensure
          * that the list of KVS entries is in alphabetical order.
          */
-        List<KeyValueStoreEntry> kvsEntries = sc.getDatabaseService()
+        List<KeyValueStoreEntry> kvsEntries = sc.getOdkDbServiceConnection().getDatabaseService()
             .getTableMetadata(sc.getAppName(), db, tableId, null, null, null, null).getEntries();
 
         for (int i = 0; i < kvsEntries.size(); i++) {
@@ -691,7 +691,7 @@ public class ProcessAppAndTableLevelChanges {
             entry.type = ElementDataType.array.name();
             if ((entry.value != null) && (entry.value.trim().length() != 0)) {
               String choiceListJSON =
-                  sc.getDatabaseService().getChoiceList(sc.getAppName(), db, entry.value);
+                  sc.getOdkDbServiceConnection().getDatabaseService().getChoiceList(sc.getAppName(), db, entry.value);
               entry.value = choiceListJSON;
             } else {
               entry.value = null;
@@ -769,18 +769,18 @@ public class ProcessAppAndTableLevelChanges {
 
     if (doesNotExistLocally) {
       OrderedColumns orderedDefns;
-      orderedDefns = sc.getDatabaseService().createOrOpenTableWithColumns(sc.getAppName(), db,
+      orderedDefns = sc.getOdkDbServiceConnection().getDatabaseService().createOrOpenTableWithColumns(sc.getAppName(), db,
           definitionResource.getTableId(), new ColumnList(definitionResource.getColumns()));
 
        // and update the schema, removing the old URI string
-      sc.getDatabaseService().privilegedServerTableSchemaETagChanged(sc.getAppName(),
+      sc.getOdkDbServiceConnection().getDatabaseService().privilegedServerTableSchemaETagChanged(sc.getAppName(),
            db, definitionResource.getTableId(), definitionResource.getSchemaETag(),
            oldTableInstanceFilesUriString);
 
       return orderedDefns;
 
     } else {
-      OrderedColumns localColumnDefns = sc.getDatabaseService().getUserDefinedColumns(
+      OrderedColumns localColumnDefns = sc.getOdkDbServiceConnection().getDatabaseService().getUserDefinedColumns(
           sc.getAppName(), db, definitionResource.getTableId());
       List<Column> serverColumns = definitionResource.getColumns();
       List<Column> localColumns = localColumnDefns.getColumns();
@@ -796,7 +796,7 @@ public class ProcessAppAndTableLevelChanges {
         }
       }
 
-      TableDefinitionEntry te = sc.getDatabaseService().getTableDefinitionEntry(
+      TableDefinitionEntry te = sc.getOdkDbServiceConnection().getDatabaseService().getTableDefinitionEntry(
           sc.getAppName(), db,
           definitionResource.getTableId());
 

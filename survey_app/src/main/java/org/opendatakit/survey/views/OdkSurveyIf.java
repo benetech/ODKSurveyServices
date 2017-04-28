@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.noveogroup.android.log.Log;
 
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
@@ -191,8 +192,19 @@ public class OdkSurveyIf {
   }
 
   @android.webkit.JavascriptInterface
-  public void saveAllChangesCompleted(String refId, String instanceId, boolean asComplete) {
+  public void saveAllChangesCompleted(String refId, String formId, String instanceId, boolean asComplete) {
+    Log.i( "Saving OdkSurveyIf:saveAllChangesCompleted");
+    Log.i( "Saving - refId: " + refId + ", formId: " + formId + ", instanceId: " + instanceId);
     if (isInactive()) return;
+
+    // If we save a form and it is not the main form that we have opened then it is the subform
+    // which should be linked to the main form to which it belongs.
+    String mainFormUUID = weakSurvey.get().getMainFormUUID();
+    if (!instanceId.equals(mainFormUUID)) {
+      weakSurvey.get().createFormSubformLocalTable();
+      updateFormSubformTable(mainFormUUID, instanceId, formId);
+    }
+
     weakSurvey.get().saveAllChangesCompleted(refId, instanceId, asComplete);
   }
 
@@ -225,7 +237,24 @@ public class OdkSurveyIf {
       mContext.startActivity(syncIntent);
     }
   }
-  
+
+  @JavascriptInterface
+  public void setMainFormData(String UUID, String tableId) {
+    Log.i( "setMainFormData: " + UUID + " " + tableId);
+    weakSurvey.get().setMainFormData(UUID, tableId);
+
+  }
+
+  @JavascriptInterface
+  public void updateFormSubformTable(String formUUID, String subformUUID, String subformTableId) {
+    weakSurvey.get().updateFormSubformLocalTable(formUUID, subformUUID, subformTableId);
+  }
+
+  @JavascriptInterface
+  public void deleteOutdatedInstancesFromFormSubFormTable(String UUID) {
+    weakSurvey.get().deleteOutdatedInstancesFromFormSubFormTable(UUID);
+  }
+
   @JavascriptInterface
   public String getSubmenuPage() {
     return weakSurvey.get().getSubmenuPage();

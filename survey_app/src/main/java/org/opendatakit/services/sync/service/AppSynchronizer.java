@@ -17,11 +17,11 @@ package org.opendatakit.services.sync.service;
 
 import android.app.Service;
 
-import org.opendatakit.aggregate.odktables.rest.ElementDataType;
-import org.opendatakit.aggregate.odktables.rest.entity.Column;
 import org.opendatakit.aggregate.odktables.rest.entity.TableResource;
 import org.opendatakit.demoAndroidlibraryClasses.application.AppAwareApplication;
-import org.opendatakit.demoAndroidlibraryClasses.database.data.ColumnList;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.BaseTable;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.Row;
+import org.opendatakit.demoAndroidlibraryClasses.database.service.UserDbInterface;
 import org.opendatakit.demoAndroidlibraryClasses.exception.ServicesAvailabilityException;
 import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
@@ -41,19 +41,22 @@ import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncStatus;
 import org.opendatakit.demoAndroidlibraryClasses.sync.service.TableLevelResult;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants.FORM_SUBFORM_PAIRS_TABLE_ID;
+import static org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants.FORM_UUID_COLUMN;
+import static org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants.SUBFORM_TABLE_ID_COLUMN;
+import static org.opendatakit.demoAndroidlibraryClasses.database.DatabaseConstants.SUBFORM_UUID_COLUMN;
+
 public class AppSynchronizer {
 
   private static final String TAG = AppSynchronizer.class.getSimpleName();
-  static final String FORM_UUID_COLUMN = "form_uuid";
-  static final String SUBFORM_ID_COLUMN = "subform_id";
-  static final String SUBFORM_TABLE_ID_COLUMN = "subform_table_id";
-  static final String FORM_SUBFORM_PAIRS_TABLE_ID = "form_subform_pairs";
 
   private final Service service;
   private final String appName;
@@ -262,7 +265,7 @@ public class AppSynchronizer {
     }
 
     private void sync(SyncNotification syncProgress) {
-
+      SyncExecutionContext sharedContext = null;
       try {
         WebLogger.getLogger(appName).i(TAG, "APPNAME IN SERVICE: " + appName);
         WebLogger.getLogger(appName).i(TAG, "[SyncThread] begin SYNCING timestamp: " + System.currentTimeMillis());
@@ -282,7 +285,7 @@ public class AppSynchronizer {
         //
         // NOTE: server limits this string to 10 characters
 
-        SyncExecutionContext sharedContext = new SyncExecutionContext(application,
+        sharedContext = new SyncExecutionContext(application,
             application.getVersionCodeString(), appName, syncProgress, syncResult);
 
         Synchronizer synchronizer = new AggregateSynchronizer(sharedContext);
@@ -314,6 +317,8 @@ public class AppSynchronizer {
           // experienced a table-level sync failure in the preceeding step.
 
           try {
+            // Add subforms which are related to forms that are being synced so they can be synced as well
+            selectedFormsIds.putAll(getRelatedSubforms(sharedContext, selectedFormsIds));
             rowDataProcessor.synchronizeDataRowsAndAttachments(workingListOfTables, attachmentState, selectedFormsIds);
           } catch (ServicesAvailabilityException e) {
             WebLogger.getLogger(appName).printStackTrace(e);
@@ -326,16 +331,6 @@ public class AppSynchronizer {
               }
             }
           }
-        }
-        //if it doesn't exist yet, we need to create a table to store form - subform pairs
-        try {
-          List<Column> columns = Arrays.asList(new Column(FORM_UUID_COLUMN, FORM_UUID_COLUMN, ElementDataType.string.name(), "[]"),
-                  new Column(SUBFORM_ID_COLUMN, SUBFORM_ID_COLUMN, ElementDataType.string.name(), "[]"),
-                  new Column(SUBFORM_TABLE_ID_COLUMN, SUBFORM_TABLE_ID_COLUMN, ElementDataType.string.name(), "[]"));
-          ColumnList columnslist = new ColumnList(columns);
-          sharedContext.getDatabaseService().createLocalOnlyTableWithColumns(sharedContext.getAppName(), sharedContext.getDatabase(), FORM_SUBFORM_PAIRS_TABLE_ID, columnslist);
-        } catch (ServicesAvailabilityException e) {
-          e.printStackTrace();
         }
 
       } catch (InvalidAuthTokenException e) {
@@ -397,7 +392,78 @@ public class AppSynchronizer {
         status = finalStatus;
       }
 
+      if (status == SyncStatus.SYNC_COMPLETE) {
+        WebLogger.getLogger(appName).i(TAG, "Removing synced form-subform pairs from local database");
+        UserDbInterface userDbInterface = sharedContext.getOdkDbServiceConnection().getDatabaseService();
+
+        String whereClauseFormColumn = FORM_UUID_COLUMN + "=?";
+        String whereClauseSubformColumn = SUBFORM_UUID_COLUMN + "=?";
+
+        for(TableLevelResult result : syncResult.getTableLevelResults()) {
+          if (selectedFormsIds.containsKey(result.getTableId())) {
+            for (String UUID : selectedFormsIds.get(result.getTableId())) {
+              try {
+                userDbInterface.deleteLocalOnlyRow(
+                        sharedContext.getAppName(),
+                        sharedContext.getDatabase(),
+                        FORM_SUBFORM_PAIRS_TABLE_ID,
+                        whereClauseFormColumn,
+                        new String[] { UUID });
+                userDbInterface.deleteLocalOnlyRow(
+                        sharedContext.getAppName(),
+                        sharedContext.getDatabase(),
+                        FORM_SUBFORM_PAIRS_TABLE_ID,
+                        whereClauseSubformColumn,
+                        new String[] { UUID });
+              } catch (ServicesAvailabilityException e) {
+                e.printStackTrace();
+              }
+            }
+          }
+        }
+      }
+
       setFinalNotification(status, false, tablesWithProblems, attachmentsFailed);
+    }
+
+    private Map<String, List<String>> getRelatedSubforms(SyncExecutionContext sharedContext, Map<String, List<String>> selectedFormsIds) {
+      Map<String, List<String>> subforms = new HashMap<>();
+
+      // Get all form-subform pairs from the local database
+      UserDbInterface userDbInterface = sharedContext.getOdkDbServiceConnection().getDatabaseService();
+      BaseTable formSubformPairs = null;
+
+      try {
+        formSubformPairs = userDbInterface.simpleQueryLocalOnlyTables(
+                sharedContext.getAppName(),
+                sharedContext.getDatabase(),
+                FORM_SUBFORM_PAIRS_TABLE_ID,
+                null, null, null, null, null, null, null, null);
+      } catch (ServicesAvailabilityException e) {
+        e.printStackTrace();
+      }
+
+      // Add subforms form relations which containing one of the main form UUIDs
+      if (formSubformPairs != null) {
+        for (List<String> formUUIDs : selectedFormsIds.values()) {
+          for (Row row : formSubformPairs.getRows()) {
+            if (formUUIDs.contains(row.getDataByKey(FORM_UUID_COLUMN))) {
+              if (subforms.containsKey(row.getDataByKey(SUBFORM_TABLE_ID_COLUMN))) {
+                // Adding new UUID to a certain map element
+                List<String> values = new ArrayList<>(subforms.get(row.getDataByKey(SUBFORM_TABLE_ID_COLUMN)));
+                values.add(row.getDataByKey(SUBFORM_UUID_COLUMN));
+                subforms.put(row.getDataByKey(SUBFORM_TABLE_ID_COLUMN), values);
+              }
+              else {
+                // Adding completely new table id, so new key in map + first item
+                subforms.put(row.getDataByKey(SUBFORM_TABLE_ID_COLUMN), Arrays.asList(row.getDataByKey(SUBFORM_UUID_COLUMN)));
+              }
+            }
+          }
+        }
+      }
+
+      return subforms;
     }
 
   private void verifySettings(SyncNotification syncProgress) {

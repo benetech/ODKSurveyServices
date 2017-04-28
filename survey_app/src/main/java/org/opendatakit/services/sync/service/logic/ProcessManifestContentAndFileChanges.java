@@ -966,7 +966,7 @@ class ProcessManifestContentAndFileChanges {
     DbHandle db = null;
     try {
       db = sc.getDatabase();
-      sc.getDatabaseService().deleteAllSyncETagsExceptForServer(sc.getAppName(), db,
+      sc.getOdkDbServiceConnection().getDatabaseService().deleteAllSyncETagsExceptForServer(sc.getAppName(), db,
           sc.getAggregateUri());
     } finally {
       sc.releaseDatabase(db);
@@ -986,7 +986,7 @@ class ProcessManifestContentAndFileChanges {
     DbHandle db = null;
     try {
       db = sc.getDatabase();
-      return sc.getDatabaseService().getFileSyncETag(sc.getAppName(), db,
+      return sc.getOdkDbServiceConnection().getDatabaseService().getFileSyncETag(sc.getAppName(), db,
           fileDownloadUri.toString(), tableId,
           lastModified);
     } finally {
@@ -1009,7 +1009,7 @@ class ProcessManifestContentAndFileChanges {
     DbHandle db = null;
     try {
       db = sc.getDatabase();
-      sc.getDatabaseService().updateFileSyncETag(sc.getAppName(), db, fileDownloadUri.toString(), tableId,
+      sc.getOdkDbServiceConnection().getDatabaseService().updateFileSyncETag(sc.getAppName(), db, fileDownloadUri.toString(), tableId,
           lastModified, documentETag);
     } finally {
       sc.releaseDatabase(db);
@@ -1036,7 +1036,7 @@ class ProcessManifestContentAndFileChanges {
     DbHandle db = null;
     try {
       db = sc.getDatabase();
-      return sc.getDatabaseService().getManifestSyncETag(sc.getAppName(), db, fileManifestUri.toString(), tableId);
+      return sc.getOdkDbServiceConnection().getDatabaseService().getManifestSyncETag(sc.getAppName(), db, fileManifestUri.toString(), tableId);
     } finally {
       sc.releaseDatabase(db);
       db = null;
@@ -1065,7 +1065,7 @@ class ProcessManifestContentAndFileChanges {
     DbHandle db = null;
     try {
       db = sc.getDatabase();
-      sc.getDatabaseService().updateManifestSyncETag(sc.getAppName(), db, fileManifestUri.toString(), tableId,
+      sc.getOdkDbServiceConnection().getDatabaseService().updateManifestSyncETag(sc.getAppName(), db, fileManifestUri.toString(), tableId,
           documentETag);
     } finally {
       sc.releaseDatabase(db);
@@ -1106,7 +1106,7 @@ class ProcessManifestContentAndFileChanges {
     DbHandle db = null;
     try {
       db = sc.getDatabase();
-      String qualifiedETag = sc.getDatabaseService().getManifestSyncETag(sc.getAppName(), db,
+      String qualifiedETag = sc.getOdkDbServiceConnection().getDatabaseService().getManifestSyncETag(sc.getAppName(), db,
           fileManifestUri.toString(), tableId);
       String restrictivePrefix = attachmentState.name() + "." + uriFragmentHash + "|";
       if ( qualifiedETag != null && qualifiedETag.startsWith(restrictivePrefix) ) {
@@ -1161,7 +1161,7 @@ class ProcessManifestContentAndFileChanges {
       if ( documentETag != null ) {
         documentETag = restrictivePrefix + documentETag;
       }
-      sc.getDatabaseService().updateManifestSyncETag(sc.getAppName(), db,
+      sc.getOdkDbServiceConnection().getDatabaseService().updateManifestSyncETag(sc.getAppName(), db,
           fileManifestUri.toString(), tableId, documentETag);
     } finally {
       sc.releaseDatabase(db);
@@ -1191,7 +1191,7 @@ class ProcessManifestContentAndFileChanges {
       }
 
       db = sc.getDatabase();
-      sc.getDatabaseService().privilegedServerTableSchemaETagChanged(sc.getAppName(), db,
+      sc.getOdkDbServiceConnection().getDatabaseService().privilegedServerTableSchemaETagChanged(sc.getAppName(), db,
           tableId, newSchemaETag, tableInstanceFilesUriString);
     } finally {
       sc.releaseDatabase(db);
