@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidCommonClasses.activities.BaseActivity;
@@ -31,7 +33,9 @@ import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.UrlUtils;
 import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -40,12 +44,16 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * Code to display a splash screen
@@ -64,123 +72,19 @@ public class SplashScreenActivity extends BaseActivity {
   private AlertDialog mAlertDialog;
   private static final boolean EXIT = true;
 
+  private static final int PERMISSION_ALL = 1;
+  String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.GET_ACCOUNTS};
+
   @SuppressWarnings("deprecation")
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // verify that the external SD Card is available.
-    try {
-      ODKFileUtils.verifyExternalStorageAvailability();
-    } catch (RuntimeException e) {
-      createErrorDialog(e.getMessage(), EXIT);
-      return;
-    }
-
-    mImageMaxWidth = getWindowManager().getDefaultDisplay().getWidth();
-
-    // this splash screen should be a blank slate
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
-    setContentView(R.layout.splash_screen);
-
-    // external intent
-    appName = getIntent().getStringExtra(IntentConsts.INTENT_KEY_APP_NAME);
-    if ( appName == null ) {
-      appName = ODKFileUtils.getOdkDefaultAppName();
-    }
-
-    Uri uri = getIntent().getData();
-    if (uri != null) {
-      // initialize to the URI, then we will customize further based upon the
-      // savedInstanceState...
-      final Uri uriFormsProvider = FormsProviderAPI.CONTENT_URI;
-      final Uri uriWebView = UrlUtils.getWebViewContentUri(this);
-      if (uri.getScheme().equalsIgnoreCase(uriFormsProvider.getScheme()) &&
-          uri.getAuthority().equalsIgnoreCase(uriFormsProvider.getAuthority())) {
-        List<String> segments = uri.getPathSegments();
-        if (segments != null && segments.size() == 1) {
-          appName = segments.get(0);
-        } else if (segments != null && segments.size() >= 2) {
-          appName = segments.get(0);
-        } else {
-          String err = "Invalid " + uri.toString() + " uri. Expected two segments.";
-          Log.e(t, err);
-          Intent i = new Intent();
-          setResult(RESULT_CANCELED, i);
-          finish();
-          return;
-        }
-      } else if ( uri.getScheme().equals(uriWebView.getScheme()) &&
-          uri.getAuthority().equals(uriWebView.getAuthority()) &&
-          uri.getPort() == uriWebView.getPort()) {
-        List<String> segments = uri.getPathSegments();
-        if (segments != null && segments.size() == 1) {
-          appName = segments.get(0);
-        } else {
-          String err = "Invalid " + uri.toString() +
-              " uri. Expected one segment (the application name).";
-          Log.e(t, err);
-          Intent i = new Intent();
-          setResult(RESULT_CANCELED, i);
-          finish();
-          return;
-        }
-      } else {
-        String err = getString(R.string.unrecognized_uri,
-            uri.toString(),
-            uriWebView.toString(),
-            uriFormsProvider.toString());
-        Log.e(t, err);
-        Intent i = new Intent();
-        setResult(RESULT_CANCELED, i);
-        finish();
-        return;
-      }
-    }
-    WebLogger.getLogger(appName).i(t, "SplashScreenActivity appName: " + appName);
-
-    // get the package info object with version number
-    PackageInfo packageInfo = null;
-    try {
-      packageInfo = getPackageManager().getPackageInfo(getPackageName(),
-          PackageManager.GET_META_DATA);
-    } catch (NameNotFoundException e) {
-      e.printStackTrace();
-    }
-
-
-    PropertiesSingleton props = CommonToolProperties.get(getApplicationContext(), appName);
-
-    String toolFirstRunKey = PropertiesSingleton.toolFirstRunPropertyName
-        (((AppAwareApplication) getApplication()).getToolName());
-
-    String toolVersionKey = PropertiesSingleton.toolVersionPropertyName
-        (((AppAwareApplication) getApplication()).getToolName());
-
-
-
-    Boolean firstRun = props.getBooleanProperty(toolFirstRunKey);
-    Boolean showSplash = props.getBooleanProperty(CommonToolProperties.KEY_SHOW_SPLASH);
-
-    String splashPath = props.getProperty(CommonToolProperties.KEY_SPLASH_PATH);
-
-    // if you've increased version code, then update the version number and set firstRun to true
-    String sKeyLastVer = props.getProperty(toolVersionKey);
-    long keyLastVer = (sKeyLastVer == null || sKeyLastVer.length() == 0) ? -1L : Long.valueOf(sKeyLastVer);
-    if (keyLastVer < packageInfo.versionCode) {
-      props.setProperty(toolVersionKey, Integer.toString(packageInfo.versionCode));
-      props.writeProperties();
-
-      firstRun = true;
-    }
-
-    // do all the first run things
-    if (((firstRun == null) ? true : firstRun) || ((showSplash == null) ? false : showSplash)) {
-      props.setBooleanProperty(toolFirstRunKey, false);
-      props.writeProperties();
-      startSplashScreen(splashPath);
+    if(!hasPermissions(this, PERMISSIONS)){
+      WebLogger.getLogger(appName).i(t, "Asking for permissions: " + appName);
+      ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
     } else {
-      endSplashScreen();
+      initialize();
     }
   }
   
@@ -308,6 +212,150 @@ public class SplashScreenActivity extends BaseActivity {
 
   @Override
   public void databaseUnavailable() {
+  }
+
+  public static boolean hasPermissions(Context context, String... permissions) {
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+      for (String permission : permissions) {
+        if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  public void initialize(){
+    // verify that the external SD Card is available.
+    try {
+      ODKFileUtils.verifyExternalStorageAvailability();
+    } catch (RuntimeException e) {
+      createErrorDialog(e.getMessage(), EXIT);
+      return;
+    }
+
+    mImageMaxWidth = getWindowManager().getDefaultDisplay().getWidth();
+
+    // this splash screen should be a blank slate
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
+    setContentView(R.layout.splash_screen);
+
+    // external intent
+    appName = getIntent().getStringExtra(IntentConsts.INTENT_KEY_APP_NAME);
+    if ( appName == null ) {
+      appName = ODKFileUtils.getOdkDefaultAppName();
+    }
+
+    Uri uri = getIntent().getData();
+    if (uri != null) {
+      // initialize to the URI, then we will customize further based upon the
+      // savedInstanceState...
+      final Uri uriFormsProvider = FormsProviderAPI.CONTENT_URI;
+      final Uri uriWebView = UrlUtils.getWebViewContentUri(this);
+      if (uri.getScheme().equalsIgnoreCase(uriFormsProvider.getScheme()) &&
+              uri.getAuthority().equalsIgnoreCase(uriFormsProvider.getAuthority())) {
+        List<String> segments = uri.getPathSegments();
+        if (segments != null && segments.size() == 1) {
+          appName = segments.get(0);
+        } else if (segments != null && segments.size() >= 2) {
+          appName = segments.get(0);
+        } else {
+          String err = "Invalid " + uri.toString() + " uri. Expected two segments.";
+          Log.e(t, err);
+          Intent i = new Intent();
+          setResult(RESULT_CANCELED, i);
+          finish();
+          return;
+        }
+      } else if ( uri.getScheme().equals(uriWebView.getScheme()) &&
+              uri.getAuthority().equals(uriWebView.getAuthority()) &&
+              uri.getPort() == uriWebView.getPort()) {
+        List<String> segments = uri.getPathSegments();
+        if (segments != null && segments.size() == 1) {
+          appName = segments.get(0);
+        } else {
+          String err = "Invalid " + uri.toString() +
+                  " uri. Expected one segment (the application name).";
+          Log.e(t, err);
+          Intent i = new Intent();
+          setResult(RESULT_CANCELED, i);
+          finish();
+          return;
+        }
+      } else {
+        String err = getString(R.string.unrecognized_uri,
+                uri.toString(),
+                uriWebView.toString(),
+                uriFormsProvider.toString());
+        Log.e(t, err);
+        Intent i = new Intent();
+        setResult(RESULT_CANCELED, i);
+        finish();
+        return;
+      }
+    }
+    WebLogger.getLogger(appName).i(t, "SplashScreenActivity appName: " + appName);
+
+    // get the package info object with version number
+    PackageInfo packageInfo = null;
+    try {
+      packageInfo = getPackageManager().getPackageInfo(getPackageName(),
+              PackageManager.GET_META_DATA);
+    } catch (NameNotFoundException e) {
+      e.printStackTrace();
+    }
+
+
+    PropertiesSingleton props = CommonToolProperties.get(getApplicationContext(), appName);
+
+    String toolFirstRunKey = PropertiesSingleton.toolFirstRunPropertyName
+            (((AppAwareApplication) getApplication()).getToolName());
+
+    String toolVersionKey = PropertiesSingleton.toolVersionPropertyName
+            (((AppAwareApplication) getApplication()).getToolName());
+
+
+
+    Boolean firstRun = props.getBooleanProperty(toolFirstRunKey);
+    Boolean showSplash = props.getBooleanProperty(CommonToolProperties.KEY_SHOW_SPLASH);
+
+    String splashPath = props.getProperty(CommonToolProperties.KEY_SPLASH_PATH);
+
+    // if you've increased version code, then update the version number and set firstRun to true
+    String sKeyLastVer = props.getProperty(toolVersionKey);
+    long keyLastVer = (sKeyLastVer == null || sKeyLastVer.length() == 0) ? -1L : Long.valueOf(sKeyLastVer);
+    if (keyLastVer < packageInfo.versionCode) {
+      props.setProperty(toolVersionKey, Integer.toString(packageInfo.versionCode));
+      props.writeProperties();
+
+      firstRun = true;
+    }
+
+    // do all the first run things
+    if (((firstRun == null) ? true : firstRun) || ((showSplash == null) ? false : showSplash)) {
+      props.setBooleanProperty(toolFirstRunKey, false);
+      props.writeProperties();
+      startSplashScreen(splashPath);
+    } else {
+      endSplashScreen();
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    switch (requestCode) {
+      case PERMISSION_ALL: {
+        if (grantResults.length > 0) {
+          if (hasPermissions(this, PERMISSIONS)) {
+            initialize();
+          } else {
+            WebLogger.getLogger(appName).i(t, "Some permissions are not granted ask again " + appName);
+            Toast.makeText(this, R.string.permissions_not_granted, Toast.LENGTH_LONG).show();
+            finish();
+          }
+        }
+      }
+    }
   }
 
 }

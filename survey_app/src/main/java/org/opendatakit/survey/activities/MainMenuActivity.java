@@ -1756,7 +1756,7 @@ public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyAct
     try {
       c = getContentResolver().query(baseUri, null, null, null, null);
 
-      if ( c.moveToFirst() ) {
+      if (c!=null && c.moveToFirst() ) {
         int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
         int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION);
         do {
