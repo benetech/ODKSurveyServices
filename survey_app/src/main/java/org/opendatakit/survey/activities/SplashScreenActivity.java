@@ -237,7 +237,6 @@ public class SplashScreenActivity extends BaseActivity {
     mImageMaxWidth = getWindowManager().getDefaultDisplay().getWidth();
 
     // this splash screen should be a blank slate
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.splash_screen);
 
     // external intent
