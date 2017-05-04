@@ -347,9 +347,10 @@ public class SplashScreenActivity extends BaseActivity {
       case PERMISSION_ALL: {
         if (grantResults.length > 0) {
           if (hasPermissions(this, PERMISSIONS)) {
+            WebLogger.getLogger(appName).i(t, "Permissions are granted " + appName);
             initialize();
           } else {
-            WebLogger.getLogger(appName).i(t, "Some permissions are not granted ask again " + appName);
+            WebLogger.getLogger(appName).i(t, "Some permissions are not granted " + appName);
             Toast.makeText(this, R.string.permissions_not_granted, Toast.LENGTH_LONG).show();
             finish();
           }
