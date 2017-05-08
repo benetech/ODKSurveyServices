@@ -517,19 +517,19 @@ public class AggregateSynchronizer implements Synchronizer {
         }
       }
 
-      Row row = Row.forUpdate(rowToAlter.getDataByKey(DataTableColumns.ID),
-          rowToAlter.getDataByKey(DataTableColumns.ROW_ETAG),
-          rowToAlter.getDataByKey(DataTableColumns.FORM_ID),
-          rowToAlter.getDataByKey(DataTableColumns.LOCALE),
-          rowToAlter.getDataByKey(DataTableColumns.SAVEPOINT_TYPE),
-          rowToAlter.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP),
-          rowToAlter.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR),
-          RowFilterScope.asRowFilter(rowToAlter.getDataByKey(DataTableColumns.FILTER_TYPE),
-              rowToAlter.getDataByKey(DataTableColumns.FILTER_VALUE)),
+      Row row = Row.forUpdate(rowToAlter.getDataByKey(DataTableColumns.ID.getText()),
+          rowToAlter.getDataByKey(DataTableColumns.ROW_ETAG.getText()),
+          rowToAlter.getDataByKey(DataTableColumns.FORM_ID.getText()),
+          rowToAlter.getDataByKey(DataTableColumns.LOCALE.getText()),
+          rowToAlter.getDataByKey(DataTableColumns.SAVEPOINT_TYPE.getText()),
+          rowToAlter.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()),
+          rowToAlter.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR.getText()),
+          RowFilterScope.asRowFilter(rowToAlter.getDataByKey(DataTableColumns.FILTER_TYPE.getText()),
+              rowToAlter.getDataByKey(DataTableColumns.FILTER_VALUE.getText())),
           values);
 
       boolean isDeleted = SyncState.deleted.name().equals(
-          rowToAlter.getDataByKey(DataTableColumns.SYNC_STATE));
+          rowToAlter.getDataByKey(DataTableColumns.SYNC_STATE.getText()));
       row.setDeleted(isDeleted);
       rows.add(row);
     }

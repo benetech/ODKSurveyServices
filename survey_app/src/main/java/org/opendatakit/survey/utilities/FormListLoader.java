@@ -19,26 +19,50 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.opendatakit.aggregate.odktables.rest.TableConstants;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.KeyValueStoreEntry;
+import org.opendatakit.demoAndroidlibraryClasses.provider.ChoiceListColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.ColumnDefinitionsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
-import org.opendatakit.survey.R;
+import org.opendatakit.demoAndroidlibraryClasses.provider.KeyValueStoreColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.SurveyConfigurationColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.SyncETagColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.TableDefinitionsColumns;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.LocalizationUtils;
+import org.opendatakit.survey.R;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import static android.database.Cursor.FIELD_TYPE_BLOB;
+import static android.database.Cursor.FIELD_TYPE_FLOAT;
+import static android.database.Cursor.FIELD_TYPE_INTEGER;
+import static android.database.Cursor.FIELD_TYPE_NULL;
+import static android.database.Cursor.FIELD_TYPE_STRING;
 
 /**
  * @author mitchellsundt@gmail.com
  */
-public class FormListLoader extends AsyncTaskLoader<ArrayList<FormInfo>> {
+public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
 
   private final String appName;
   private String submenuPage;
+
+  private String[] whereArgs = new String[] {
+          "new_row"
+  };
 
 
   public FormListLoader(Context context, String appName, String submenuPage) {
@@ -47,25 +71,26 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<FormInfo>> {
     this.submenuPage = submenuPage;
   }
 
-  @Override public ArrayList<FormInfo> loadInBackground() {
+  @Override public ArrayList<Object> loadInBackground() {
     // This is called when a new Loader needs to be created. This
     // sample only has one Loader, so we don't care about the ID.
     // First, pick the base URI to use depending on whether we are
     // currently filtering.
     Uri baseUri = Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName);
 
-    ArrayList<FormInfo> forms = new ArrayList<FormInfo>();
-
+    ArrayList<Object> forms = new ArrayList<Object>();
+    SimpleDateFormat formatter = new SimpleDateFormat(getContext().getString(R.string
+            .last_updated_on_date_at_time), Locale.getDefault());
     Cursor c = null;
     try {
       c = getContext().getContentResolver().query(baseUri, null, null, null, null);
 
       if (c != null && c.moveToFirst() ) {
-        int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
-        int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID);
-        int idxFormTitle = c.getColumnIndex(FormsColumns.DISPLAY_NAME);
-        int idxLastUpdateDate = c.getColumnIndex(FormsColumns.DATE);
-        int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION);
+        int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
+        int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
+        int idxFormTitle = c.getColumnIndex(FormsColumns.DISPLAY_NAME.getText());/*
+        int idxLastUpdateDate = c.getColumnIndex(FormsColumns.DATE.getText());
+        int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION.getText());
 
         SimpleDateFormat formatter = new SimpleDateFormat(getContext().getString(R.string
             .last_updated_on_date_at_time), Locale.getDefault());
@@ -78,7 +103,7 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<FormInfo>> {
           String formTitle = c.getString(idxFormTitle);
           int instancesCounter = getFormInstancesCount(c.getString(idxTableId));
 
-          FormInfo info = new FormInfo(
+          InstanceInfo info = new InstanceInfo(
               c.getString(idxTableId),
               c.getString(idxFormId),
               formVersion,
@@ -88,54 +113,93 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<FormInfo>> {
           if(!c.getString(idxFormVersion).contains("sub"))
             forms.add(info);
         } while ( c.moveToNext());
-      }
-    } finally {
+      }*/
+        do {
+          Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
+                  + c.getString(idxTableId));
+
+          Cursor c2 = null;
+          try {
+            c2 = getContext().getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, DataTableColumns.SAVEPOINT_TIMESTAMP.getText() + " DESC"); //mozna dac     Cursor c = getContext().getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, null);
+            if (c2 != null && c2.moveToFirst()) {
+              forms.add(LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)));
+              do {
+                int idxForm = c2.getColumnIndex(InstanceColumns.DISPLAY_NAME.getText());
+                int[] arr = countEmptyAndFilledColumns(c2);
+                InstanceInfo info = new InstanceInfo(
+                        LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
+                        formatter.format(new Date(TableConstants.milliSecondsFromNanos(c2.getString(c2.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()))))),
+                        "Jan Kowalski",
+                        arr[0],
+                        arr[1]);
+                forms.add(info);
+              } while (c2.moveToNext());
+            }
+
+          } finally {
+            if (c2 != null && !c2.isClosed()) {
+              c2.close();
+            }
+          }
+        }
+        while (c.moveToNext());
+
+
+      }} finally {
       if ( c != null && !c.isClosed() ) {
         c.close();
       }
     }
 
-    // order this by the localized display name
-    Collections.sort(forms, new Comparator<FormInfo>() {
-      @Override public int compare(FormInfo lhs, FormInfo rhs) {
-        int cmp = lhs.formDisplayName.compareTo(rhs.formDisplayName);
-        if ( cmp != 0 ) {
-          return cmp;
-        }
-        cmp = lhs.tableId.compareTo(rhs.tableId);
-        if ( cmp != 0 ) {
-          return cmp;
-        }
-        cmp = lhs.formId.compareTo(rhs.formId);
-        if ( cmp != 0 ) {
-          return cmp;
-        }
-        cmp = lhs.formVersion.compareTo(rhs.formVersion);
-        if ( cmp != 0 ) {
-          return cmp;
-        }
-        cmp = lhs.formDisplaySubtext.compareTo(rhs.formDisplaySubtext);
-        return cmp;
-      }
-    });
-
     return forms;
   }
 
-  private int getFormInstancesCount(String formTitle) {
-    Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
-            + formTitle );
+  private int[] countEmptyAndFilledColumns(Cursor c) {
+    int res = 0;
+    int res2 =0;
+    boolean isDefColumn;
+    //dac to w gore gdzies
+    List<String> fields0 = DataTableColumns.getValues();
+    fields0.addAll(ChoiceListColumns.getValues());
+    fields0.addAll(ColumnDefinitionsColumns.getValues());
+    fields0.addAll(FormsColumns.getValues());
+    fields0.addAll(InstanceColumns.getValues());
+    fields0.addAll(TableDefinitionsColumns.getValues());
+    fields0.addAll(SyncETagColumns.getValues());
+    fields0.addAll(SurveyConfigurationColumns.getValues());
+    fields0.addAll(KeyValueStoreColumns.getValues());
 
-    String[] whereArgs = new String[] {
-            submenuPage
-    };
-    Cursor c = getContext().getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, null);
-    int counter = c.getCount();
-
-    if(c!=null) {
-      c.close();
+    for (int i = 0; i < c.getColumnCount(); i++) {
+      isDefColumn = false;
+      for (int j = 0; j < fields0.size(); j++) {
+        if (c.getColumnName(i).equals(fields0.get(j))) {
+          isDefColumn = true;
+          break;
+        }
+      }
+      if (!isDefColumn) {
+        switch (c.getType(i)) {
+          case FIELD_TYPE_NULL:
+            res++;
+            break;
+          case FIELD_TYPE_INTEGER:
+            res2++;
+            break;
+          case FIELD_TYPE_FLOAT:
+            res2++;
+            break;
+          case FIELD_TYPE_STRING:
+            if (!c.getColumnName(i).contains("_contentType"))
+              res2++;
+            break;
+          case FIELD_TYPE_BLOB:
+            res2++;
+            break;
+        }
+      }
     }
-    return counter;
+    int[] array = {res, res2};
+    return array;
   }
 
   @Override protected void onStartLoading() {

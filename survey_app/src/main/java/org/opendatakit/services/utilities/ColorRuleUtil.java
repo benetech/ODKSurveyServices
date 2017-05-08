@@ -90,35 +90,35 @@ public class ColorRuleUtil {
   }
 
   private static ColorRule getColorRuleForSyncStateSynced() {
-    return new ColorRule(ID_SYNCED_RULE, DataTableColumns.SYNC_STATE,
+    return new ColorRule(ID_SYNCED_RULE, DataTableColumns.SYNC_STATE.getText(),
         ColorRule.RuleType.EQUAL, SyncState.synced.name(),
         DEFAULT_SYNC_STATE_SYNCED_FOREGROUND,
         DEFAULT_SYNC_STATE_SYNCED_BACKGROUND);
   }
 
   private static ColorRule getColorRuleForSyncStateNewRow() {
-    return new ColorRule(ID_NEW_ROW_RULE, DataTableColumns.SYNC_STATE,
+    return new ColorRule(ID_NEW_ROW_RULE, DataTableColumns.SYNC_STATE.getText(),
         ColorRule.RuleType.EQUAL, SyncState.new_row.name(),
         DEFAULT_SYNC_STATE_NEW_ROW_FOREGROUND,
         DEFAULT_SYNC_STATE_NEW_ROW_BACKGROUND);
   }
 
   private static ColorRule getColorRuleForSyncStateChanged() {
-    return new ColorRule(ID_CHANGED_RULE, DataTableColumns.SYNC_STATE,
+    return new ColorRule(ID_CHANGED_RULE, DataTableColumns.SYNC_STATE.getText(),
         ColorRule.RuleType.EQUAL, SyncState.changed.name(),
         DEFAULT_SYNC_STATE_CHANGED_FOREGROUND,
         DEFAULT_SYNC_STATE_CHANGED_BACKGROUND);
   }
 
   private static ColorRule getColorRuleForSyncStateDeleted() {
-    return new ColorRule(ID_DELETED_RULE, DataTableColumns.SYNC_STATE,
+    return new ColorRule(ID_DELETED_RULE, DataTableColumns.SYNC_STATE.getText(),
         ColorRule.RuleType.EQUAL, SyncState.deleted.name(),
         DEFAULT_SYNC_STATE_DELETED_FOREGROUND,
         DEFAULT_SYNC_STATE_DELETED_BACKGROUND);
   }
 
   private static ColorRule getColorRuleForSyncStateInConflict() {
-    return new ColorRule(ID_IN_CONFLICT_RULE, DataTableColumns.SYNC_STATE,
+    return new ColorRule(ID_IN_CONFLICT_RULE, DataTableColumns.SYNC_STATE.getText(),
         ColorRule.RuleType.EQUAL, SyncState.in_conflict.name(),
         DEFAULT_SYNC_STATE_IN_CONFLICT_FOREGROUND,
         DEFAULT_SYNC_STATE_IN_CONFLICT_BACKGROUND);

@@ -105,7 +105,7 @@ class ProcessRowDataPushLocalChanges extends ProcessRowDataSharedBase {
       for (int i = 0; i < segmentAlter.size(); ++i) {
         RowOutcome serverRow = outcomes.get(i);
         Row localRow = segmentAlter.get(i);
-        String localRowId = localRow.getDataByKey(DataTableColumns.ID);
+        String localRowId = localRow.getDataByKey(DataTableColumns.ID.getText());
         if (!serverRow.getRowId().equals(localRowId)) {
           throw new ClientDetectedVersionMismatchedServerResponseException("Unexpected reordering of return");
         }
@@ -116,7 +116,7 @@ class ProcessRowDataPushLocalChanges extends ProcessRowDataSharedBase {
             // we should delete the LOCAL row because we have successfully deleted the server row.
             sc.getDatabaseService().privilegedDeleteRowWithId(
                 sc.getAppName(), db, resource.getTableId(), orderedColumns,
-                localRow.getDataByKey(DataTableColumns.ID));
+                localRow.getDataByKey(DataTableColumns.ID.getText()));
             tableLevelResult.incLocalDeletes();
             publishUpdateNotification(R.string.sync_deleting_local_row, resource.getTableId());
             tableLevelResult.incServerDeletes();
@@ -180,19 +180,19 @@ class ProcessRowDataPushLocalChanges extends ProcessRowDataSharedBase {
           }
 
           // insert in_conflict server row
-          values.put(DataTableColumns.ROW_ETAG, serverRow.getRowETag());
-          values.put(DataTableColumns.SYNC_STATE, (serverRow.isDeleted() ?
+          values.put(DataTableColumns.ROW_ETAG.getText(), serverRow.getRowETag());
+          values.put(DataTableColumns.SYNC_STATE.getText(), (serverRow.isDeleted() ?
               SyncState.deleted.name() : SyncState.changed.name()));
-          values.putNull(DataTableColumns.CONFLICT_TYPE);
-          values.put(DataTableColumns.FORM_ID, serverRow.getFormId());
-          values.put(DataTableColumns.LOCALE, serverRow.getLocale());
-          values.put(DataTableColumns.SAVEPOINT_TIMESTAMP, serverRow.getSavepointTimestamp());
-          values.put(DataTableColumns.SAVEPOINT_CREATOR, serverRow.getSavepointCreator());
-          values.put(DataTableColumns.SAVEPOINT_TYPE, serverRow.getSavepointType());
+          values.putNull(DataTableColumns.CONFLICT_TYPE.getText());
+          values.put(DataTableColumns.FORM_ID.getText(), serverRow.getFormId());
+          values.put(DataTableColumns.LOCALE.getText(), serverRow.getLocale());
+          values.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), serverRow.getSavepointTimestamp());
+          values.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), serverRow.getSavepointCreator());
+          values.put(DataTableColumns.SAVEPOINT_TYPE.getText(), serverRow.getSavepointType());
           RowFilterScope.Type type = serverRow.getRowFilterScope().getType();
-          values.put(DataTableColumns.FILTER_TYPE,
+          values.put(DataTableColumns.FILTER_TYPE.getText(),
               (type == null) ? RowFilterScope.Type.DEFAULT.name() : type.name());
-          values.put(DataTableColumns.FILTER_VALUE, serverRow.getRowFilterScope().getValue());
+          values.put(DataTableColumns.FILTER_VALUE.getText(), serverRow.getRowFilterScope().getValue());
 
           sc.getDatabaseService().privilegedPerhapsPlaceRowIntoConflictWithId(sc.getAppName(), db,
               resource.getTableId(),
@@ -308,13 +308,13 @@ class ProcessRowDataPushLocalChanges extends ProcessRowDataSharedBase {
           StringBuilder sqlCommandBuilder = new StringBuilder();
           sqlCommandBuilder.append("INSERT INTO ").append(local_id_table)
               .append(" (").append(ID_COLUMN).append(" ) SELECT DISTINCT ")
-              .append(DataTableColumns.ID).append(" FROM ").append(tableId)
-              .append(" WHERE ").append(DataTableColumns.SYNC_STATE)
+              .append(DataTableColumns.ID.getText()).append(" FROM ").append(tableId)
+              .append(" WHERE ").append(DataTableColumns.SYNC_STATE.getText())
               .append(" IN (?, ?, ?) AND ")
-              .append(DataTableColumns.ID).append(" NOT IN (SELECT DISTINCT ")
-              .append(DataTableColumns.ID).append(" FROM ").append(tableId).append(" WHERE ")
-              .append(DataTableColumns.SAVEPOINT_TYPE).append(" IS NULL)").append(" AND ")
-              .append(DataTableColumns.ID).append(" IN ").append("(")
+              .append(DataTableColumns.ID.getText()).append(" NOT IN (SELECT DISTINCT ")
+              .append(DataTableColumns.ID.getText()).append(" FROM ").append(tableId).append(" WHERE ")
+              .append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(" IS NULL)").append(" AND ")
+              .append(DataTableColumns.ID.getText()).append(" IN ").append("(")
               .append(idsBindHelperBuilder.toString()).append(")");
 
           sqlCommand = sqlCommandBuilder.toString();
@@ -349,7 +349,7 @@ class ProcessRowDataPushLocalChanges extends ProcessRowDataSharedBase {
       String whereClause;
       {
         StringBuilder whereClauseBuilder = new StringBuilder();
-        whereClauseBuilder.append(DataTableColumns.ID).append(" IN (SELECT ")
+        whereClauseBuilder.append(DataTableColumns.ID.getText()).append(" IN (SELECT ")
             .append(ID_COLUMN).append(" FROM ").append(local_id_table)
             .append(" LIMIT ? OFFSET ? )");
         whereClause = whereClauseBuilder.toString();
@@ -378,7 +378,7 @@ class ProcessRowDataPushLocalChanges extends ProcessRowDataSharedBase {
 
               localDataTable = sc.getDatabaseService()
                   .privilegedSimpleQuery(sc.getAppName(), db, tableId, orderedColumns, whereClause,
-                      bindArgs, empty, null, new String[] { DataTableColumns.ID },
+                      bindArgs, empty, null, new String[] { DataTableColumns.ID.getText() },
                       new String[] { "ASC" }, null, null);
             } finally {
               sc.releaseDatabase(db);

@@ -78,49 +78,6 @@ public class FormInfo {
   static final String FORMDEF_FORM_ID = "form_id";
 
   /**
-   * Return an array of string values. Useful for passing as selectionArgs to
-   * SQLite. Or for iterating over and populating a ContentValues array.
-   *
-   * @param projection
-   *          -- array of FormsColumns names to declare values of
-   * @return
-   */
-  public String[] asRowValues(String[] projection) {
-
-    if (projection == null) {
-      projection = FormsColumns.formsDataColumnNames;
-    }
-
-    String[] ret = new String[projection.length];
-    for (int i = 0; i < projection.length; ++i) {
-      String s = projection[i];
-
-      if (FormsColumns.DISPLAY_NAME.equals(s)) {
-        ret[i] = formTitle;
-      } else if (FormsColumns.TABLE_ID.equals(s)) {
-        ret[i] = tableId;
-      } else if (FormsColumns.FORM_ID.equals(s)) {
-        ret[i] = formId;
-      } else if (FormsColumns.FORM_VERSION.equals(s)) {
-        ret[i] = formVersion;
-      } else if (FormsColumns.JSON_MD5_HASH.equals(s)) {
-        ret[i] = "-placeholder-"; // removed by FormsProvider
-      } else if (FormsColumns.DATE.equals(s)) {
-        ret[i] = Long.toString(lastModificationDate);
-      } else if (FormsColumns.FILE_LENGTH.equals(s)) {
-        ret[i] = Long.toString(fileLength);
-      } else if (FormsColumns.SETTINGS.equals(s)) {
-        ret[i] = settings;
-      } else if (FormsColumns.DEFAULT_FORM_LOCALE.equals(s)) {
-        ret[i] = defaultLocale;
-      } else if (FormsColumns.INSTANCE_NAME.equals(s)) {
-        ret[i] = instanceName;
-      }
-    }
-    return ret;
-  }
-
-  /**
    * Given a Cursor pointing at a valid Forms database row, extract the values
    * from that cursor. If parseFormDef is true, read and parse the formDef.json
    * file.
@@ -134,15 +91,15 @@ public class FormInfo {
   public FormInfo(String appName, Cursor c, boolean parseFormDef) {
     this.appName = appName;
 
-    lastModificationDate = CursorUtils.getIndexAsType(c, Long.class, c.getColumnIndex(FormsColumns.DATE));
-    fileLength = CursorUtils.getIndexAsType(c, Long.class, c.getColumnIndex(FormsColumns.FILE_LENGTH));
-    tableId = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.TABLE_ID));
-    formId = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.FORM_ID));
-    settings = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.SETTINGS));
-    formVersion = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.FORM_VERSION));
-    formTitle = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.DISPLAY_NAME));
-    defaultLocale = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.DEFAULT_FORM_LOCALE));
-    instanceName = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.INSTANCE_NAME));
+    lastModificationDate = CursorUtils.getIndexAsType(c, Long.class, c.getColumnIndex(FormsColumns.DATE.getText()));
+    fileLength = CursorUtils.getIndexAsType(c, Long.class, c.getColumnIndex(FormsColumns.FILE_LENGTH.getText()));
+    tableId = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.TABLE_ID.getText()));
+    formId = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.FORM_ID.getText()));
+    settings = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.SETTINGS.getText()));
+    formVersion = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.FORM_VERSION.getText()));
+    formTitle = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.DISPLAY_NAME.getText()));
+    defaultLocale = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.DEFAULT_FORM_LOCALE.getText()));
+    instanceName = CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.INSTANCE_NAME.getText()));
 
     File formFolder = new File( ODKFileUtils.getFormFolder(appName, tableId, formId) );
     formDefFile = new File( formFolder, ODKFileUtils.FORMDEF_JSON_FILENAME);

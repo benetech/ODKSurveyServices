@@ -125,11 +125,11 @@ public class TablesProvider extends ContentProvider {
       whereIdArgs = whereArgs;
     } else {
       if (TextUtils.isEmpty(where)) {
-        whereId = TableDefinitionsColumns.TABLE_ID + "=?";
+        whereId = TableDefinitionsColumns.TABLE_ID.getText() + "=?";
         whereIdArgs = new String[1];
         whereIdArgs[0] = uriTableId;
       } else {
-        whereId = TableDefinitionsColumns.TABLE_ID + "=? AND (" + where
+        whereId = TableDefinitionsColumns.TABLE_ID.getText() + "=? AND (" + where
             + ")";
         whereIdArgs = new String[whereArgs.length + 1];
         whereIdArgs[0] = uriTableId;
@@ -187,9 +187,9 @@ public class TablesProvider extends ContentProvider {
     String uriTableId = ((segments.size() == 2) ? segments.get(1) : null);
 
     if (uriTableId == null) {
-      return TableDefinitionsColumns.CONTENT_TYPE;
+      return TableDefinitionsColumns.CONTENT_TYPE.getText();
     } else {
-      return TableDefinitionsColumns.CONTENT_ITEM_TYPE;
+      return TableDefinitionsColumns.CONTENT_ITEM_TYPE.getText();
     }
   }
 
@@ -224,11 +224,11 @@ public class TablesProvider extends ContentProvider {
       whereIdArgs = selectionArgs;
     } else {
       if (TextUtils.isEmpty(selection)) {
-        whereId = TableDefinitionsColumns.TABLE_ID + "=?";
+        whereId = TableDefinitionsColumns.TABLE_ID.getText() + "=?";
         whereIdArgs = new String[1];
         whereIdArgs[0] = uriTableId;
       } else {
-        whereId = TableDefinitionsColumns.TABLE_ID + "=? AND (" + selection
+        whereId = TableDefinitionsColumns.TABLE_ID.getText() + "=? AND (" + selection
             + ")";
         whereIdArgs = new String[selectionArgs.length + 1];
         whereIdArgs[0] = uriTableId;
@@ -249,10 +249,10 @@ public class TablesProvider extends ContentProvider {
       Cursor c = null;
       try {
         c = db.query(DatabaseConstants.TABLE_DEFS_TABLE_NAME,
-            new String[] { TableDefinitionsColumns.TABLE_ID }, whereId, whereIdArgs,
+            new String[] { TableDefinitionsColumns.TABLE_ID.getText() }, whereId, whereIdArgs,
             null, null, null, null);
         if ( c != null && c.moveToFirst() ) {
-          int idxTableId = c.getColumnIndex(TableDefinitionsColumns.TABLE_ID);
+          int idxTableId = c.getColumnIndex(TableDefinitionsColumns.TABLE_ID.getText());
           do {
             String tableId = c.getString(idxTableId);
             tableIds.add(tableId);

@@ -125,7 +125,7 @@
 <string name="change_view">Change View</string>
 <string name="show_sent_and_unsent_forms">Sent and Unsent Forms</string>
 <string name="show_unsent_forms">Unsent Forms Only</string>
-<string name="last_updated_on_date_at_time">\'Last Updated on\' EEE, MMM dd, yyyy \'at\'
+<string name="last_updated_on_date_at_time">\'Last saved on\' EEE, MMM dd, yyyy \'at\'
     HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
 <string name="added_on_date_at_time">\'Added on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
 <string name="sent_on_date_at_time">\'Sent on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
@@ -226,7 +226,7 @@
 <string name="save_and_close">Save and Close</string>
 <string name="reset_image">Reset</string>
 <string name="new_survey">NEW SURVEY</string>
-<string name="surveys_in_progress">IN PROGRESS</string>
+<string name="surveys_in_progress">In Progress Surveys</string>
 <string name="settings">SETTINGS</string>
 <string name="sync">Sync</string>
 <string name="poverty">poverty</string>

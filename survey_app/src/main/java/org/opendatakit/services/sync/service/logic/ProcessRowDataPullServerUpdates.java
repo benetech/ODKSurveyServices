@@ -171,12 +171,12 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
 
             // construct where clause filter
             StringBuilder b = new StringBuilder();
-            b.append(DataTableColumns.ID).append(" IN (SELECT ").append(ID_COLUMN)
+            b.append(DataTableColumns.ID.getText()).append(" IN (SELECT ").append(ID_COLUMN)
                 .append(" FROM ").append(local_id_table).append(")");
 
             localDataTable = sc.getDatabaseService()
                 .privilegedSimpleQuery(sc.getAppName(), db, tableId, orderedColumns, b.toString(),
-                    empty, empty, null, new String[] { DataTableColumns.ID }, new String[] { "ASC" },
+                    empty, empty, null, new String[] { DataTableColumns.ID.getText() }, new String[] { "ASC" },
                     null, null);
         }
 
@@ -195,7 +195,7 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
         // loop through the localRow table
         for (int i = 0; i < localDataTable.getNumberOfRows(); i++) {
           Row localRow = localDataTable.getRowAtIndex(i);
-          String stateStr = localRow.getDataByKey(DataTableColumns.SYNC_STATE);
+          String stateStr = localRow.getDataByKey(DataTableColumns.SYNC_STATE.getText());
           SyncState state = stateStr == null ? null : SyncState.valueOf(stateStr);
 
           String rowId = localDataTable.getRowId(i);
@@ -228,20 +228,20 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
           }
 
           // insert in_conflict server row
-          values.put(DataTableColumns.ID, serverRow.getRowId());
-          values.put(DataTableColumns.ROW_ETAG, serverRow.getRowETag());
-          values.put(DataTableColumns.SYNC_STATE, (serverRow.isDeleted() ?
+          values.put(DataTableColumns.ID.getText(), serverRow.getRowId());
+          values.put(DataTableColumns.ROW_ETAG.getText(), serverRow.getRowETag());
+          values.put(DataTableColumns.SYNC_STATE.getText(), (serverRow.isDeleted() ?
               SyncState.deleted.name() : SyncState.changed.name()));
-          values.put(DataTableColumns.FORM_ID, serverRow.getFormId());
-          values.put(DataTableColumns.LOCALE, serverRow.getLocale());
-          values.put(DataTableColumns.SAVEPOINT_TIMESTAMP, serverRow.getSavepointTimestamp());
-          values.put(DataTableColumns.SAVEPOINT_CREATOR, serverRow.getSavepointCreator());
-          values.put(DataTableColumns.SAVEPOINT_TYPE, serverRow.getSavepointType());
+          values.put(DataTableColumns.FORM_ID.getText(), serverRow.getFormId());
+          values.put(DataTableColumns.LOCALE.getText(), serverRow.getLocale());
+          values.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), serverRow.getSavepointTimestamp());
+          values.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), serverRow.getSavepointCreator());
+          values.put(DataTableColumns.SAVEPOINT_TYPE.getText(), serverRow.getSavepointType());
           RowFilterScope.Type type = serverRow.getRowFilterScope().getType();
-          values.put(DataTableColumns.FILTER_TYPE,
+          values.put(DataTableColumns.FILTER_TYPE.getText(),
               (type == null) ? RowFilterScope.Type.DEFAULT.name() : type.name());
-          values.put(DataTableColumns.FILTER_VALUE, serverRow.getRowFilterScope().getValue());
-          values.putNull(DataTableColumns.CONFLICT_TYPE);
+          values.put(DataTableColumns.FILTER_VALUE.getText(), serverRow.getRowFilterScope().getValue());
+          values.putNull(DataTableColumns.CONFLICT_TYPE.getText());
 
           sc.getDatabaseService().privilegedPerhapsPlaceRowIntoConflictWithId(sc.getAppName(), sc
               .getDatabase(), tableId, orderedColumns, values, rowId);
@@ -281,20 +281,20 @@ class ProcessRowDataPullServerUpdates extends ProcessRowDataSharedBase {
             }
 
             // set all the metadata fields
-            values.put(DataTableColumns.ID, serverRow.getRowId());
-            values.put(DataTableColumns.ROW_ETAG, serverRow.getRowETag());
-            values.put(DataTableColumns.SYNC_STATE, hasNonNullAttachments
+            values.put(DataTableColumns.ID.getText(), serverRow.getRowId());
+            values.put(DataTableColumns.ROW_ETAG.getText(), serverRow.getRowETag());
+            values.put(DataTableColumns.SYNC_STATE.getText(), hasNonNullAttachments
                 ? SyncState.synced_pending_files.name() : SyncState.synced.name());
-            values.put(DataTableColumns.FORM_ID, serverRow.getFormId());
-            values.put(DataTableColumns.LOCALE, serverRow.getLocale());
-            values.put(DataTableColumns.SAVEPOINT_TIMESTAMP, serverRow.getSavepointTimestamp());
-            values.put(DataTableColumns.SAVEPOINT_CREATOR, serverRow.getSavepointCreator());
-            values.put(DataTableColumns.SAVEPOINT_TYPE, serverRow.getSavepointType());
+            values.put(DataTableColumns.FORM_ID.getText(), serverRow.getFormId());
+            values.put(DataTableColumns.LOCALE.getText(), serverRow.getLocale());
+            values.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), serverRow.getSavepointTimestamp());
+            values.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), serverRow.getSavepointCreator());
+            values.put(DataTableColumns.SAVEPOINT_TYPE.getText(), serverRow.getSavepointType());
             RowFilterScope.Type type = serverRow.getRowFilterScope().getType();
-            values.put(DataTableColumns.FILTER_TYPE,
+            values.put(DataTableColumns.FILTER_TYPE.getText(),
                 (type == null) ? RowFilterScope.Type.DEFAULT.name() : type.name());
-            values.put(DataTableColumns.FILTER_VALUE, serverRow.getRowFilterScope().getValue());
-            values.putNull(DataTableColumns.CONFLICT_TYPE);
+            values.put(DataTableColumns.FILTER_VALUE.getText(), serverRow.getRowFilterScope().getValue());
+            values.putNull(DataTableColumns.CONFLICT_TYPE.getText());
 
             sc.getDatabaseService().privilegedInsertRowWithId(sc.getAppName(), db,
                 tableId, orderedColumns, values, serverRow.getRowId(), false);

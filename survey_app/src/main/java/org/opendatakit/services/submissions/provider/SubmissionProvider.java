@@ -287,9 +287,9 @@ public class SubmissionProvider extends ContentProvider {
         Cursor c = null;
         try {
           c = db.query(DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME, new String[] {
-              KeyValueStoreColumns.KEY, KeyValueStoreColumns.VALUE }, KeyValueStoreColumns.TABLE_ID
-              + "=? AND " + KeyValueStoreColumns.PARTITION + "=? AND "
-              + KeyValueStoreColumns.ASPECT + "=? AND " + KeyValueStoreColumns.KEY
+              KeyValueStoreColumns.KEY.getText(), KeyValueStoreColumns.VALUE.getText() }, KeyValueStoreColumns.TABLE_ID.getText()
+              + "=? AND " + KeyValueStoreColumns.PARTITION.getText() + "=? AND "
+              + KeyValueStoreColumns.ASPECT.getText() + "=? AND " + KeyValueStoreColumns.KEY.getText()
               + " IN (?,?,?,?,?)", new String[] { tableId, KeyValueStoreConstants.PARTITION_TABLE,
               KeyValueStoreConstants.ASPECT_DEFAULT, KeyValueStoreConstants.XML_INSTANCE_NAME,
               KeyValueStoreConstants.XML_ROOT_ELEMENT_NAME,
@@ -299,8 +299,8 @@ public class SubmissionProvider extends ContentProvider {
           c.moveToFirst();
 
           if (c.getCount() > 0) {
-            int idxKey = c.getColumnIndex(KeyValueStoreColumns.KEY);
-            int idxValue = c.getColumnIndex(KeyValueStoreColumns.VALUE);
+            int idxKey = c.getColumnIndex(KeyValueStoreColumns.KEY.getText());
+            int idxValue = c.getColumnIndex(KeyValueStoreColumns.VALUE.getText());
             do {
               String key = c.getString(idxKey);
               String value = c.getString(idxValue);
@@ -333,13 +333,13 @@ public class SubmissionProvider extends ContentProvider {
         // for the instanceId
         StringBuilder b = new StringBuilder();
         b.append("SELECT * FROM ").append(tableId).append(" as T WHERE ")
-            .append(DataTableColumns.ID).append("=?").append(" AND ")
-            .append(DataTableColumns.SAVEPOINT_TYPE).append(" IS NOT NULL AND ")
-            .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append("=(SELECT max(V.")
-                .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(") FROM ").append(tableId)
-                   .append(" as V WHERE V.").append(DataTableColumns.ID).append("=T.")
-                   .append(DataTableColumns.ID).append(" AND V.")
-                   .append(DataTableColumns.SAVEPOINT_TYPE).append(" IS NOT NULL").append(")");
+            .append(DataTableColumns.ID.getText()).append("=?").append(" AND ")
+            .append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(" IS NOT NULL AND ")
+            .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append("=(SELECT max(V.")
+                .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(") FROM ").append(tableId)
+                   .append(" as V WHERE V.").append(DataTableColumns.ID.getText()).append("=T.")
+                   .append(DataTableColumns.ID.getText()).append(" AND V.")
+                   .append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(" IS NOT NULL").append(")");
 
         String[] selectionArgs = new String[] { instanceId };
         FileSet freturn = new FileSet(appName);
@@ -422,23 +422,23 @@ public class SubmissionProvider extends ContentProvider {
                       + defn.getElementType());
                 }
 
-              } else if (columnName.equals(DataTableColumns.SAVEPOINT_TIMESTAMP)) {
+              } else if (columnName.equals(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())) {
                 savepointTimestamp = CursorUtils.getIndexAsString(c, i);
-              } else if (columnName.equals(DataTableColumns.ROW_ETAG)) {
+              } else if (columnName.equals(DataTableColumns.ROW_ETAG.getText())) {
                 rowETag = CursorUtils.getIndexAsString(c, i);
-              } else if (columnName.equals(DataTableColumns.FILTER_TYPE)) {
+              } else if (columnName.equals(DataTableColumns.FILTER_TYPE.getText())) {
                 filterType = CursorUtils.getIndexAsString(c, i);
-              } else if (columnName.equals(DataTableColumns.FILTER_VALUE)) {
+              } else if (columnName.equals(DataTableColumns.FILTER_VALUE.getText())) {
                 filterValue = CursorUtils.getIndexAsString(c, i);
-              } else if (columnName.equals(DataTableColumns.FORM_ID)) {
+              } else if (columnName.equals(DataTableColumns.FORM_ID.getText())) {
                 formId = CursorUtils.getIndexAsString(c, i);
-              } else if (columnName.equals(DataTableColumns.LOCALE)) {
+              } else if (columnName.equals(DataTableColumns.LOCALE.getText())) {
                 locale = CursorUtils.getIndexAsString(c, i);
-              } else if (columnName.equals(DataTableColumns.FORM_ID)) {
+              } else if (columnName.equals(DataTableColumns.FORM_ID.getText())) {
                 formId = CursorUtils.getIndexAsString(c, i);
-              } else if (columnName.equals(DataTableColumns.SAVEPOINT_TYPE)) {
+              } else if (columnName.equals(DataTableColumns.SAVEPOINT_TYPE.getText())) {
                 savepointType = CursorUtils.getIndexAsString(c, i);
-              } else if (columnName.equals(DataTableColumns.SAVEPOINT_CREATOR)) {
+              } else if (columnName.equals(DataTableColumns.SAVEPOINT_CREATOR.getText())) {
                 savepointCreator = CursorUtils.getIndexAsString(c, i);
               }
             }

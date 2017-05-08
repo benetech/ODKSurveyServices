@@ -142,12 +142,12 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
           StringBuilder sqlCommandBuilder = new StringBuilder();
           sqlCommandBuilder.append("INSERT INTO ").append(local_id_table)
               .append(" (").append(ID_COLUMN).append(" ) SELECT DISTINCT ")
-              .append(DataTableColumns.ID).append(" FROM ").append(tableId)
+              .append(DataTableColumns.ID.getText()).append(" FROM ").append(tableId)
               .append(" WHERE ")
-              .append(DataTableColumns.SYNC_STATE).append(" IN (?, ?) AND ")
-              .append(DataTableColumns.ID).append(" NOT IN (SELECT DISTINCT ")
-              .append(DataTableColumns.ID).append(" FROM ").append(tableId).append(" WHERE ")
-              .append(DataTableColumns.SAVEPOINT_TYPE).append(" IS NULL)");
+              .append(DataTableColumns.SYNC_STATE.getText()).append(" IN (?, ?) AND ")
+              .append(DataTableColumns.ID.getText()).append(" NOT IN (SELECT DISTINCT ")
+              .append(DataTableColumns.ID.getText()).append(" FROM ").append(tableId).append(" WHERE ")
+              .append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(" IS NULL)");
           sqlCommand = sqlCommandBuilder.toString();
         }
 
@@ -187,7 +187,7 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
       String whereClause;
       {
         StringBuilder whereClauseBuilder = new StringBuilder();
-        whereClauseBuilder.append(DataTableColumns.ID).append(" IN (SELECT ")
+        whereClauseBuilder.append(DataTableColumns.ID.getText()).append(" IN (SELECT ")
             .append(ID_COLUMN).append(" FROM ").append(local_id_table)
             .append(" LIMIT ? OFFSET ? )");
         whereClause = whereClauseBuilder.toString();
@@ -210,7 +210,7 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
 
               localDataTable = sc.getDatabaseService()
                   .privilegedSimpleQuery(sc.getAppName(), db, tableId, orderedColumns, whereClause,
-                      bindArgs, empty, null, new String[] { DataTableColumns.ID },
+                      bindArgs, empty, null, new String[] { DataTableColumns.ID.getText() },
                       new String[] { "ASC" }, fetchLimit, fetchOffset);
             } finally {
               sc.releaseDatabase(db);
@@ -227,10 +227,10 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
           // loop through the localRow table
           for (int i = 0; i < localDataTable.getNumberOfRows(); i++) {
             Row localRow = localDataTable.getRowAtIndex(i);
-            String stateStr = localRow.getDataByKey(DataTableColumns.SYNC_STATE);
+            String stateStr = localRow.getDataByKey(DataTableColumns.SYNC_STATE.getText());
             SyncState state = (stateStr == null) ? null : SyncState.valueOf(stateStr);
 
-            getLogger().i(TAG, "syncAttachments examining row " + localRow.getDataByKey(DataTableColumns.ID));
+            getLogger().i(TAG, "syncAttachments examining row " + localRow.getDataByKey(DataTableColumns.ID.getText()));
 
             boolean syncAttachments = false;
             // the local row wasn't impacted by a server change
@@ -269,7 +269,7 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
                       db = sc.getDatabase();
                       sc.getDatabaseService()
                           .privilegedUpdateRowETagAndSyncState(sc.getAppName(), db, tableId,
-                              localRow.getDataByKey(DataTableColumns.ID), localRow.getDataByKey(DataTableColumns.ROW_ETAG),
+                              localRow.getDataByKey(DataTableColumns.ID.getText()), localRow.getDataByKey(DataTableColumns.ROW_ETAG.getText()),
                               SyncState.synced.name());
                     } finally {
                       sc.releaseDatabase(db);
@@ -284,7 +284,7 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
               }
               tableLevelResult.incLocalAttachmentRetries();
 
-              getLogger().i(TAG, "syncAttachments completed processing for " + localRow.getDataByKey(DataTableColumns.ID));
+              getLogger().i(TAG, "syncAttachments completed processing for " + localRow.getDataByKey(DataTableColumns.ID.getText()));
 
               int idString;
               switch (attachmentState) {

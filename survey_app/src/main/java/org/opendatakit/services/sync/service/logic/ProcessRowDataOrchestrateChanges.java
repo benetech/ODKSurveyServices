@@ -218,7 +218,7 @@ public class ProcessRowDataOrchestrateChanges {
       return;
     }
 
-    if (tableId.equals(FormsColumns.COMMON_BASE_FORM_ID)) {
+    if (tableId.equals(FormsColumns.COMMON_BASE_FORM_ID.getText())) {
       // do not sync the framework table
       tableLevelResult.setSyncOutcome(SyncOutcome.SUCCESS);
       sc.updateNotification(SyncProgressState.ROWS,
@@ -307,8 +307,8 @@ public class ProcessRowDataOrchestrateChanges {
       // fail the sync on this table if there are checkpoint rows.
       {
         StringBuilder b = new StringBuilder();
-        b.append("SELECT ").append(DataTableColumns.ID).append(" FROM ").append(tableId)
-            .append(" WHERE ").append(DataTableColumns.SAVEPOINT_TYPE).append(" IS NULL");
+        b.append("SELECT ").append(DataTableColumns.ID.getText()).append(" FROM ").append(tableId)
+            .append(" WHERE ").append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(" IS NULL");
         DbHandle db = null;
         try {
           db = sc.getDatabase();
@@ -331,8 +331,8 @@ public class ProcessRowDataOrchestrateChanges {
       // fail the sync on this table if there are conflict rows.
       {
         StringBuilder b = new StringBuilder();
-        b.append("SELECT ").append(DataTableColumns.ID).append(" FROM ").append(tableId)
-            .append(" WHERE ").append(DataTableColumns.SYNC_STATE).append(" = ?");
+        b.append("SELECT ").append(DataTableColumns.ID.getText()).append(" FROM ").append(tableId)
+            .append(" WHERE ").append(DataTableColumns.SYNC_STATE.getText()).append(" = ?");
         Object[] bindArgs = new Object[]{ SyncState.in_conflict.name() };
         DbHandle db = null;
         try {

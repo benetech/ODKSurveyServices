@@ -70,9 +70,9 @@ public class InstanceProvider extends ContentProvider {
     }
   }
 
-  private static final String DATA_TABLE_ID_COLUMN = DataTableColumns.ID;
-  private static final String DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN = DataTableColumns.SAVEPOINT_TIMESTAMP;
-  private static final String DATA_TABLE_SAVEPOINT_TYPE_COLUMN = DataTableColumns.SAVEPOINT_TYPE;
+  private static final String DATA_TABLE_ID_COLUMN = DataTableColumns.ID.getText();
+  private static final String DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN = DataTableColumns.SAVEPOINT_TIMESTAMP.getText();
+  private static final String DATA_TABLE_SAVEPOINT_TYPE_COLUMN = DataTableColumns.SAVEPOINT_TYPE.getText();
 
   private static final HashMap<String, String> sInstancesProjectionMap;
 
@@ -220,15 +220,15 @@ public class InstanceProvider extends ContentProvider {
 
       try {
         c = db.query(DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME,
-            new String[] { KeyValueStoreColumns.VALUE }, KeyValueStoreColumns.TABLE_ID + "=? AND "
-                + KeyValueStoreColumns.PARTITION + "=? AND " + KeyValueStoreColumns.ASPECT
-                + "=? AND " + KeyValueStoreColumns.KEY + "=?", new String[] { tableId,
+            new String[] { KeyValueStoreColumns.VALUE.getText() }, KeyValueStoreColumns.TABLE_ID.getText() + "=? AND "
+                + KeyValueStoreColumns.PARTITION.getText() + "=? AND " + KeyValueStoreColumns.ASPECT.getText()
+                + "=? AND " + KeyValueStoreColumns.KEY.getText() + "=?", new String[] { tableId,
                 KeyValueStoreConstants.PARTITION_TABLE, KeyValueStoreConstants.ASPECT_DEFAULT,
                 KeyValueStoreConstants.XML_INSTANCE_NAME }, null, null, null, null);
         if ( c != null ) {
           c.moveToFirst();
           if (c.getCount() == 1) {
-            int idxInstanceName = c.getColumnIndex(KeyValueStoreColumns.VALUE);
+            int idxInstanceName = c.getColumnIndex(KeyValueStoreColumns.VALUE.getText());
             instanceName = c.getString(idxInstanceName);
           }
         }
@@ -243,15 +243,15 @@ public class InstanceProvider extends ContentProvider {
       b.setLength(0);
       //@formatter:off
       b.append("INSERT INTO ").append(DatabaseConstants.UPLOADS_TABLE_NAME).append("(")
-          .append(InstanceColumns.DATA_INSTANCE_ID).append(",")
+          .append(InstanceColumns.DATA_INSTANCE_ID.getText()).append(",")
           .append(InstanceColumns.DATA_TABLE_TABLE_ID).append(",").append("SELECT ")
-          .append(InstanceColumns.DATA_INSTANCE_ID).append(",")
+          .append(InstanceColumns.DATA_INSTANCE_ID.getText()).append(",")
           .append(InstanceColumns.DATA_TABLE_TABLE_ID).append(",").append(" FROM (")
             .append("SELECT DISTINCT ").append(DATA_TABLE_ID_COLUMN).append(" as ")
-            .append(InstanceColumns.DATA_INSTANCE_ID).append(",").append("? as ")
+            .append(InstanceColumns.DATA_INSTANCE_ID.getText()).append(",").append("? as ")
             .append(InstanceColumns.DATA_TABLE_TABLE_ID).append(" FROM ")
             .append(tableId).append(" EXCEPT SELECT DISTINCT ")
-            .append(InstanceColumns.DATA_INSTANCE_ID).append(",")
+            .append(InstanceColumns.DATA_INSTANCE_ID.getText()).append(",")
             .append(InstanceColumns.DATA_TABLE_TABLE_ID).append(" FROM ")
             .append(DatabaseConstants.UPLOADS_TABLE_NAME).append(")");
       //@formatter:on
@@ -261,21 +261,21 @@ public class InstanceProvider extends ContentProvider {
 
       //@formatter:off
       b.append("WITH idname AS (SELECT t.")
-              .append(DATA_TABLE_ID_COLUMN).append(" as ").append(InstanceColumns.DATA_INSTANCE_ID).append(", t.");
+              .append(DATA_TABLE_ID_COLUMN).append(" as ").append(InstanceColumns.DATA_INSTANCE_ID.getText()).append(", t.");
       if ( instanceName == null ) {
-        b.append(DataTableColumns.SAVEPOINT_TIMESTAMP);
+        b.append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
       } else {
         b.append(instanceName);
       }
       b.append(" as ").append(InstanceColumns.DATA_INSTANCE_NAME).append(" FROM ")
-              .append(tableId).append(" t WHERE t.").append(DataTableColumns.SAVEPOINT_TIMESTAMP).append("=")
-              .append("(select max(v.").append(DataTableColumns.SAVEPOINT_TIMESTAMP)
+              .append(tableId).append(" t WHERE t.").append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append("=")
+              .append("(select max(v.").append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())
                   .append(") from ").append(tableId).append(" as v where v._id=t._id)")
               .append(") UPDATE ").append(DatabaseConstants.UPLOADS_TABLE_NAME).append(" SET ")
                 .append(InstanceColumns.DATA_INSTANCE_NAME).append("=idname.").append(InstanceColumns.DATA_INSTANCE_NAME)
               .append(" WHERE ")
           .append(InstanceColumns.DATA_TABLE_TABLE_ID).append("=? AND ")
-          .append(InstanceColumns.DATA_INSTANCE_ID).append("=idname.").append(InstanceColumns.DATA_INSTANCE_ID);
+          .append(InstanceColumns.DATA_INSTANCE_ID.getText()).append("=idname.").append(InstanceColumns.DATA_INSTANCE_ID.getText());
       //@formatter:on
       db.execSQL(b.toString(), args);
       db.setTransactionSuccessful();
@@ -335,32 +335,32 @@ public class InstanceProvider extends ContentProvider {
        .append(".").append(InstanceColumns._ID)
          .append(" as ").append(InstanceColumns._ID).append(",")
      .append(DatabaseConstants.UPLOADS_TABLE_NAME)
-       .append(".").append(InstanceColumns.DATA_INSTANCE_ID)
-         .append(" as ").append(InstanceColumns.DATA_INSTANCE_ID).append(",")
+       .append(".").append(InstanceColumns.DATA_INSTANCE_ID.getText())
+         .append(" as ").append(InstanceColumns.DATA_INSTANCE_ID.getText()).append(",")
      .append(DatabaseConstants.UPLOADS_TABLE_NAME)
-       .append(".").append(InstanceColumns.SUBMISSION_INSTANCE_ID)
-         .append(" as ").append(InstanceColumns.SUBMISSION_INSTANCE_ID).append(",");
+       .append(".").append(InstanceColumns.SUBMISSION_INSTANCE_ID.getText())
+         .append(" as ").append(InstanceColumns.SUBMISSION_INSTANCE_ID.getText()).append(",");
     // add the dataTable metadata except for _ID (which conflicts with InstanceColumns._ID)
-    b.append(tableId).append(".").append(DataTableColumns.ROW_ETAG)
-         .append(" as ").append(DataTableColumns.ROW_ETAG).append(",")
-     .append(tableId).append(".").append(DataTableColumns.SYNC_STATE)
-         .append(" as ").append(DataTableColumns.SYNC_STATE).append(",")
-     .append(tableId).append(".").append(DataTableColumns.CONFLICT_TYPE)
-         .append(" as ").append(DataTableColumns.CONFLICT_TYPE).append(",")
-     .append(tableId).append(".").append(DataTableColumns.FILTER_TYPE)
-         .append(" as ").append(DataTableColumns.FILTER_TYPE).append(",")
-     .append(tableId).append(".").append(DataTableColumns.FILTER_VALUE)
-         .append(" as ").append(DataTableColumns.FILTER_VALUE).append(",")
-     .append(tableId).append(".").append(DataTableColumns.FORM_ID)
-         .append(" as ").append(DataTableColumns.FORM_ID).append(",")
-     .append(tableId).append(".").append(DataTableColumns.LOCALE)
-         .append(" as ").append(DataTableColumns.LOCALE).append(",")
-     .append(tableId).append(".").append(DataTableColumns.SAVEPOINT_TYPE)
-         .append(" as ").append(DataTableColumns.SAVEPOINT_TYPE).append(",")
-     .append(tableId).append(".").append(DataTableColumns.SAVEPOINT_TIMESTAMP)
-         .append(" as ").append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(",")
-     .append(tableId).append(".").append(DataTableColumns.SAVEPOINT_CREATOR)
-         .append(" as ").append(DataTableColumns.SAVEPOINT_CREATOR).append(",");
+    b.append(tableId).append(".").append(DataTableColumns.ROW_ETAG.getText())
+         .append(" as ").append(DataTableColumns.ROW_ETAG.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.SYNC_STATE.getText())
+         .append(" as ").append(DataTableColumns.SYNC_STATE.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.CONFLICT_TYPE.getText())
+         .append(" as ").append(DataTableColumns.CONFLICT_TYPE.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.FILTER_TYPE.getText())
+         .append(" as ").append(DataTableColumns.FILTER_TYPE.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.FILTER_VALUE.getText())
+         .append(" as ").append(DataTableColumns.FILTER_VALUE.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.FORM_ID.getText())
+         .append(" as ").append(DataTableColumns.FORM_ID.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.LOCALE.getText())
+         .append(" as ").append(DataTableColumns.LOCALE.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.SAVEPOINT_TYPE.getText())
+         .append(" as ").append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())
+         .append(" as ").append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(",")
+     .append(tableId).append(".").append(DataTableColumns.SAVEPOINT_CREATOR.getText())
+         .append(" as ").append(DataTableColumns.SAVEPOINT_CREATOR.getText()).append(",");
     // add the user-specified data fields in this dataTable
     for ( ColumnDefinition cd : orderedDefns.getColumnDefinitions() ) {
       if ( cd.isUnitOfRetention() ) {
@@ -369,25 +369,25 @@ public class InstanceProvider extends ContentProvider {
       }
     }
     b.append("CASE WHEN ").append(DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN).append(" IS NULL THEN null")
-        .append(" WHEN ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP)
+        .append(" WHEN ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText())
         .append(" IS NULL THEN null").append(" WHEN ").append(DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN)
-        .append(" > ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP).append(" THEN null")
-        .append(" ELSE ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP).append(" END as ")
-            .append(InstanceColumns.XML_PUBLISH_TIMESTAMP).append(",");
+        .append(" > ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText()).append(" THEN null")
+        .append(" ELSE ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText()).append(" END as ")
+            .append(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText()).append(",");
     b.append("CASE WHEN ").append(DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN).append(" IS NULL THEN null")
-        .append(" WHEN ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP)
+        .append(" WHEN ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText())
         .append(" IS NULL THEN null").append(" WHEN ").append(DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN)
-        .append(" > ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP).append(" THEN null")
-        .append(" ELSE ").append(InstanceColumns.XML_PUBLISH_STATUS).append(" END as ")
-            .append(InstanceColumns.XML_PUBLISH_STATUS).append(",");
+        .append(" > ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText()).append(" THEN null")
+        .append(" ELSE ").append(InstanceColumns.XML_PUBLISH_STATUS.getText()).append(" END as ")
+            .append(InstanceColumns.XML_PUBLISH_STATUS.getText()).append(",");
     b.append("CASE WHEN ").append(DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN).append(" IS NULL THEN null")
-        .append(" WHEN ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP)
+        .append(" WHEN ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText())
         .append(" IS NULL THEN null").append(" WHEN ").append(DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN)
-        .append(" > ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP).append(" THEN null")
-        .append(" ELSE ").append(InstanceColumns.DISPLAY_SUBTEXT).append(" END as ")
-            .append(InstanceColumns.DISPLAY_SUBTEXT).append(",");
+        .append(" > ").append(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText()).append(" THEN null")
+        .append(" ELSE ").append(InstanceColumns.DISPLAY_SUBTEXT.getText()).append(" END as ")
+            .append(InstanceColumns.DISPLAY_SUBTEXT.getText()).append(",");
     b.append(InstanceColumns.DATA_INSTANCE_NAME);
-    b.append(" as ").append(InstanceColumns.DISPLAY_NAME);
+    b.append(" as ").append(InstanceColumns.DISPLAY_NAME.getText());
     b.append(" FROM ");
     b.append("( SELECT * FROM ").append(tableId).append(" AS T WHERE T.")
      .append(DATA_TABLE_SAVEPOINT_TIMESTAMP_COLUMN).append("=(SELECT MAX(V.")
@@ -399,7 +399,7 @@ public class InstanceProvider extends ContentProvider {
     b.append(" JOIN ").append(DatabaseConstants.UPLOADS_TABLE_NAME).append(" ON ")
         .append(tableId).append(".").append(DATA_TABLE_ID_COLUMN).append("=")
         .append(DatabaseConstants.UPLOADS_TABLE_NAME).append(".")
-        .append(InstanceColumns.DATA_INSTANCE_ID).append(" AND ").append("? =")
+        .append(InstanceColumns.DATA_INSTANCE_ID.getText()).append(" AND ").append("? =")
         .append(DatabaseConstants.UPLOADS_TABLE_NAME).append(".")
         .append(InstanceColumns.DATA_TABLE_TABLE_ID);
     b.append(" WHERE ").append(DATA_TABLE_SAVEPOINT_TYPE_COLUMN).append("=?");
@@ -408,10 +408,10 @@ public class InstanceProvider extends ContentProvider {
     if (instanceId != null) {
       b.append(" AND ").append(DatabaseConstants.UPLOADS_TABLE_NAME).append(".")
           .append(InstanceColumns._ID).append("=?");
-      String tempArgs[] = { tableId, InstanceColumns.STATUS_COMPLETE, instanceId };
+      String tempArgs[] = { tableId, InstanceColumns.STATUS_COMPLETE.getText(), instanceId };
       filterArgs = tempArgs;
     } else {
-      String tempArgs[] = { tableId, InstanceColumns.STATUS_COMPLETE };
+      String tempArgs[] = { tableId, InstanceColumns.STATUS_COMPLETE.getText() };
       filterArgs = tempArgs;
     }
 
@@ -465,10 +465,10 @@ public class InstanceProvider extends ContentProvider {
   private String getDisplaySubtext(String xmlPublishStatus, Date xmlPublishDate) {
     if (xmlPublishDate == null) {
       return getContext().getString(R.string.not_yet_sent);
-    } else if (InstanceColumns.STATUS_SUBMITTED.equalsIgnoreCase(xmlPublishStatus)) {
+    } else if (InstanceColumns.STATUS_SUBMITTED.getText().equalsIgnoreCase(xmlPublishStatus)) {
       return new SimpleDateFormat(getContext().getString(R.string.sent_on_date_at_time),
           Locale.getDefault()).format(xmlPublishDate);
-    } else if (InstanceColumns.STATUS_SUBMISSION_FAILED.equalsIgnoreCase(xmlPublishStatus)) {
+    } else if (InstanceColumns.STATUS_SUBMISSION_FAILED.getText().equalsIgnoreCase(xmlPublishStatus)) {
       return new SimpleDateFormat(getContext().getString(R.string.sending_failed_on_date_at_time),
           Locale.getDefault()).format(xmlPublishDate);
     } else {
@@ -517,7 +517,7 @@ public class InstanceProvider extends ContentProvider {
       if (success) {
         // delete the entries matching the filter criteria
         if (segments.size() == 2) {
-          where = "(" + where + ") AND (" + InstanceColumns.DATA_INSTANCE_ID + "=? )";
+          where = "(" + where + ") AND (" + InstanceColumns.DATA_INSTANCE_ID.getText() + "=? )";
           if (whereArgs != null) {
             String[] args = new String[whereArgs.length + 1];
             System.arraycopy(whereArgs, 0, args, 0, whereArgs.length);
@@ -541,7 +541,7 @@ public class InstanceProvider extends ContentProvider {
             String iId = CursorUtils.getIndexAsString(del,
                 del.getColumnIndex(InstanceColumns._ID));
             String iIdDataTable = CursorUtils.getIndexAsString(del,
-                del.getColumnIndex(InstanceColumns.DATA_INSTANCE_ID));
+                del.getColumnIndex(InstanceColumns.DATA_INSTANCE_ID.getText()));
             idStructs.add(new IdStruct(iId, iIdDataTable));
             String path = ODKFileUtils.getInstanceFolder(appName, tableId, iIdDataTable);
             File f = new File(path);
@@ -575,7 +575,7 @@ public class InstanceProvider extends ContentProvider {
             String iId = CursorUtils.getIndexAsString(del,
                 del.getColumnIndex(InstanceColumns._ID));
             String iIdDataTable = CursorUtils.getIndexAsString(del,
-                del.getColumnIndex(InstanceColumns.DATA_INSTANCE_ID));
+                del.getColumnIndex(InstanceColumns.DATA_INSTANCE_ID.getText()));
             idStructs.add(new IdStruct(iId, iIdDataTable));
             String path = ODKFileUtils.getInstanceFolder(appName, tableId, iIdDataTable);
             File f = new File(path);
@@ -598,7 +598,7 @@ public class InstanceProvider extends ContentProvider {
       }
 
       for (IdStruct idStruct : idStructs) {
-        db.delete(DatabaseConstants.UPLOADS_TABLE_NAME, InstanceColumns.DATA_INSTANCE_ID + "=?",
+        db.delete(DatabaseConstants.UPLOADS_TABLE_NAME, InstanceColumns.DATA_INSTANCE_ID.getText() + "=?",
             new String[] { idStruct.idUploadsTable });
         db.delete(tableId, DATA_TABLE_ID_COLUMN + "=?", new String[] { idStruct.idDataTable });
       }
@@ -679,7 +679,7 @@ public class InstanceProvider extends ContentProvider {
             String iId = CursorUtils.getIndexAsString(ref,
                 ref.getColumnIndex(InstanceColumns._ID));
             String iIdDataTable = CursorUtils.getIndexAsString(ref,
-                ref.getColumnIndex(InstanceColumns.DATA_INSTANCE_ID));
+                ref.getColumnIndex(InstanceColumns.DATA_INSTANCE_ID.getText()));
             idStructs.add(new IdStruct(iId, iIdDataTable));
           } while (ref.moveToNext());
         }
@@ -690,14 +690,14 @@ public class InstanceProvider extends ContentProvider {
       }
 
       // update the values string...
-      if (cv.containsKey(InstanceColumns.XML_PUBLISH_STATUS)) {
+      if (cv.containsKey(InstanceColumns.XML_PUBLISH_STATUS.getText())) {
         Date xmlPublishDate = new Date();
-        cv.put(InstanceColumns.XML_PUBLISH_TIMESTAMP,
+        cv.put(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText(),
             TableConstants.nanoSecondsFromMillis(xmlPublishDate.getTime()));
-        String xmlPublishStatus = cv.getAsString(InstanceColumns.XML_PUBLISH_STATUS);
-        if (!cv.containsKey(InstanceColumns.DISPLAY_SUBTEXT)) {
+        String xmlPublishStatus = cv.getAsString(InstanceColumns.XML_PUBLISH_STATUS.getText());
+        if (!cv.containsKey(InstanceColumns.DISPLAY_SUBTEXT.getText())) {
           String text = getDisplaySubtext(xmlPublishStatus, xmlPublishDate);
-          cv.put(InstanceColumns.DISPLAY_SUBTEXT, text);
+          cv.put(InstanceColumns.DISPLAY_SUBTEXT.getText(), text);
         }
       }
 
@@ -738,11 +738,11 @@ public class InstanceProvider extends ContentProvider {
 
     sInstancesProjectionMap = new HashMap<String, String>();
     sInstancesProjectionMap.put(InstanceColumns._ID, InstanceColumns._ID);
-    sInstancesProjectionMap.put(InstanceColumns.DATA_INSTANCE_ID, InstanceColumns.DATA_INSTANCE_ID);
-    sInstancesProjectionMap.put(InstanceColumns.XML_PUBLISH_TIMESTAMP,
-        InstanceColumns.XML_PUBLISH_TIMESTAMP);
-    sInstancesProjectionMap.put(InstanceColumns.XML_PUBLISH_STATUS,
-        InstanceColumns.XML_PUBLISH_STATUS);
+    sInstancesProjectionMap.put(InstanceColumns.DATA_INSTANCE_ID.getText(), InstanceColumns.DATA_INSTANCE_ID.getText());
+    sInstancesProjectionMap.put(InstanceColumns.XML_PUBLISH_TIMESTAMP.getText(),
+        InstanceColumns.XML_PUBLISH_TIMESTAMP.getText());
+    sInstancesProjectionMap.put(InstanceColumns.XML_PUBLISH_STATUS.getText(),
+        InstanceColumns.XML_PUBLISH_STATUS.getText());
   }
 
 }

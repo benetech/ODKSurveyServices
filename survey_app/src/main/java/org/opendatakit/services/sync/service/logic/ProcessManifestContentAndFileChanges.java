@@ -704,7 +704,7 @@ class ProcessManifestContentAndFileChanges {
     ArrayList<String> uriFragments = new ArrayList<String>();
 
     StringBuilder b = new StringBuilder();
-    b.append(localRow.getDataByKey(DataTableColumns.ROW_ETAG));
+    b.append(localRow.getDataByKey(DataTableColumns.ROW_ETAG.getText()));
     // extract the non-null uriFragments here...
     for ( ColumnDefinition cd : fileAttachmentColumns) {
       String uriFragment = localRow.getDataByKey(cd.getElementKey());
@@ -737,7 +737,7 @@ class ProcessManifestContentAndFileChanges {
     }
 
     // 1) Get this row's instanceId (rowId)
-    String instanceId = localRow.getDataByKey(DataTableColumns.ID);
+    String instanceId = localRow.getDataByKey(DataTableColumns.ID.getText());
     log.i(LOGTAG, "syncRowLevelFileAttachments requesting a row-level manifest for " + instanceId);
 
 

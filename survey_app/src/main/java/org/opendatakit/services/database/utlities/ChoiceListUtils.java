@@ -48,9 +48,9 @@ public class ChoiceListUtils {
     ArrayList<String> bindArgs = new ArrayList<String>();
     StringBuilder b = new StringBuilder();
     //@formatter:off
-    b.append("SELECT ").append(ChoiceListColumns.CHOICE_LIST_JSON).append(" FROM ")
+    b.append("SELECT ").append(ChoiceListColumns.CHOICE_LIST_JSON.getText()).append(" FROM ")
      .append("\"").append(DatabaseConstants.CHOICE_LIST_TABLE_NAME).append("\" WHERE ")
-     .append(ChoiceListColumns.CHOICE_LIST_ID).append("=?");
+     .append(ChoiceListColumns.CHOICE_LIST_ID.getText()).append("=?");
     //@formatter:on
     bindArgs.add(choiceListId);
 
@@ -69,7 +69,7 @@ public class ChoiceListUtils {
             "getChoiceList: multiple entries for choiceListId " + choiceListId);
       }
 
-      int idx = c.getColumnIndex(ChoiceListColumns.CHOICE_LIST_JSON);
+      int idx = c.getColumnIndex(ChoiceListColumns.CHOICE_LIST_JSON.getText());
       if (c.isNull(idx)) {
         // shouldn't happen...
         return null;
@@ -107,7 +107,7 @@ public class ChoiceListUtils {
     //@formatter:off
     b.append("DELETE FROM ")
      .append("\"").append(DatabaseConstants.CHOICE_LIST_TABLE_NAME).append("\" WHERE ")
-     .append(ChoiceListColumns.CHOICE_LIST_ID).append("=?");
+     .append(ChoiceListColumns.CHOICE_LIST_ID.getText()).append("=?");
     //@formatter:on
     bindArgs.add(choiceListId);
 
@@ -122,8 +122,8 @@ public class ChoiceListUtils {
       bindArgs.clear();
       //@formatter:off
       b.append("INSERT INTO \"").append(DatabaseConstants.CHOICE_LIST_TABLE_NAME).append("\" (")
-       .append(ChoiceListColumns.CHOICE_LIST_ID).append(",")
-       .append(ChoiceListColumns.CHOICE_LIST_JSON).append(") VALUES (?,?)");
+       .append(ChoiceListColumns.CHOICE_LIST_ID.getText()).append(",")
+       .append(ChoiceListColumns.CHOICE_LIST_JSON.getText()).append(") VALUES (?,?)");
       //@formatter:on
       bindArgs.add(choiceListId);
       bindArgs.add(choiceListJSON);

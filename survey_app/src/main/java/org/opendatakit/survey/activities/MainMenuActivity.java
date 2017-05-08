@@ -78,7 +78,6 @@ import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.application.Survey;
 import org.opendatakit.survey.fragments.BackPressWebkitConfirmationDialogFragment;
-import org.opendatakit.survey.fragments.FrontPageFragment;
 import org.opendatakit.survey.fragments.InProgressInstancesFragment;
 import org.opendatakit.survey.fragments.InitializationFragment;
 import org.opendatakit.survey.fragments.WebViewFragment;
@@ -559,7 +558,7 @@ public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyAct
   public String getUrlBaseLocation(boolean ifChanged) {
     // Find the formPath for the framework formDef.json
     File frameworkFormDef = new File( ODKFileUtils.getFormFolder(appName,
-        FormsColumns.COMMON_BASE_FORM_ID, FormsColumns.COMMON_BASE_FORM_ID), "formDef.json");
+        FormsColumns.COMMON_BASE_FORM_ID.getText(), FormsColumns.COMMON_BASE_FORM_ID.getText()), "formDef.json");
 
     // formPath always begins ../ -- strip that off to get explicit path
     // suffix...
@@ -618,7 +617,7 @@ public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyAct
     if (currentForm == null) {
       // we want framework...
       File frameworkFormDef = new File( ODKFileUtils.getFormFolder(appName,
-          FormsColumns.COMMON_BASE_FORM_ID, FormsColumns.COMMON_BASE_FORM_ID), "formDef.json");
+          FormsColumns.COMMON_BASE_FORM_ID.getText(), FormsColumns.COMMON_BASE_FORM_ID.getText()), "formDef.json");
 
       String hashUrl = "#formPath="
           + StringEscapeUtils.escapeHtml4(ODKFileUtils.getRelativeFormPath(appName, frameworkFormDef))
@@ -1081,11 +1080,6 @@ public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyAct
     Fragment newFragment = null;
     if (newScreenType == ScreenList.MAIN_SCREEN) {
       throw new IllegalStateException("unexpected reference to generic main screen");
-    } else if (newScreenType == ScreenList.FORM_CHOOSER) {
-      newFragment = mgr.findFragmentByTag(newScreenType.name());
-      if (newFragment == null) {
-        newFragment = new FrontPageFragment();
-      }
     } else if (newScreenType == ScreenList.FRONT_PAGE) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
@@ -1757,8 +1751,8 @@ public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyAct
       c = getContentResolver().query(baseUri, null, null, null, null);
 
       if (c!=null && c.moveToFirst() ) {
-        int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
-        int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION);
+        int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
+        int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION.getText());
         do {
           if(!c.getString(idxFormVersion).contains("sub")) {
             Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, getAppName() + "/"

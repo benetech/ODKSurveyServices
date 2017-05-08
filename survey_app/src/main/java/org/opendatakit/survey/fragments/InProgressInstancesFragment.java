@@ -19,7 +19,7 @@ import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.IOdkSurveyActivity;
 import org.opendatakit.survey.activities.MainMenuActivity;
-import org.opendatakit.survey.utilities.FormInfo;
+import org.opendatakit.survey.utilities.InstanceInfo;
 import org.opendatakit.survey.utilities.FormListLoader;
 
 import android.app.ListFragment;
@@ -32,7 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import org.opendatakit.survey.utilities.TableIdFormIdVersionListAdapter;
+import org.opendatakit.survey.utilities.InstanceInfoListAdapter;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,7 @@ import java.util.ArrayList;
  * @author mitchellsundt@gmail.com
  */
 public class InProgressInstancesFragment extends ListFragment
-    implements LoaderManager.LoaderCallbacks<ArrayList<FormInfo>> {
+    implements LoaderManager.LoaderCallbacks<ArrayList<Object>> {
 
   @SuppressWarnings("unused") private static final String t = "InProgressInstancesFragment";
   private static final int FORM_CHOOSER_LIST_LOADER = 0x02;
@@ -53,7 +53,7 @@ public class InProgressInstancesFragment extends ListFragment
 
   // data that is not retained
 
-  private TableIdFormIdVersionListAdapter mAdapter;
+  private InstanceInfoListAdapter mAdapter;
   private View view;
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -64,8 +64,8 @@ public class InProgressInstancesFragment extends ListFragment
     super.onActivityCreated(savedInstanceState);
 
     // render total instance view
-    mAdapter = new TableIdFormIdVersionListAdapter(getActivity(), true,  R.layout.two_item, R.id.text1,
-        R.id.text2, R.id.text3, R.id.text4);
+    mAdapter = new InstanceInfoListAdapter(getActivity(), R.layout.two_item, R.id.savepointTimestamp,
+            R.id.beneficiaryName, R.id.questionsLeft);
     setListAdapter(mAdapter);
 
     getLoaderManager().initLoader(FORM_CHOOSER_LIST_LOADER, null, this);
@@ -89,22 +89,22 @@ public class InProgressInstancesFragment extends ListFragment
     super.onListItemClick(l, v, position, id);
 
     // get uri to form
-    FormInfo info = (FormInfo) mAdapter.getItem(position);
+    /*InstanceInfo info = (InstanceInfo) mAdapter.getItem(position);
     Uri formUri = Uri.withAppendedPath(Uri.withAppendedPath(
         Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI,
             ((IAppAwareActivity) getActivity()).getAppName()), info.tableId), info.formId);
 
-    ((IOdkSurveyActivity) getActivity()).chooseForm(formUri);
+    ((IOdkSurveyActivity) getActivity()).chooseForm(formUri);*/
   }
 
-  @Override public Loader<ArrayList<FormInfo>> onCreateLoader(int id, Bundle args) {
+  @Override public Loader<ArrayList<Object>> onCreateLoader(int id, Bundle args) {
     // This is called when a new Loader needs to be created. This
     // sample only has one Loader, so we don't care about the ID.
     return new FormListLoader(getActivity(), ((IAppAwareActivity) getActivity()).getAppName(), ((MainMenuActivity)getActivity()).getSubmenuPage());
   }
 
-  @Override public void onLoadFinished(Loader<ArrayList<FormInfo>> loader,
-      ArrayList<FormInfo> dataset) {
+  @Override public void onLoadFinished(Loader<ArrayList<Object>> loader,
+      ArrayList<Object> dataset) {
     // Swap the new cursor in. (The framework will take care of closing the
     // old cursor once we return.)
     mAdapter.clear();
@@ -112,7 +112,7 @@ public class InProgressInstancesFragment extends ListFragment
     mAdapter.notifyDataSetChanged();
   }
 
-  @Override public void onLoaderReset(Loader<ArrayList<FormInfo>> loader) {
+  @Override public void onLoaderReset(Loader<ArrayList<Object>> loader) {
     // This is called when the last Cursor provided to onLoadFinished()
     // above is about to be closed. We need to make sure we are no
     // longer using it.

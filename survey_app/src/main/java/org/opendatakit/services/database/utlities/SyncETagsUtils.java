@@ -230,7 +230,7 @@ public class SyncETagsUtils {
     bindArgs.add(Integer.toString(DataHelper.boolToInt(true)));
     b.append(" AND ").append(SyncETagColumns.URL).append("=?");
     bindArgs.add(url);
-    b.append(" ORDER BY ").append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP).append(" DESC");
+    b.append(" ORDER BY ").append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(" DESC");
 
     Cursor c = null;
     try {
@@ -246,7 +246,7 @@ public class SyncETagsUtils {
         // TODO: log something
       }
       
-      int idx = c.getColumnIndex(SyncETagColumns.ETAG_MD5_HASH);
+      int idx = c.getColumnIndex(SyncETagColumns.ETAG_MD5_HASH.getText());
       if ( c.isNull(idx) ) {
         // shouldn't happen...
         return null;
@@ -295,8 +295,8 @@ public class SyncETagsUtils {
          .append(SyncETagColumns.TABLE_ID).append(",")
          .append(SyncETagColumns.IS_MANIFEST).append(",")
          .append(SyncETagColumns.URL).append(",")
-         .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP).append(",")
-         .append(SyncETagColumns.ETAG_MD5_HASH).append(") VALUES (");
+         .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(",")
+         .append(SyncETagColumns.ETAG_MD5_HASH.getText()).append(") VALUES (");
         //@formatter:on
         if ( tableId == null ) {
           b.append("NULL,");
@@ -349,7 +349,7 @@ public class SyncETagsUtils {
     bindArgs.add(Integer.toString(DataHelper.boolToInt(false)));
     b.append(" AND ").append(SyncETagColumns.URL).append("=?");
     bindArgs.add(url);
-    b.append(" ORDER BY ").append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP).append(" DESC");
+    b.append(" ORDER BY ").append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(" DESC");
 
     Cursor c = null;
     try {
@@ -365,8 +365,8 @@ public class SyncETagsUtils {
         // TODO: log something
       }
 
-      int idx = c.getColumnIndex(SyncETagColumns.ETAG_MD5_HASH);
-      int idxLMT = c.getColumnIndex(SyncETagColumns.LAST_MODIFIED_TIMESTAMP);
+      int idx = c.getColumnIndex(SyncETagColumns.ETAG_MD5_HASH.getText());
+      int idxLMT = c.getColumnIndex(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText());
       if (c.isNull(idx)) {
         // shouldn't happen...
         return null;
@@ -420,8 +420,8 @@ public class SyncETagsUtils {
          .append(SyncETagColumns.TABLE_ID).append(",")
          .append(SyncETagColumns.IS_MANIFEST).append(",")
          .append(SyncETagColumns.URL).append(",")
-         .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP).append(",")
-         .append(SyncETagColumns.ETAG_MD5_HASH).append(") VALUES (");
+         .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(",")
+         .append(SyncETagColumns.ETAG_MD5_HASH.getText()).append(") VALUES (");
         //@formatter:on
         if ( tableId == null ) {
           b.append("NULL,");

@@ -113,8 +113,8 @@ class OdkResolveConflictFieldLoader extends AsyncTaskLoader<ResolveActionList> {
 
       // get both conflict records for this row.
       // the local record is always before the server record (due to conflict_type values)
-      String whereClause = DataTableColumns.ID + "=?" +
-          " AND " + DataTableColumns.CONFLICT_TYPE + " IS NOT NULL";
+      String whereClause = DataTableColumns.ID.getText() + "=?" +
+          " AND " + DataTableColumns.CONFLICT_TYPE.getText() + " IS NOT NULL";
       List<String> adminColumns = ODKDatabaseImplUtils.get().getAdminColumns();
       String[] adminColArr = adminColumns.toArray(new String[adminColumns.size()]);
 
@@ -124,7 +124,7 @@ class OdkResolveConflictFieldLoader extends AsyncTaskLoader<ResolveActionList> {
 
       BaseTable baseTable = ODKDatabaseImplUtils.get().privilegedQuery(db, mTableId, QueryUtil
               .buildSqlStatement(mTableId, whereClause, null, null,
-                  new String[] { DataTableColumns.CONFLICT_TYPE }, new String[] { "ASC" }),
+                  new String[] { DataTableColumns.CONFLICT_TYPE.getText() }, new String[] { "ASC" }),
           new String[] { mRowId }, null, accessContextPrivileged);
       table = new UserTable(baseTable, orderedDefns, adminColArr);
     } catch (Exception e) {
@@ -168,9 +168,9 @@ class OdkResolveConflictFieldLoader extends AsyncTaskLoader<ResolveActionList> {
     Row localRow = table.getRowAtIndex(localRowIndex);
     Row serverRow = table.getRowAtIndex(serverRowIndex);
 
-    int localConflictType = Integer.parseInt(localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE));
+    int localConflictType = Integer.parseInt(localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()));
     int serverConflictType = Integer
-        .parseInt(serverRow.getDataByKey(DataTableColumns.CONFLICT_TYPE));
+        .parseInt(serverRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()));
     //
     // And now we need to construct up the adapter.
 

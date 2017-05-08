@@ -1585,33 +1585,33 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     String timeStamp = TableConstants.nanoSecondsFromMillis(System.currentTimeMillis());
 
     ContentValues cvValues = new ContentValues();
-    cvValues.put(DataTableColumns.ID, uuid);
-    cvValues.put(DataTableColumns.ROW_ETAG, nullString);
-    cvValues.put(DataTableColumns.SYNC_STATE, SyncState.new_row.name());
-    cvValues.put(DataTableColumns.CONFLICT_TYPE, nullString);
-    cvValues.put(DataTableColumns.FILTER_TYPE, nullString);
-    cvValues.put(DataTableColumns.FILTER_VALUE, nullString);
-    cvValues.put(DataTableColumns.FORM_ID, nullString);
-    cvValues.put(DataTableColumns.LOCALE, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_TYPE, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP, timeStamp);
-    cvValues.put(DataTableColumns.SAVEPOINT_CREATOR, nullString);
+    cvValues.put(DataTableColumns.ID.getText(), uuid);
+    cvValues.put(DataTableColumns.ROW_ETAG.getText(), nullString);
+    cvValues.put(DataTableColumns.SYNC_STATE.getText(), SyncState.new_row.name());
+    cvValues.put(DataTableColumns.CONFLICT_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.FILTER_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.FILTER_VALUE.getText(), nullString);
+    cvValues.put(DataTableColumns.FORM_ID.getText(), nullString);
+    cvValues.put(DataTableColumns.LOCALE.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), timeStamp);
+    cvValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), nullString);
 
     ODKDatabaseImplUtils.get().insertRowWithId(db, tableId, orderedColumns, cvValues, uuid,
         activeUser, RoleConsts.ADMIN_ROLES_LIST, currentLocale);
 
     // Select everything out of the table
-    String sel = "SELECT * FROM " + tableId + " WHERE " + DataTableColumns.ID + " = ?";
+    String sel = "SELECT * FROM " + tableId + " WHERE " + DataTableColumns.ID.getText() + " = ?";
     String[] selArgs = { uuid };
     Cursor cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel, selArgs, null,
         accessContext);
 
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP);
+      int ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
       String ts = cursor.getString(ind);
       assertEquals(ts, timeStamp);
 
-      ind = cursor.getColumnIndex(DataTableColumns.SYNC_STATE);
+      ind = cursor.getColumnIndex(DataTableColumns.SYNC_STATE.getText());
       String ss = cursor.getString(ind);
       assertEquals(ss, SyncState.new_row.name());
     }
@@ -1636,17 +1636,17 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     String timeStamp = TableConstants.nanoSecondsFromMillis(System.currentTimeMillis());
 
     ContentValues cvValues = new ContentValues();
-    cvValues.put(DataTableColumns.ID, nullString);
-    cvValues.put(DataTableColumns.ROW_ETAG, nullString);
-    cvValues.put(DataTableColumns.SYNC_STATE, SyncState.new_row.name());
-    cvValues.put(DataTableColumns.CONFLICT_TYPE, nullString);
-    cvValues.put(DataTableColumns.FILTER_TYPE, nullString);
-    cvValues.put(DataTableColumns.FILTER_VALUE, nullString);
-    cvValues.put(DataTableColumns.FORM_ID, nullString);
-    cvValues.put(DataTableColumns.LOCALE, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_TYPE, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP, timeStamp);
-    cvValues.put(DataTableColumns.SAVEPOINT_CREATOR, nullString);
+    cvValues.put(DataTableColumns.ID.getText(), nullString);
+    cvValues.put(DataTableColumns.ROW_ETAG.getText(), nullString);
+    cvValues.put(DataTableColumns.SYNC_STATE.getText(), SyncState.new_row.name());
+    cvValues.put(DataTableColumns.CONFLICT_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.FILTER_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.FILTER_VALUE.getText(), nullString);
+    cvValues.put(DataTableColumns.FORM_ID.getText(), nullString);
+    cvValues.put(DataTableColumns.LOCALE.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), timeStamp);
+    cvValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), nullString);
 
     try {
       ODKDatabaseImplUtils.get()
@@ -1683,17 +1683,17 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     String timeStamp = TableConstants.nanoSecondsFromMillis(System.currentTimeMillis());
 
     ContentValues cvValues = new ContentValues();
-    cvValues.put(DataTableColumns.ID, uuid);
-    cvValues.put(DataTableColumns.ROW_ETAG, nullString);
-    cvValues.put(DataTableColumns.SYNC_STATE, nullString);
-    cvValues.put(DataTableColumns.CONFLICT_TYPE, nullString);
-    cvValues.put(DataTableColumns.FILTER_TYPE, nullString);
-    cvValues.put(DataTableColumns.FILTER_VALUE, nullString);
-    cvValues.put(DataTableColumns.FORM_ID, nullString);
-    cvValues.put(DataTableColumns.LOCALE, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_TYPE, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP, timeStamp);
-    cvValues.put(DataTableColumns.SAVEPOINT_CREATOR, nullString);
+    cvValues.put(DataTableColumns.ID.getText(), uuid);
+    cvValues.put(DataTableColumns.ROW_ETAG.getText(), nullString);
+    cvValues.put(DataTableColumns.SYNC_STATE.getText(), nullString);
+    cvValues.put(DataTableColumns.CONFLICT_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.FILTER_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.FILTER_VALUE.getText(), nullString);
+    cvValues.put(DataTableColumns.FORM_ID.getText(), nullString);
+    cvValues.put(DataTableColumns.LOCALE.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), timeStamp);
+    cvValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), nullString);
 
     try {
       ODKDatabaseImplUtils.get()
@@ -1729,17 +1729,17 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     String uuid = UUID.randomUUID().toString();
 
     ContentValues cvValues = new ContentValues();
-    cvValues.put(DataTableColumns.ID, uuid);
-    cvValues.put(DataTableColumns.ROW_ETAG, nullString);
-    cvValues.put(DataTableColumns.SYNC_STATE, SyncState.new_row.name());
-    cvValues.put(DataTableColumns.CONFLICT_TYPE, nullString);
-    cvValues.put(DataTableColumns.FILTER_TYPE, nullString);
-    cvValues.put(DataTableColumns.FILTER_VALUE, nullString);
-    cvValues.put(DataTableColumns.FORM_ID, nullString);
-    cvValues.put(DataTableColumns.LOCALE, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_TYPE, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP, nullString);
-    cvValues.put(DataTableColumns.SAVEPOINT_CREATOR, nullString);
+    cvValues.put(DataTableColumns.ID.getText(), uuid);
+    cvValues.put(DataTableColumns.ROW_ETAG.getText(), nullString);
+    cvValues.put(DataTableColumns.SYNC_STATE.getText(), SyncState.new_row.name());
+    cvValues.put(DataTableColumns.CONFLICT_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.FILTER_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.FILTER_VALUE.getText(), nullString);
+    cvValues.put(DataTableColumns.FORM_ID.getText(), nullString);
+    cvValues.put(DataTableColumns.LOCALE.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_TYPE.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), nullString);
+    cvValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), nullString);
 
     try {
       ODKDatabaseImplUtils.get()
@@ -2337,11 +2337,11 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       val2 = cursor.getString(ind);
 
       // Get the savepoint_type
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -2393,11 +2393,11 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       val = cursor.getString(ind);
 
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -2445,13 +2445,13 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       val = cursor.getString(ind);
 
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
       type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       saveptType = cursor.getString(ind);
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -2483,7 +2483,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     ContentValues cvValues = new ContentValues();
     cvValues.put(testCol, testVal);
-    cvValues.putNull(DataTableColumns.CONFLICT_TYPE);
+    cvValues.putNull(DataTableColumns.CONFLICT_TYPE.getText());
 
     boolean thrown = true;
     try {
@@ -2519,7 +2519,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     ContentValues cvValues = new ContentValues();
     cvValues.put(testCol, testVal);
-    cvValues.putNull(DataTableColumns.SAVEPOINT_TYPE);
+    cvValues.putNull(DataTableColumns.SAVEPOINT_TYPE.getText());
 
     boolean thrown = true;
     try {
@@ -2555,7 +2555,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     ContentValues cvValues = new ContentValues();
     cvValues.put(testCol, testVal);
-    cvValues.putNull(DataTableColumns.SAVEPOINT_TIMESTAMP);
+    cvValues.putNull(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
 
     boolean thrown = true;
     try {
@@ -2680,13 +2680,13 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       val2 = cursor.getString(ind);
 
       // Get the savepoint_timestamp
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
       type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       saveptType = cursor.getString(ind);
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -2716,13 +2716,13 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       val2 = cursor.getString(ind);
 
       // Get the savepoint_timestamp
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
       type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       saveptType = cursor.getString(ind);
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -2804,13 +2804,13 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       val2 = cursor.getString(ind);
 
       // Get the savepoint_timestamp
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
       type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       saveptType = cursor.getString(ind);
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -2841,13 +2841,13 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       val2 = cursor.getString(ind);
 
       // Get the savepoint_timestamp
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
       type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       saveptType = cursor.getString(ind);
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -2895,11 +2895,11 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       val = cursor.getString(ind);
 
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -2969,16 +2969,16 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
           if (i >= colHeadersLength) {
             throw new IllegalStateException("data beyond header row of ColumnDefinitions table");
           }
-          if (ColumnDefinitionsColumns.ELEMENT_KEY.equals(colHeaders[i])) {
+          if (ColumnDefinitionsColumns.ELEMENT_KEY.getText().equals(colHeaders[i])) {
             elementKeyStr = row[i];
           }
-          if (ColumnDefinitionsColumns.ELEMENT_NAME.equals(colHeaders[i])) {
+          if (ColumnDefinitionsColumns.ELEMENT_NAME.getText().equals(colHeaders[i])) {
             elementNameStr = row[i];
           }
-          if (ColumnDefinitionsColumns.ELEMENT_TYPE.equals(colHeaders[i])) {
+          if (ColumnDefinitionsColumns.ELEMENT_TYPE.getText().equals(colHeaders[i])) {
             elementTypeStr = row[i];
           }
-          if (ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS.equals(colHeaders[i])) {
+          if (ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS.getText().equals(colHeaders[i])) {
             listChildElementKeysStr = row[i];
           }
         }
@@ -3021,19 +3021,19 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         String value = null;
         int rowLength = countUpToLastNonNullElement(row);
         for (int i = 0; i < rowLength; ++i) {
-          if (KeyValueStoreColumns.PARTITION.equals(kvsHeaders[i])) {
+          if (KeyValueStoreColumns.PARTITION.getText().equals(kvsHeaders[i])) {
             partition = row[i];
           }
-          if (KeyValueStoreColumns.ASPECT.equals(kvsHeaders[i])) {
+          if (KeyValueStoreColumns.ASPECT.getText().equals(kvsHeaders[i])) {
             aspect = row[i];
           }
-          if (KeyValueStoreColumns.KEY.equals(kvsHeaders[i])) {
+          if (KeyValueStoreColumns.KEY.getText().equals(kvsHeaders[i])) {
             key = row[i];
           }
-          if (KeyValueStoreColumns.VALUE_TYPE.equals(kvsHeaders[i])) {
+          if (KeyValueStoreColumns.VALUE_TYPE.getText().equals(kvsHeaders[i])) {
             type = row[i];
           }
-          if (KeyValueStoreColumns.VALUE.equals(kvsHeaders[i])) {
+          if (KeyValueStoreColumns.VALUE.getText().equals(kvsHeaders[i])) {
             value = row[i];
           }
         }
@@ -3165,11 +3165,11 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       val = cursor.getString(ind);
 
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -3226,11 +3226,11 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       val = cursor.getString(ind);
 
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -3346,14 +3346,14 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     ContentValues cvValues = new ContentValues();
     String rowId = LocalizationUtils.genUUID();
     cvValues.put(testCol, testVal);
-    cvValues.put(DataTableColumns.ROW_ETAG, LocalizationUtils.genUUID());
-    cvValues.put(DataTableColumns.SYNC_STATE, SyncState.deleted.name());
+    cvValues.put(DataTableColumns.ROW_ETAG.getText(), LocalizationUtils.genUUID());
+    cvValues.put(DataTableColumns.SYNC_STATE.getText(), SyncState.deleted.name());
     ODKDatabaseImplUtils.get().insertRowWithId(db, tableId, orderedColumns, cvValues, rowId,
         activeUser, RoleConsts.ADMIN_ROLES_LIST, currentLocale);
 
     // Select everything out of the table
-    String sel = "SELECT * FROM " + tableId + " WHERE " + DataTableColumns.ID + " = ? ORDER BY "
-        + DataTableColumns.CONFLICT_TYPE + " ASC";
+    String sel = "SELECT * FROM " + tableId + " WHERE " + DataTableColumns.ID.getText() + " = ? ORDER BY "
+        + DataTableColumns.CONFLICT_TYPE.getText() + " ASC";
     String[] selArgs = { rowId };
     Cursor cursor = null;
 
@@ -3381,18 +3381,18 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     // data value
     updates.put(testCol, testVal + 6);
     // metadata fields
-    updates.put(DataTableColumns.CONFLICT_TYPE, ConflictType.SERVER_UPDATED_UPDATED_VALUES);
-    updates.put(DataTableColumns.SYNC_STATE, SyncState.in_conflict.name());
-    updates.put(DataTableColumns.ROW_ETAG, LocalizationUtils.genUUID());
+    updates.put(DataTableColumns.CONFLICT_TYPE.getText(), ConflictType.SERVER_UPDATED_UPDATED_VALUES);
+    updates.put(DataTableColumns.SYNC_STATE.getText(), SyncState.in_conflict.name());
+    updates.put(DataTableColumns.ROW_ETAG.getText(), LocalizationUtils.genUUID());
     // insert in_conflict server row
-    updates.put(DataTableColumns.FORM_ID, "serverForm");
-    updates.put(DataTableColumns.LOCALE, currentLocale);
-    updates.put(DataTableColumns.SAVEPOINT_TIMESTAMP,
+    updates.put(DataTableColumns.FORM_ID.getText(), "serverForm");
+    updates.put(DataTableColumns.LOCALE.getText(), currentLocale);
+    updates.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(),
         TableConstants.nanoSecondsFromMillis(System.currentTimeMillis()));
-    updates.put(DataTableColumns.SAVEPOINT_TYPE, SavepointTypeManipulator.complete());
-    updates.put(DataTableColumns.SAVEPOINT_CREATOR, "mailto:server@gmail.com");
-    updates.put(DataTableColumns.FILTER_TYPE, RowFilterScope.Type.DEFAULT.name());
-    updates.put(DataTableColumns.FILTER_VALUE, "mailto:server@gmail.com");
+    updates.put(DataTableColumns.SAVEPOINT_TYPE.getText(), SavepointTypeManipulator.complete());
+    updates.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), "mailto:server@gmail.com");
+    updates.put(DataTableColumns.FILTER_TYPE.getText(), RowFilterScope.Type.DEFAULT.name());
+    updates.put(DataTableColumns.FILTER_VALUE.getText(), "mailto:server@gmail.com");
 
     // Place row in conflict
     int conflictType = ConflictType.LOCAL_DELETED_OLD_VALUES;
@@ -3401,9 +3401,9 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         activeUser, currentLocale);
 
     // Run the query again and make sure that the place row in conflict worked as expected
-    String whereClause = DataTableColumns.ID + "=?";
+    String whereClause = DataTableColumns.ID.getText() + "=?";
     String[] selectionArgs = new String[] { rowId };
-    String[] orderByKeys = new String[] { DataTableColumns.CONFLICT_TYPE };
+    String[] orderByKeys = new String[] { DataTableColumns.CONFLICT_TYPE.getText() };
     String[] orderByDirs = new String[] { "ASC" };
     List<String> adminColumns = ODKDatabaseImplUtils.get().getAdminColumns();
     String[] adminColArr = adminColumns.toArray(new String[adminColumns.size()]);
@@ -3421,12 +3421,12 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     String v;
     int conflictTypeVal;
 
-    v = first.getDataByKey(DataTableColumns.CONFLICT_TYPE);
+    v = first.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText());
     assertNotNull(v);
     conflictTypeVal = Integer.valueOf(v);
     assertEquals(conflictType, conflictTypeVal);
 
-    v = second.getDataByKey(DataTableColumns.CONFLICT_TYPE);
+    v = second.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText());
     assertNotNull(v);
     conflictTypeVal = Integer.valueOf(v);
     assertEquals(ConflictType.SERVER_UPDATED_UPDATED_VALUES, conflictTypeVal);
@@ -3495,7 +3495,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //
 //  int conflictTypeVal = -1;
 //  while (cursor.moveToNext()) {
-//    int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//    int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //    int type = cursor.getType(ind);
 //    assertEquals(type, Cursor.FIELD_TYPE_INTEGER);
 //    conflictTypeVal = cursor.getInt(ind);
@@ -3559,7 +3559,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //
 //    int conflictTypeVal = -1;
 //    while (cursor.moveToNext()) {
-//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //      int type = cursor.getType(ind);
 //      assertEquals(type, Cursor.FIELD_TYPE_INTEGER);
 //      conflictTypeVal = cursor.getInt(ind);
@@ -3623,7 +3623,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //
 //    int conflictTypeVal = -1;
 //    while (cursor.moveToNext()) {
-//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //      int type = cursor.getType(ind);
 //      assertEquals(type, Cursor.FIELD_TYPE_INTEGER);
 //      conflictTypeVal = cursor.getInt(ind);
@@ -3677,8 +3677,8 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Ensure that the expected properties is in the KVS table
     String sel = "SELECT * FROM " + DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME +
-        " WHERE " + KeyValueStoreColumns.PARTITION + " = ? AND " + KeyValueStoreColumns.KEY +
-        " = ? AND " + KeyValueStoreColumns.VALUE + " = ?";
+        " WHERE " + KeyValueStoreColumns.PARTITION.getText() + " = ? AND " + KeyValueStoreColumns.KEY.getText() +
+        " = ? AND " + KeyValueStoreColumns.VALUE.getText() + " = ?";
     String[] selArgs = { partition, key, kvsValue };
     Cursor cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel, selArgs, null,
         accessContext);
@@ -3701,7 +3701,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     String val = null;
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(KeyValueStoreColumns.VALUE_TYPE);
+      int ind = cursor.getColumnIndex(KeyValueStoreColumns.VALUE_TYPE.getText());
       int resultType = cursor.getType(ind);
       assertEquals(resultType, Cursor.FIELD_TYPE_STRING);
       val = cursor.getString(ind);
@@ -3752,7 +3752,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Select the _choice_list_id from the _choice_lists table
     String sel = "SELECT * FROM " + DatabaseConstants.CHOICE_LIST_TABLE_NAME +
-        " WHERE " + ChoiceListColumns.CHOICE_LIST_ID + " = ?";
+        " WHERE " + ChoiceListColumns.CHOICE_LIST_ID.getText() + " = ?";
     String[] selArgs = { "" + choiceListId };
     Cursor cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel, selArgs, null,
         accessContext);
@@ -3760,7 +3760,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     String val = null;
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(ChoiceListColumns.CHOICE_LIST_JSON);
+      int ind = cursor.getColumnIndex(ChoiceListColumns.CHOICE_LIST_JSON.getText());
       int type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       val = cursor.getString(ind);
@@ -3803,8 +3803,8 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Ensure that the expected properties is in the KVS table
     String sel = "SELECT * FROM " + DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME +
-        " WHERE " + KeyValueStoreColumns.PARTITION + " = ? AND " + KeyValueStoreColumns.KEY +
-        " = ? AND " + KeyValueStoreColumns.VALUE + " = ?";
+        " WHERE " + KeyValueStoreColumns.PARTITION.getText() + " = ? AND " + KeyValueStoreColumns.KEY.getText() +
+        " = ? AND " + KeyValueStoreColumns.VALUE.getText() + " = ?";
     String[] selArgs = { partition, key, kvsValue };
     Cursor cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel, selArgs, null,
         accessContext);
@@ -3870,7 +3870,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Select everything out of the table
     String sel2 = "SELECT * FROM " + DatabaseConstants.TABLE_DEFS_TABLE_NAME +
-        " WHERE " + TableDefinitionsColumns.TABLE_ID + " = ?";
+        " WHERE " + TableDefinitionsColumns.TABLE_ID.getText() + " = ?";
     String [] selArgs2 = { "" + tableId };
     cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel2, selArgs2, null,
         accessContextNoTableId);
@@ -3880,15 +3880,15 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     String schemaETagVal = null;
     String lastDataETagVal = null;
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(TableDefinitionsColumns.LAST_SYNC_TIME);
+      int ind = cursor.getColumnIndex(TableDefinitionsColumns.LAST_SYNC_TIME.getText());
       int type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       syncTimeVal = cursor.getString(ind);
 
-      ind = cursor.getColumnIndex(TableDefinitionsColumns.SCHEMA_ETAG);
+      ind = cursor.getColumnIndex(TableDefinitionsColumns.SCHEMA_ETAG.getText());
       assertTrue(cursor.isNull(ind));
 
-      ind = cursor.getColumnIndex(TableDefinitionsColumns.LAST_DATA_ETAG);
+      ind = cursor.getColumnIndex(TableDefinitionsColumns.LAST_DATA_ETAG.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -3987,7 +3987,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContext);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4005,7 +4005,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextPlainUser);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4015,19 +4015,19 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextAnonymousUser);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
     c.close();
 
-    sel = "SELECT testColumn, " + DataTableColumns.FILTER_TYPE +
+    sel = "SELECT testColumn, " + DataTableColumns.FILTER_TYPE.getText() +
         " from " + testTable;
     c = ODKDatabaseImplUtils.get().rawQuery(db, sel, null, null,
         accessContext);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4037,7 +4037,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextPlainUser);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4047,21 +4047,21 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextAnonymousUser);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
     c.close();
 
 
-    sel = "SELECT testColumn, " + DataTableColumns.FILTER_TYPE +
-        ", " + DataTableColumns.FILTER_VALUE +
+    sel = "SELECT testColumn, " + DataTableColumns.FILTER_TYPE.getText() +
+        ", " + DataTableColumns.FILTER_VALUE.getText() +
         " from " + testTable;
     c = ODKDatabaseImplUtils.get().rawQuery(db, sel, null, null,
         accessContext);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4071,7 +4071,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextPlainUser);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4081,21 +4081,21 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextAnonymousUser);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
     c.close();
 
 
-    sel = "SELECT testColumn, " + DataTableColumns.FILTER_TYPE +
-        ", " + DataTableColumns.SYNC_STATE +
+    sel = "SELECT testColumn, " + DataTableColumns.FILTER_TYPE.getText() +
+        ", " + DataTableColumns.SYNC_STATE.getText() +
         " from " + testTable;
     c = ODKDatabaseImplUtils.get().rawQuery(db, sel, null, null,
         accessContext);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4105,7 +4105,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextPlainUser);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4115,22 +4115,22 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextAnonymousUser);
     if ( c.moveToFirst() ) {
       assertTrue( "did not expect effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) == -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) == -1 );
     } else {
       assertTrue("should not get here", false);
     }
     c.close();
 
 
-    sel = "SELECT testColumn, " + DataTableColumns.FILTER_TYPE +
-        ", " + DataTableColumns.FILTER_VALUE +
-        ", " + DataTableColumns.SYNC_STATE +
+    sel = "SELECT testColumn, " + DataTableColumns.FILTER_TYPE.getText() +
+        ", " + DataTableColumns.FILTER_VALUE.getText() +
+        ", " + DataTableColumns.SYNC_STATE.getText() +
         " from " + testTable;
     c = ODKDatabaseImplUtils.get().rawQuery(db, sel, null, null,
         accessContext);
     if ( c.moveToFirst() ) {
       assertTrue( "expected effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) != -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) != -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4140,7 +4140,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextPlainUser);
     if ( c.moveToFirst() ) {
       assertTrue( "expected effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) != -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) != -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4150,7 +4150,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContextAnonymousUser);
     if ( c.moveToFirst() ) {
       assertTrue( "expected effective privileges column",
-          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS) != -1 );
+          c.getColumnIndex(DataTableColumns.EFFECTIVE_ACCESS.getText()) != -1 );
     } else {
       assertTrue("should not get here", false);
     }
@@ -4232,11 +4232,11 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
       val2 = cursor.getInt(ind);
 
       // Get the savepoint_type
-      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
 
       // Get the conflict_type and make sure that it is null
-      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
       assertTrue(cursor.isNull(ind));
     }
 
@@ -4301,7 +4301,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //
 //    int conflictTypeVal = -1;
 //    while (cursor.moveToNext()) {
-//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //      int type = cursor.getType(ind);
 //      assertEquals(type, Cursor.FIELD_TYPE_INTEGER);
 //      conflictTypeVal = cursor.getInt(ind);
@@ -4381,11 +4381,11 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //      val2 = cursor.getInt(ind);
 //
 //      // Get the savepoint_type
-//      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+//      ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
 //      assertTrue(cursor.isNull(ind));
 //
 //      // Get the conflict_type and make sure that it is null
-//      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//      ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //      assertTrue(cursor.isNull(ind));
 //    }
 //
@@ -4405,7 +4405,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //
 //    int conflictTypeVal = -1;
 //    while (cursor.moveToNext()) {
-//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //      int type = cursor.getType(ind);
 //      assertEquals(type, Cursor.FIELD_TYPE_INTEGER);
 //      conflictTypeVal = cursor.getInt(ind);
@@ -4465,7 +4465,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //
 //    int conflictTypeVal = -1;
 //    while (cursor.moveToNext()) {
-//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //      int type = cursor.getType(ind);
 //      assertEquals(type, Cursor.FIELD_TYPE_INTEGER);
 //      conflictTypeVal = cursor.getInt(ind);
@@ -4612,8 +4612,8 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Ensure that the expected properties is in the KVS table
     String sel = "SELECT * FROM " + DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME +
-        " WHERE " + KeyValueStoreColumns.PARTITION + " = ? AND " + KeyValueStoreColumns.KEY +
-        " = ? AND " + KeyValueStoreColumns.VALUE + " = ?";
+        " WHERE " + KeyValueStoreColumns.PARTITION.getText() + " = ? AND " + KeyValueStoreColumns.KEY.getText() +
+        " = ? AND " + KeyValueStoreColumns.VALUE.getText() + " = ?";
     String[] selArgs = { partition, key, kvsValue };
     Cursor cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel, selArgs, null,
         accessContext);
@@ -4685,8 +4685,8 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Ensure that the expected properties is in the KVS table
     String sel = "SELECT * FROM " + DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME +
-        " WHERE " + KeyValueStoreColumns.PARTITION + " = ? AND " + KeyValueStoreColumns.KEY +
-        " = ? AND " + KeyValueStoreColumns.VALUE + " = ?";
+        " WHERE " + KeyValueStoreColumns.PARTITION.getText() + " = ? AND " + KeyValueStoreColumns.KEY.getText() +
+        " = ? AND " + KeyValueStoreColumns.VALUE.getText() + " = ?";
     String[] selArgs = { partition, key, kvsValue };
     Cursor cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel, selArgs, null,
         accessContext);
@@ -4756,8 +4756,8 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Ensure that the expected properties is in the KVS table
     String sel = "SELECT * FROM " + DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME +
-        " WHERE " + KeyValueStoreColumns.PARTITION + " = ? AND " + KeyValueStoreColumns.KEY +
-        " = ? AND " + KeyValueStoreColumns.VALUE + " = ?";
+        " WHERE " + KeyValueStoreColumns.PARTITION.getText() + " = ? AND " + KeyValueStoreColumns.KEY.getText() +
+        " = ? AND " + KeyValueStoreColumns.VALUE.getText() + " = ?";
     String[] selArgs = { partition, key, kvsValue };
     Cursor cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel, selArgs, null,
         accessContext);
@@ -4853,7 +4853,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //
 //    int conflictTypeVal = -1;
 //    while (cursor.moveToNext()) {
-//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //      int type = cursor.getType(ind);
 //      assertEquals(type, Cursor.FIELD_TYPE_INTEGER);
 //      conflictTypeVal = cursor.getInt(ind);
@@ -4870,10 +4870,10 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 //    assertEquals(cursor.getCount(), 1);
 //
 //    while (cursor.moveToNext()) {
-//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+//      int ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
 //      assertTrue(cursor.isNull(ind));
 //
-//      int indSyncState = cursor.getColumnIndex(DataTableColumns.SYNC_STATE);
+//      int indSyncState = cursor.getColumnIndex(DataTableColumns.SYNC_STATE.getText());
 //      int typeSyncState = cursor.getType(indSyncState);
 //      assertEquals(typeSyncState, Cursor.FIELD_TYPE_STRING);
 //      String syncStateVal = cursor.getString(indSyncState);
@@ -4918,7 +4918,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Select the _choice_list_id from the _choice_lists table
     String sel = "SELECT * FROM " + DatabaseConstants.CHOICE_LIST_TABLE_NAME +
-        " WHERE " + ChoiceListColumns.CHOICE_LIST_ID + " = ?";
+        " WHERE " + ChoiceListColumns.CHOICE_LIST_ID.getText() + " = ?";
     String[] selArgs = { "" + choiceListId };
     Cursor cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel, selArgs, null,
         accessContext);
@@ -4926,7 +4926,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     String val = null;
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(ChoiceListColumns.CHOICE_LIST_JSON);
+      int ind = cursor.getColumnIndex(ChoiceListColumns.CHOICE_LIST_JSON.getText());
       int type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       val = cursor.getString(ind);
@@ -4982,17 +4982,17 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Select everything out of the table
     String sel2 = "SELECT * FROM " + DatabaseConstants.TABLE_DEFS_TABLE_NAME +
-        " WHERE " + TableDefinitionsColumns.TABLE_ID + " = ?";
+        " WHERE " + TableDefinitionsColumns.TABLE_ID.getText() + " = ?";
     String [] selArgs2 = { "" + tableId };
     cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel2, selArgs2, null,
         accessContextNoTableId);
     assertEquals(cursor.getCount(), 1);
 
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(TableDefinitionsColumns.SCHEMA_ETAG);
+      int ind = cursor.getColumnIndex(TableDefinitionsColumns.SCHEMA_ETAG.getText());
       assertTrue(cursor.isNull(ind));
 
-      int ind2 = cursor.getColumnIndex(TableDefinitionsColumns.LAST_DATA_ETAG);
+      int ind2 = cursor.getColumnIndex(TableDefinitionsColumns.LAST_DATA_ETAG.getText());
       assertTrue(cursor.isNull(ind2));
     }
 
@@ -5008,12 +5008,12 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     assertEquals(cursor.getCount(), 1);
 
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(TableDefinitionsColumns.SCHEMA_ETAG);
+      int ind = cursor.getColumnIndex(TableDefinitionsColumns.SCHEMA_ETAG.getText());
       int type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       assertEquals(newSchemaETag, cursor.getString(ind));
 
-      int ind2 = cursor.getColumnIndex(TableDefinitionsColumns.LAST_DATA_ETAG);
+      int ind2 = cursor.getColumnIndex(TableDefinitionsColumns.LAST_DATA_ETAG.getText());
       int type2 = cursor.getType(ind2);
       assertEquals(type2, Cursor.FIELD_TYPE_STRING);
       assertEquals(newLastDataETag, cursor.getString(ind2));
@@ -5070,7 +5070,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     // Select everything out of the table
     String sel2 = "SELECT * FROM " + DatabaseConstants.TABLE_DEFS_TABLE_NAME +
-        " WHERE " + TableDefinitionsColumns.TABLE_ID + " = ?";
+        " WHERE " + TableDefinitionsColumns.TABLE_ID.getText() + " = ?";
     String [] selArgs2 = { "" + tableId };
     cursor = ODKDatabaseImplUtils.get().rawQuery(db, sel2, selArgs2, null,
         accessContextNoTableId);
@@ -5078,7 +5078,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     String defaultSyncTime = "-1";
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(TableDefinitionsColumns.LAST_SYNC_TIME);
+      int ind = cursor.getColumnIndex(TableDefinitionsColumns.LAST_SYNC_TIME.getText());
       int type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       assertEquals(cursor.getString(ind), defaultSyncTime);
@@ -5094,7 +5094,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
 
     String syncTime = null;
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(TableDefinitionsColumns.LAST_SYNC_TIME);
+      int ind = cursor.getColumnIndex(TableDefinitionsColumns.LAST_SYNC_TIME.getText());
       int type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       syncTime = cursor.getString(ind);
@@ -5157,13 +5157,13 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         accessContext);
 
     while (cursor.moveToNext()) {
-      int ind = cursor.getColumnIndex(DataTableColumns.ROW_ETAG);
+      int ind = cursor.getColumnIndex(DataTableColumns.ROW_ETAG.getText());
       int type = cursor.getType(ind);
       assertEquals(type, Cursor.FIELD_TYPE_STRING);
       String rowETagVal = cursor.getString(ind);
       assertEquals(rowETag, rowETagVal);
 
-      int indSyncState = cursor.getColumnIndex(DataTableColumns.SYNC_STATE);
+      int indSyncState = cursor.getColumnIndex(DataTableColumns.SYNC_STATE.getText());
       int typeSyncState = cursor.getType(indSyncState);
       assertEquals(typeSyncState, Cursor.FIELD_TYPE_STRING);
       String syncStateVal = cursor.getString(indSyncState);
@@ -5319,7 +5319,7 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
     }
 
     // Ensure that the row exists
-    String sel2 = "SELECT * FROM " + tableId + " WHERE " + DataTableColumns.ID + " = ?";
+    String sel2 = "SELECT * FROM " + tableId + " WHERE " + DataTableColumns.ID.getText() + " = ?";
     String[] selArgs2 = { "" + rowId };
     Cursor cursor2 = ODKDatabaseImplUtils.get().rawQuery(db, sel2, selArgs2, null,
         accessContext);
@@ -6265,11 +6265,11 @@ public abstract class AbstractODKDatabaseUtilsTest extends AndroidTestCase {
         assertEquals(type, Cursor.FIELD_TYPE_STRING);
         val = cursor.getString(ind);
 
-        ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE);
+        ind = cursor.getColumnIndex(DataTableColumns.SAVEPOINT_TYPE.getText());
         assertFalse(cursor.isNull(ind));
 
         // Get the conflict_type and make sure that it is null
-        ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+        ind = cursor.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
         assertTrue(cursor.isNull(ind));
       }
 

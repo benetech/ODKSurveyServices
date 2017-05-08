@@ -73,10 +73,10 @@ public class FormIdStruct {
     try {
       c = resolver.query(formUri, null, null, null, null);
       if (c != null && c.getCount() == 1) {
-        int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
-        int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID);
-        int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION);
-        int idxDate = c.getColumnIndex(FormsColumns.DATE);
+        int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
+        int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
+        int idxFormVersion = c.getColumnIndex(FormsColumns.FORM_VERSION.getText());
+        int idxDate = c.getColumnIndex(FormsColumns.DATE.getText());
 
         c.moveToFirst();
 

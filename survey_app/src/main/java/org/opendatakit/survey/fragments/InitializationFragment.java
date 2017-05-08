@@ -176,7 +176,7 @@ public class InitializationFragment extends Fragment implements InitializationLi
   }
 
   @Override
-  public void initializationComplete(boolean overallSuccess, ArrayList<String> result) {
+  public void initializationComplete(boolean overallSuccess, ArrayList<String> result) { //tu powinien zamknac sie dialog
     try {
       dismissProgressDialog();
     } catch (IllegalArgumentException e) {

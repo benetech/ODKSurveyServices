@@ -130,7 +130,7 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
       HttpContext localContext, Map<URI, URI> uriRemap) {
 
     ContentValues cv = new ContentValues();
-    cv.put(InstanceColumns.SUBMISSION_INSTANCE_ID, submissionInstanceId);
+    cv.put(InstanceColumns.SUBMISSION_INSTANCE_ID.getText(), submissionInstanceId);
     URI u = null;
     try {
       URL url = new URL(URLDecoder.decode(urlString, CharEncoding.UTF_8));
@@ -139,21 +139,21 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
       WebLogger.getLogger(appName).printStackTrace(e);
       mOutcome.mResults.put(id,
           fail + "invalid url: " + urlString + " :: details: " + e.getMessage());
-      cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+      cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
       appContext.getContentResolver().update(toUpdate, cv, null, null);
       return true;
     } catch (URISyntaxException e) {
       WebLogger.getLogger(appName).printStackTrace(e);
       mOutcome.mResults.put(id,
           fail + "invalid uri: " + urlString + " :: details: " + e.getMessage());
-      cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+      cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
       appContext.getContentResolver().update(toUpdate, cv, null, null);
       return true;
     } catch (UnsupportedEncodingException e) {
       WebLogger.getLogger(appName).printStackTrace(e);
       mOutcome.mResults.put(id,
           fail + "invalid url: " + urlString + " :: details: " + e.getMessage());
-      cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+      cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
       appContext.getContentResolver().update(toUpdate, cv, null, null);
       return true;
     }
@@ -200,14 +200,14 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
                 // We can't tell if this is a spoof or not.
                 mOutcome.mResults.put(id, fail
                     + "Unexpected redirection attempt to a different host: " + uNew.toString());
-                cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+                cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
                 appContext.getContentResolver().update(toUpdate, cv, null, null);
                 return true;
               }
             } catch (Exception e) {
               WebLogger.getLogger(appName).printStackTrace(e);
               mOutcome.mResults.put(id, fail + urlString + " " + e.getMessage());
-              cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+              cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
               appContext.getContentResolver().update(toUpdate, cv, null, null);
               return true;
             }
@@ -223,7 +223,7 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
                     id,
                     fail
                         + "Invalid status code on Head request.  If you have a web proxy, you may need to login to your network. ");
-            cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+            cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
             appContext.getContentResolver().update(toUpdate, cv, null, null);
             return true;
           }
@@ -232,42 +232,42 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
         WebLogger.getLogger(appName).printStackTrace(e);
         WebLogger.getLogger(appName).e(t, e.getMessage());
         mOutcome.mResults.put(id, fail + "Client Protocol Exception");
-        cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+        cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
         appContext.getContentResolver().update(toUpdate, cv, null, null);
         return true;
       } catch (ConnectTimeoutException e) {
         WebLogger.getLogger(appName).printStackTrace(e);
         WebLogger.getLogger(appName).e(t, e.getMessage());
         mOutcome.mResults.put(id, fail + "Connection Timeout");
-        cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+        cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
         appContext.getContentResolver().update(toUpdate, cv, null, null);
         return true;
       } catch (UnknownHostException e) {
         WebLogger.getLogger(appName).printStackTrace(e);
         mOutcome.mResults.put(id, fail + e.getMessage() + " :: Network Connection Failed");
         WebLogger.getLogger(appName).e(t, e.getMessage());
-        cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+        cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
         appContext.getContentResolver().update(toUpdate, cv, null, null);
         return true;
       } catch (SocketTimeoutException e) {
         WebLogger.getLogger(appName).printStackTrace(e);
         WebLogger.getLogger(appName).e(t, e.getMessage());
         mOutcome.mResults.put(id, fail + "Connection Timeout");
-        cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+        cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
         appContext.getContentResolver().update(toUpdate, cv, null, null);
         return true;
       } catch (HttpHostConnectException e) {
         WebLogger.getLogger(appName).printStackTrace(e);
         WebLogger.getLogger(appName).e(t, e.toString());
         mOutcome.mResults.put(id, fail + "Network Connection Refused");
-        cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+        cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
         appContext.getContentResolver().update(toUpdate, cv, null, null);
         return true;
       } catch (Exception e) {
         WebLogger.getLogger(appName).printStackTrace(e);
         mOutcome.mResults.put(id, fail + "Generic Exception");
         WebLogger.getLogger(appName).e(t, e.getMessage());
-        cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+        cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
         appContext.getContentResolver().update(toUpdate, cv, null, null);
         return true;
       }
@@ -287,7 +287,7 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
 
     if (!instanceFile.exists()) {
       mOutcome.mResults.put(id, fail + "instance XML file does not exist!");
-      cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+      cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
       appContext.getContentResolver().update(toUpdate, cv, null, null);
       return true;
     }
@@ -359,14 +359,14 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
             mOutcome.mResults.put(id, fail + response.getStatusLine().getReasonPhrase() + " ("
                 + responseCode + ") at " + urlString);
           }
-          cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+          cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
           appContext.getContentResolver().update(toUpdate, cv, null, null);
           return true;
         }
       } catch (Exception e) {
         WebLogger.getLogger(appName).printStackTrace(e);
         mOutcome.mResults.put(id, fail + "Generic Exception. " + e.getMessage());
-        cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMISSION_FAILED);
+        cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMISSION_FAILED.getText());
         appContext.getContentResolver().update(toUpdate, cv, null, null);
         return true;
       }
@@ -374,7 +374,7 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
 
     // if it got here, it must have worked
     mOutcome.mResults.put(id, appContext.getString(R.string.success));
-    cv.put(InstanceColumns.XML_PUBLISH_STATUS, InstanceColumns.STATUS_SUBMITTED);
+    cv.put(InstanceColumns.XML_PUBLISH_STATUS.getText(), InstanceColumns.STATUS_SUBMITTED.getText());
     appContext.getContentResolver().update(toUpdate, cv, null, null);
     return true;
   }
@@ -533,9 +533,9 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
           String id = CursorUtils.getIndexAsString(c,
               c.getColumnIndex(InstanceColumns._ID));
           String dataTableInstanceId = CursorUtils.getIndexAsString(c,
-              c.getColumnIndex(InstanceColumns.DATA_INSTANCE_ID));
+              c.getColumnIndex(InstanceColumns.DATA_INSTANCE_ID.getText()));
           String lastOutcome = CursorUtils.getIndexAsString(c,
-              c.getColumnIndex(InstanceColumns.XML_PUBLISH_STATUS));
+              c.getColumnIndex(InstanceColumns.XML_PUBLISH_STATUS.getText()));
           String submissionInstanceId = LocalizationUtils.genUUID();
           // submissions always get a new legacy instance id UNLESS the last
           // submission failed,
@@ -543,9 +543,9 @@ public class InstanceUploaderTask extends AsyncTask<String, Integer, InstanceUpl
           // associated with
           // that failure. This supports resumption of sends of forms with many
           // attachments.
-          if (lastOutcome != null && lastOutcome.equals(InstanceColumns.STATUS_SUBMISSION_FAILED)) {
+          if (lastOutcome != null && lastOutcome.equals(InstanceColumns.STATUS_SUBMISSION_FAILED.getText())) {
             String lastId = CursorUtils.getIndexAsString(c,
-                c.getColumnIndex(InstanceColumns.SUBMISSION_INSTANCE_ID));
+                c.getColumnIndex(InstanceColumns.SUBMISSION_INSTANCE_ID.getText()));
             if (lastId != null) {
               submissionInstanceId = lastId;
             }

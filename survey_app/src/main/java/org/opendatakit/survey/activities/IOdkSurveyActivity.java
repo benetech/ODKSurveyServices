@@ -66,7 +66,7 @@ public interface IOdkSurveyActivity extends IOdkCommonActivity, IOdkDataActivity
 
   public void ignoreAllChangesFailed(String instanceId);
 
-  // for FormChooserListFragment
+  // for InProgressInstancesFragment
   public void chooseForm(Uri formUri);
 
   // for back press suppression

@@ -3,25 +3,37 @@ package org.opendatakit.demoAndroidlibraryClasses.provider;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public final class FormsColumns implements BaseColumns {
-    public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.opendatakit.form";
-    public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.opendatakit.form";
-    public static final String COMMON_BASE_FORM_ID = "framework";
-    public static final String TABLE_ID = "tableId";
-    public static final String FORM_ID = "formId";
-    public static final String SETTINGS = "settings";
-    public static final String FORM_VERSION = "formVersion";
-    public static final String DISPLAY_NAME = "displayName";
-    public static final String DEFAULT_FORM_LOCALE = "defaultFormLocale";
-    public static final String INSTANCE_NAME = "instanceName";
-    public static final String JSON_MD5_HASH = "jsonMd5Hash";
-    public static final String DATE = "date";
-    public static final String FILE_LENGTH = "fileLength";
-    public static final String[] formsDataColumnNames = new String[]{"tableId", "formId", "settings", "formVersion", "displayName", "defaultFormLocale", "instanceName", "jsonMd5Hash", "fileLength", "date"};
+public enum FormsColumns implements BaseColumns {
+    CONTENT_TYPE("vnd.android.cursor.dir/vnd.opendatakit.form"),
+    CONTENT_ITEM_TYPE("vnd.android.cursor.item/vnd.opendatakit.form"),
+    COMMON_BASE_FORM_ID("framework"),
+    TABLE_ID("tableId"),
+    FORM_ID("formId"),
+    SETTINGS("settings"),
+    FORM_VERSION("formVersion"),
+    DISPLAY_NAME("displayName"),
+    DEFAULT_FORM_LOCALE("defaultFormLocale"),
+    INSTANCE_NAME("instanceName"),
+    JSON_MD5_HASH("jsonMd5Hash"),
+    DATE("date"),
+    FILE_LENGTH("fileLength");
 
-    private FormsColumns() {
+    private final String text;
+
+    FormsColumns() {
+        this.text = null;
+    }
+
+    FormsColumns(String text){
+        this.text = text;
+    }
+
+    public String getText(){
+        return this.text;
     }
 
     public static String getTableCreateSql(String tableName) {
@@ -36,5 +48,13 @@ public final class FormsColumns implements BaseColumns {
             String appName = (String)segments.get(0);
             return appName;
         }
+    }
+
+    public static List<String> getValues(){
+        List<String> res = new ArrayList();
+        for(FormsColumns d : values()) {
+            res.add(d.getText());
+        }
+        return res;
     }
 }

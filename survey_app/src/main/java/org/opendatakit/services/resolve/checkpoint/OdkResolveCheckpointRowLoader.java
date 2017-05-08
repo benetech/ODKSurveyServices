@@ -95,9 +95,9 @@ class OdkResolveCheckpointRowLoader extends AsyncTaskLoader<ArrayList<ResolveRow
 
       OrderedColumns orderedDefns = ODKDatabaseImplUtils.get()
           .getUserDefinedColumns(db, mTableId);
-      String whereClause = DataTableColumns.SAVEPOINT_TYPE + " IS NULL";
-      String[] groupBy = { DataTableColumns.ID };
-      String[] orderByKeys = new String[] { DataTableColumns.SAVEPOINT_TIMESTAMP };
+      String whereClause = DataTableColumns.SAVEPOINT_TYPE.getText() + " IS NULL";
+      String[] groupBy = { DataTableColumns.ID.getText() };
+      String[] orderByKeys = new String[] { DataTableColumns.SAVEPOINT_TIMESTAMP.getText() };
       String[] orderByDir = new String[] { "DESC" };
 
       List<String> adminColumns = ODKDatabaseImplUtils.get().getAdminColumns();
@@ -123,7 +123,7 @@ class OdkResolveCheckpointRowLoader extends AsyncTaskLoader<ArrayList<ResolveRow
         // (the ones that differ only in their metadata).
         for (int i = 0; i < table.getNumberOfRows(); ++i) {
           Row row = table.getRowAtIndex(i);
-          String rowId = row.getDataByKey(DataTableColumns.ID);
+          String rowId = row.getDataByKey(DataTableColumns.ID.getText());
 
           OdkResolveCheckpointFieldLoader loader = new OdkResolveCheckpointFieldLoader(getContext(),
               mAppName, mTableId, rowId);
@@ -153,18 +153,18 @@ class OdkResolveCheckpointRowLoader extends AsyncTaskLoader<ArrayList<ResolveRow
           .constructSimpleDisplayName(mTableId)) : entries.get(0).value;
 
       forms = ODKDatabaseImplUtils.get().rawQuery(db,
-          "SELECT " + FormsColumns.INSTANCE_NAME +
-              " , " + FormsColumns.FORM_ID +
-              " , " + FormsColumns.DISPLAY_NAME +
+          "SELECT " + FormsColumns.INSTANCE_NAME.getText() +
+              " , " + FormsColumns.FORM_ID.getText() +
+              " , " + FormsColumns.DISPLAY_NAME.getText() +
               " FROM " + DatabaseConstants.FORMS_TABLE_NAME +
-              " WHERE " + FormsColumns.TABLE_ID + "=?" +
-              " ORDER BY " + FormsColumns.FORM_ID + " ASC",
+              " WHERE " + FormsColumns.TABLE_ID.getText() + "=?" +
+              " ORDER BY " + FormsColumns.FORM_ID.getText() + " ASC",
           new String[]{ mTableId }, null, accessContextBase);
 
       if ( forms != null && forms.moveToFirst() ) {
-        int idxInstanceName = forms.getColumnIndex(FormsColumns.INSTANCE_NAME);
-        int idxFormId = forms.getColumnIndex(FormsColumns.FORM_ID);
-        int idxFormDisplayName = forms.getColumnIndex(FormsColumns.DISPLAY_NAME);
+        int idxInstanceName = forms.getColumnIndex(FormsColumns.INSTANCE_NAME.getText());
+        int idxFormId = forms.getColumnIndex(FormsColumns.FORM_ID.getText());
+        int idxFormDisplayName = forms.getColumnIndex(FormsColumns.DISPLAY_NAME.getText());
         do {
           if ( forms.isNull(idxInstanceName) ) {
             continue;
@@ -227,7 +227,7 @@ class OdkResolveCheckpointRowLoader extends AsyncTaskLoader<ArrayList<ResolveRow
         nameToUse = new FormDefinition();
         nameToUse.formId = null;
         nameToUse.formDisplayName = tableDisplayName;
-        nameToUse.instanceName = DataTableColumns.SAVEPOINT_TIMESTAMP;
+        nameToUse.instanceName = DataTableColumns.SAVEPOINT_TIMESTAMP.getText();
       } else {
         // otherwise use the name from the first formId that gave one.
         nameToUse = formDefinitions.get(0);
@@ -238,7 +238,7 @@ class OdkResolveCheckpointRowLoader extends AsyncTaskLoader<ArrayList<ResolveRow
     ArrayList<ResolveRowEntry> results = new ArrayList<ResolveRowEntry>();
     for (int i = 0; i < table.getNumberOfRows(); i++) {
       Row row = table.getRowAtIndex(i);
-      String rowId = row.getDataByKey(DataTableColumns.ID);
+      String rowId = row.getDataByKey(DataTableColumns.ID.getText());
       String instanceName = row.getDataByKey(nameToUse.instanceName);
       ResolveRowEntry re = new ResolveRowEntry(rowId,
           getContext().getString(R.string.resolve_row_display_name, formDisplayName, instanceName));

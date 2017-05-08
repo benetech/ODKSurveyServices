@@ -125,14 +125,14 @@ public class AndroidShortcuts extends BaseActivity {
           c.moveToPosition(-1);
           while (c.moveToNext()) {
             String localizableDisplayName =
-                CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.DISPLAY_NAME));
+                CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.DISPLAY_NAME.getText()));
             String formName = app.getName() + " > "
                 + LocalizationUtils.getLocalizedDisplayName(localizableDisplayName);
             uri = Uri.withAppendedPath(
                     Uri.withAppendedPath(
                       Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName),
-                        CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.TABLE_ID))),
-                          CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.FORM_ID)));
+                        CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.TABLE_ID.getText()))),
+                          CursorUtils.getIndexAsString(c, c.getColumnIndex(FormsColumns.FORM_ID.getText())));
             choices.add(new Choice(R.drawable.snotes_form, formIcon, uri, formName, appName));
           }
         }

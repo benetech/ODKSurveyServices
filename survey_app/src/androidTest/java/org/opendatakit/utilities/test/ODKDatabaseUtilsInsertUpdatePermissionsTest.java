@@ -541,16 +541,16 @@ public class ODKDatabaseUtilsInsertUpdatePermissionsTest extends AbstractPermiss
 //          if (i >= colHeadersLength) {
 //            throw new IllegalStateException("data beyond header row of ColumnDefinitions table");
 //          }
-//          if (ColumnDefinitionsColumns.ELEMENT_KEY.equals(colHeaders[i])) {
+//          if (ColumnDefinitionsColumns.ELEMENT_KEY.getText().equals(colHeaders[i])) {
 //            elementKeyStr = row[i];
 //          }
-//          if (ColumnDefinitionsColumns.ELEMENT_NAME.equals(colHeaders[i])) {
+//          if (ColumnDefinitionsColumns.ELEMENT_NAME.getText().equals(colHeaders[i])) {
 //            elementNameStr = row[i];
 //          }
-//          if (ColumnDefinitionsColumns.ELEMENT_TYPE.equals(colHeaders[i])) {
+//          if (ColumnDefinitionsColumns.ELEMENT_TYPE.getText().equals(colHeaders[i])) {
 //            elementTypeStr = row[i];
 //          }
-//          if (ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS.equals(colHeaders[i])) {
+//          if (ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS.getText().equals(colHeaders[i])) {
 //            listChildElementKeysStr = row[i];
 //          }
 //        }
@@ -593,16 +593,16 @@ public class ODKDatabaseUtilsInsertUpdatePermissionsTest extends AbstractPermiss
 //        String value = null;
 //        int rowLength = countUpToLastNonNullElement(row);
 //        for (int i = 0; i < rowLength; ++i) {
-//          if (KeyValueStoreColumns.PARTITION.equals(kvsHeaders[i])) {
+//          if (KeyValueStoreColumns.PARTITION.getText().equals(kvsHeaders[i])) {
 //            partition = row[i];
 //          }
-//          if (KeyValueStoreColumns.ASPECT.equals(kvsHeaders[i])) {
+//          if (KeyValueStoreColumns.ASPECT.getText().equals(kvsHeaders[i])) {
 //            aspect = row[i];
 //          }
-//          if (KeyValueStoreColumns.KEY.equals(kvsHeaders[i])) {
+//          if (KeyValueStoreColumns.KEY.getText().equals(kvsHeaders[i])) {
 //            key = row[i];
 //          }
-//          if (KeyValueStoreColumns.VALUE_TYPE.equals(kvsHeaders[i])) {
+//          if (KeyValueStoreColumns.VALUE_TYPE.getText().equals(kvsHeaders[i])) {
 //            type = row[i];
 //          }
 //          if (KeyValueStoreColumns.VALUE.equals(kvsHeaders[i])) {

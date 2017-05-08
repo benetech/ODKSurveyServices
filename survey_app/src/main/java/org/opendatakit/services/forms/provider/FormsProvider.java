@@ -131,15 +131,15 @@ public class FormsProvider extends ContentProvider {
   private FormSpec patchUpValues(String appName, HashMap<String,Object> values) {
 
     // require a tableId and formId...
-    if ( !values.containsKey(FormsColumns.TABLE_ID)) {
-      throw new IllegalArgumentException(FormsColumns.TABLE_ID + " is not specified");
+    if ( !values.containsKey(FormsColumns.TABLE_ID.getText())) {
+      throw new IllegalArgumentException(FormsColumns.TABLE_ID.getText() + " is not specified");
     }
-    String tableId = (String) values.get(FormsColumns.TABLE_ID);
+    String tableId = (String) values.get(FormsColumns.TABLE_ID.getText());
 
-    if ( !values.containsKey(FormsColumns.FORM_ID)) {
-      throw new IllegalArgumentException(FormsColumns.FORM_ID + " is not specified");
+    if ( !values.containsKey(FormsColumns.FORM_ID.getText())) {
+      throw new IllegalArgumentException(FormsColumns.FORM_ID.getText() + " is not specified");
     }
-    String formId = (String) values.get(FormsColumns.FORM_ID);
+    String formId = (String) values.get(FormsColumns.FORM_ID.getText());
 
     FormSpec formSpec = new FormSpec();
     formSpec.tableId = tableId;
@@ -149,8 +149,8 @@ public class FormsProvider extends ContentProvider {
 
     File formDefFolder = new File(formFolder);
 
-    if (!values.containsKey(FormsColumns.DISPLAY_NAME)) {
-      values.put(FormsColumns.DISPLAY_NAME,
+    if (!values.containsKey(FormsColumns.DISPLAY_NAME.getText())) {
+      values.put(FormsColumns.DISPLAY_NAME.getText(),
           NameUtil.normalizeDisplayName(NameUtil.constructSimpleDisplayName(formId)));
     }
 
@@ -164,11 +164,11 @@ public class FormsProvider extends ContentProvider {
     // get the supplied date and hash
     // if these match, skip parsing for other fields.
 
-    if (values.containsKey(FormsColumns.DATE) &&
-        values.containsKey(FormsColumns.FILE_LENGTH)) {
+    if (values.containsKey(FormsColumns.DATE.getText()) &&
+        values.containsKey(FormsColumns.FILE_LENGTH.getText())) {
       // we can avoid file I/O if these values match those of the formDefFile.
-      Long existingModificationDate = (Long) values.get(FormsColumns.DATE);
-      Long existingFileLength = (Long) values.get(FormsColumns.FILE_LENGTH);
+      Long existingModificationDate = (Long) values.get(FormsColumns.DATE.getText());
+      Long existingFileLength = (Long) values.get(FormsColumns.FILE_LENGTH.getText());
 
       // date is the last modification date of the formDef file
       Long now = formDefFile.lastModified();
@@ -183,16 +183,16 @@ public class FormsProvider extends ContentProvider {
     // parse the formDef.json
     FormInfo fiFound = new FormInfo(getContext(), appName, formDefFile);
 
-    values.put(FormsColumns.SETTINGS, fiFound.settings);
-    values.put(FormsColumns.FORM_VERSION, fiFound.formVersion);
-    values.put(FormsColumns.DISPLAY_NAME, fiFound.formTitle);
-    values.put(FormsColumns.DEFAULT_FORM_LOCALE, fiFound.defaultLocale);
-    values.put(FormsColumns.INSTANCE_NAME, fiFound.instanceName);
+    values.put(FormsColumns.SETTINGS.getText(), fiFound.settings);
+    values.put(FormsColumns.FORM_VERSION.getText(), fiFound.formVersion);
+    values.put(FormsColumns.DISPLAY_NAME.getText(), fiFound.formTitle);
+    values.put(FormsColumns.DEFAULT_FORM_LOCALE.getText(), fiFound.defaultLocale);
+    values.put(FormsColumns.INSTANCE_NAME.getText(), fiFound.instanceName);
 
     String md5 = ODKFileUtils.getMd5Hash(appName, formDefFile);
-    values.put(FormsColumns.JSON_MD5_HASH, md5);
-    values.put(FormsColumns.DATE, fiFound.lastModificationDate);
-    values.put(FormsColumns.FILE_LENGTH, fiFound.fileLength);
+    values.put(FormsColumns.JSON_MD5_HASH.getText(), md5);
+    values.put(FormsColumns.DATE.getText(), fiFound.lastModificationDate);
+    values.put(FormsColumns.FILE_LENGTH.getText(), fiFound.fileLength);
 
     return formSpec;
   }
@@ -220,13 +220,13 @@ public class FormsProvider extends ContentProvider {
     }
 
     // force a scan from disk
-    values.remove(FormsColumns.DATE);
-    values.remove(FormsColumns.JSON_MD5_HASH);
+    values.remove(FormsColumns.DATE.getText());
+    values.remove(FormsColumns.JSON_MD5_HASH.getText());
     FormSpec formSpec = patchUpValues(appName, values);
 
     // first try to see if a record with this filename already exists...
-    String[] projection = { FormsColumns.TABLE_ID, FormsColumns.FORM_ID };
-    String selection = FormsColumns.TABLE_ID + "=? AND " + FormsColumns.FORM_ID + "=?";
+    String[] projection = { FormsColumns.TABLE_ID.getText(), FormsColumns.FORM_ID.getText() };
+    String selection = FormsColumns.TABLE_ID.getText() + "=? AND " + FormsColumns.FORM_ID.getText() + "=?";
     String[] selectionArgs = { formSpec.tableId, formSpec.formId };
     Cursor c = null;
 
@@ -270,7 +270,7 @@ public class FormsProvider extends ContentProvider {
         // and notify listeners of the new row...
         Uri formUri = Uri.withAppendedPath(
             Uri.withAppendedPath(Uri.parse("content://" + getFormsAuthority()), appName),
-            (String) values.get(FormsColumns.FORM_ID));
+            (String) values.get(FormsColumns.FORM_ID.getText()));
         getContext().getContentResolver().notifyChange(formUri, null);
         Uri idUri = Uri.withAppendedPath(
             Uri.withAppendedPath(Uri.parse("content://" + getFormsAuthority()), appName),
@@ -360,11 +360,11 @@ public class FormsProvider extends ContentProvider {
       // either a tableId or a numericFormId is specified.
       // combine this filter with the where clause the user supplied.
       if (TextUtils.isEmpty(where)) {
-        pf.whereId = (pf.isNumericFormId ? FormsColumns._ID : FormsColumns.TABLE_ID) + "=?";
+        pf.whereId = (pf.isNumericFormId ? FormsColumns._ID : FormsColumns.TABLE_ID.getText()) + "=?";
         pf.whereIdArgs = new String[1];
         pf.whereIdArgs[0] = (pf.isNumericFormId ? pf.numericFormId : pf.tableId);
       } else {
-        pf.whereId = (pf.isNumericFormId ? FormsColumns._ID : FormsColumns.TABLE_ID) + "=? AND (" + where
+        pf.whereId = (pf.isNumericFormId ? FormsColumns._ID : FormsColumns.TABLE_ID.getText()) + "=? AND (" + where
             + ")";
         pf.whereIdArgs = new String[whereArgs.length + 1];
         pf.whereIdArgs[0] =  (pf.isNumericFormId ? pf.numericFormId : pf.tableId);
@@ -374,12 +374,12 @@ public class FormsProvider extends ContentProvider {
       // we have both a tableId and a formId.
       // combine with the filter clause the user supplied.
       if (TextUtils.isEmpty(where)) {
-        pf.whereId = FormsColumns.TABLE_ID + "=? AND " + FormsColumns.FORM_ID + "=?";
+        pf.whereId = FormsColumns.TABLE_ID.getText() + "=? AND " + FormsColumns.FORM_ID.getText() + "=?";
         pf.whereIdArgs = new String[2];
         pf.whereIdArgs[0] = pf.tableId;
         pf.whereIdArgs[1] = pf.formId;
       } else {
-        pf.whereId =  FormsColumns.TABLE_ID + "=? AND " + FormsColumns.FORM_ID + "=? AND (" + where
+        pf.whereId =  FormsColumns.TABLE_ID.getText() + "=? AND " + FormsColumns.FORM_ID.getText() + "=? AND (" + where
             + ")";
         pf.whereIdArgs = new String[whereArgs.length + 2];
         pf.whereIdArgs[0] = pf.tableId;
@@ -398,9 +398,9 @@ public class FormsProvider extends ContentProvider {
     PatchedFilter pf = extractUriFeatures( uri, segments, null, null );
 
     if ( pf.isNumericFormId || segments.size() == 3) {
-      return FormsColumns.CONTENT_ITEM_TYPE;
+      return FormsColumns.CONTENT_ITEM_TYPE.getText();
     } else {
-      return FormsColumns.CONTENT_TYPE;
+      return FormsColumns.CONTENT_TYPE.getText();
     }
   }
 
@@ -469,7 +469,7 @@ public class FormsProvider extends ContentProvider {
     PatchedFilter pf = extractUriFeatures( uri, segments, where, whereArgs );
     WebLoggerIf logger = WebLogger.getLogger(pf.appName);
 
-    String[] projection = { FormsColumns._ID, FormsColumns.TABLE_ID, FormsColumns.FORM_ID };
+    String[] projection = { FormsColumns._ID, FormsColumns.TABLE_ID.getText(), FormsColumns.FORM_ID.getText() };
 
     HashMap<String, FormSpec> directories = new HashMap<String, FormSpec>();
 
@@ -494,8 +494,8 @@ public class FormsProvider extends ContentProvider {
       }
 
       int idxId = c.getColumnIndex(FormsColumns._ID);
-      int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
-      int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID);
+      int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
+      int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
 
       if ( c.moveToFirst() ) {
         do {
@@ -630,10 +630,10 @@ public class FormsProvider extends ContentProvider {
      * the ContentValues and have those not match the where results.
      *
      */
-    String contentTableId = (values != null && values.containsKey(FormsColumns.TABLE_ID)) ?
-        values.getAsString(FormsColumns.TABLE_ID) : null;
-    String contentFormId = (values != null && values.containsKey(FormsColumns.FORM_ID)) ?
-        values.getAsString(FormsColumns.FORM_ID) : null;
+    String contentTableId = (values != null && values.containsKey(FormsColumns.TABLE_ID.getText())) ?
+        values.getAsString(FormsColumns.TABLE_ID.getText()) : null;
+    String contentFormId = (values != null && values.containsKey(FormsColumns.FORM_ID.getText())) ?
+        values.getAsString(FormsColumns.FORM_ID.getText()) : null;
 
     HashMap<FormSpec, HashMap<String,Object>> matchedValues = new HashMap<FormSpec, HashMap<String,Object>>();
 
@@ -654,8 +654,8 @@ public class FormsProvider extends ContentProvider {
         }
         if (c.moveToFirst()) {
           int idxId = c.getColumnIndex(FormsColumns._ID);
-          int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID);
-          int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID);
+          int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
+          int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
 
           Integer idValue = null;
           String tableIdValue = null;
@@ -679,8 +679,8 @@ public class FormsProvider extends ContentProvider {
                 cv.put(key, values.get(key));
               }
             }
-            cv.put(FormsColumns.TABLE_ID, tableIdValue);
-            cv.put(FormsColumns.FORM_ID, formIdValue);
+            cv.put(FormsColumns.TABLE_ID.getText(), tableIdValue);
+            cv.put(FormsColumns.FORM_ID.getText(), formIdValue);
             for ( int idx = 0 ; idx < c.getColumnCount() ; ++idx ) {
               String colName = c.getColumnName(idx);
               if ( colName.equals(FormsColumns._ID)) {

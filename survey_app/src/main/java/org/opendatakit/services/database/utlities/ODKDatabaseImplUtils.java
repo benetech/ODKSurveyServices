@@ -83,16 +83,16 @@ public class ODKDatabaseImplUtils {
   private static final String K_LIMIT = " LIMIT ";
   private static final String K_OFFSET = " OFFSET ";
 
-  private static final String K_TABLE_DEFS_TABLE_ID_EQUALS_PARAM = TableDefinitionsColumns.TABLE_ID + S_EQUALS_PARAM;
+  private static final String K_TABLE_DEFS_TABLE_ID_EQUALS_PARAM = TableDefinitionsColumns.TABLE_ID.getText() + S_EQUALS_PARAM;
 
-  private static final String K_COLUMN_DEFS_TABLE_ID_EQUALS_PARAM = ColumnDefinitionsColumns.TABLE_ID + S_EQUALS_PARAM;
+  private static final String K_COLUMN_DEFS_TABLE_ID_EQUALS_PARAM = ColumnDefinitionsColumns.TABLE_ID.getText() + S_EQUALS_PARAM;
 
-  private static final String K_KVS_TABLE_ID_EQUALS_PARAM = KeyValueStoreColumns.TABLE_ID + S_EQUALS_PARAM;
-  private static final String K_KVS_PARTITION_EQUALS_PARAM = KeyValueStoreColumns.PARTITION + S_EQUALS_PARAM;
-  private static final String K_KVS_ASPECT_EQUALS_PARAM = KeyValueStoreColumns.ASPECT + S_EQUALS_PARAM;
-  private static final String K_KVS_KEY_EQUALS_PARAM = KeyValueStoreColumns.KEY + S_EQUALS_PARAM;
+  private static final String K_KVS_TABLE_ID_EQUALS_PARAM = KeyValueStoreColumns.TABLE_ID.getText() + S_EQUALS_PARAM;
+  private static final String K_KVS_PARTITION_EQUALS_PARAM = KeyValueStoreColumns.PARTITION.getText() + S_EQUALS_PARAM;
+  private static final String K_KVS_ASPECT_EQUALS_PARAM = KeyValueStoreColumns.ASPECT.getText() + S_EQUALS_PARAM;
+  private static final String K_KVS_KEY_EQUALS_PARAM = KeyValueStoreColumns.KEY.getText() + S_EQUALS_PARAM;
 
-  private static final String K_DATATABLE_ID_EQUALS_PARAM = DataTableColumns.ID + S_EQUALS_PARAM;
+  private static final String K_DATATABLE_ID_EQUALS_PARAM = DataTableColumns.ID.getText() + S_EQUALS_PARAM;
 
   /**
    * The rolesList expansion is very time consuming.
@@ -230,30 +230,30 @@ public class ODKDatabaseImplUtils {
 
   static {
     ArrayList<String> adminColumns = new ArrayList<String>();
-    adminColumns.add(DataTableColumns.ID);
-    adminColumns.add(DataTableColumns.ROW_ETAG);
-    adminColumns.add(DataTableColumns.SYNC_STATE); // not exportable
-    adminColumns.add(DataTableColumns.CONFLICT_TYPE); // not exportable
-    adminColumns.add(DataTableColumns.FILTER_TYPE);
-    adminColumns.add(DataTableColumns.FILTER_VALUE);
-    adminColumns.add(DataTableColumns.FORM_ID);
-    adminColumns.add(DataTableColumns.LOCALE);
-    adminColumns.add(DataTableColumns.SAVEPOINT_TYPE);
-    adminColumns.add(DataTableColumns.SAVEPOINT_TIMESTAMP);
-    adminColumns.add(DataTableColumns.SAVEPOINT_CREATOR);
+    adminColumns.add(DataTableColumns.ID.getText());
+    adminColumns.add(DataTableColumns.ROW_ETAG.getText());
+    adminColumns.add(DataTableColumns.SYNC_STATE.getText()); // not exportable
+    adminColumns.add(DataTableColumns.CONFLICT_TYPE.getText()); // not exportable
+    adminColumns.add(DataTableColumns.FILTER_TYPE.getText());
+    adminColumns.add(DataTableColumns.FILTER_VALUE.getText());
+    adminColumns.add(DataTableColumns.FORM_ID.getText());
+    adminColumns.add(DataTableColumns.LOCALE.getText());
+    adminColumns.add(DataTableColumns.SAVEPOINT_TYPE.getText());
+    adminColumns.add(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
+    adminColumns.add(DataTableColumns.SAVEPOINT_CREATOR.getText());
     Collections.sort(adminColumns);
     ADMIN_COLUMNS = Collections.unmodifiableList(adminColumns);
 
     ArrayList<String> exportColumns = new ArrayList<String>();
-    exportColumns.add(DataTableColumns.ID);
-    exportColumns.add(DataTableColumns.ROW_ETAG);
-    exportColumns.add(DataTableColumns.FILTER_TYPE);
-    exportColumns.add(DataTableColumns.FILTER_VALUE);
-    exportColumns.add(DataTableColumns.FORM_ID);
-    exportColumns.add(DataTableColumns.LOCALE);
-    exportColumns.add(DataTableColumns.SAVEPOINT_TYPE);
-    exportColumns.add(DataTableColumns.SAVEPOINT_TIMESTAMP);
-    exportColumns.add(DataTableColumns.SAVEPOINT_CREATOR);
+    exportColumns.add(DataTableColumns.ID.getText());
+    exportColumns.add(DataTableColumns.ROW_ETAG.getText());
+    exportColumns.add(DataTableColumns.FILTER_TYPE.getText());
+    exportColumns.add(DataTableColumns.FILTER_VALUE.getText());
+    exportColumns.add(DataTableColumns.FORM_ID.getText());
+    exportColumns.add(DataTableColumns.LOCALE.getText());
+    exportColumns.add(DataTableColumns.SAVEPOINT_TYPE.getText());
+    exportColumns.add(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
+    exportColumns.add(DataTableColumns.SAVEPOINT_CREATOR.getText());
     Collections.sort(exportColumns);
     EXPORT_COLUMNS = Collections.unmodifiableList(exportColumns);
 
@@ -485,45 +485,45 @@ public class ODKDatabaseImplUtils {
     b.append(", ");
     if ( accessContext.isPrivilegedUser ) {
       // privileged user
-      b.append("\"rwd\" as ").append(DataTableColumns.EFFECTIVE_ACCESS);
+      b.append("\"rwd\" as ").append(DataTableColumns.EFFECTIVE_ACCESS.getText());
     } else if ( accessContext.isUnverifiedUser ) {
       // un-verified user or anonymous user
       if ( accessContext.accessColumnType == AccessColumnType.UNLOCKED_EFFECTIVE_ACCESS_COLUMN ) {
         // unlocked tables have r, rw (modify) and rwd (default or new_row) options
-        b.append("case when T.").append(DataTableColumns.SYNC_STATE)
+        b.append("case when T.").append(DataTableColumns.SYNC_STATE.getText())
             .append("= \"").append(SyncState.new_row.name()).append("\" then \"rwd\" ")
-            .append(" when T.").append(DataTableColumns.FILTER_TYPE)
+            .append(" when T.").append(DataTableColumns.FILTER_TYPE.getText())
             .append("= \"").append(RowFilterScope.Type.DEFAULT.name()).append("\" then \"rwd\" ")
-            .append(" when T.").append(DataTableColumns.FILTER_TYPE)
+            .append(" when T.").append(DataTableColumns.FILTER_TYPE.getText())
             .append("= \"").append(RowFilterScope.Type.MODIFY.name()).append("\" then \"rw\" ")
-            .append(" else \"r\" end as ").append(DataTableColumns.EFFECTIVE_ACCESS);
+            .append(" else \"r\" end as ").append(DataTableColumns.EFFECTIVE_ACCESS.getText());
       } else {
         // locked tables have just rwd (new_row) and r options
-        b.append("case when T.").append(DataTableColumns.SYNC_STATE)
+        b.append("case when T.").append(DataTableColumns.SYNC_STATE.getText())
             .append("= \"").append(SyncState.new_row.name()).append("\" then \"rwd\" ")
-            .append(" else \"r\" end as ").append(DataTableColumns.EFFECTIVE_ACCESS);
+            .append(" else \"r\" end as ").append(DataTableColumns.EFFECTIVE_ACCESS.getText());
       }
     } else {
       // ordinary user
       if ( accessContext.accessColumnType == AccessColumnType.UNLOCKED_EFFECTIVE_ACCESS_COLUMN ) {
         // unlocked tables have r, rw (modify) and rwd (default or new_row) options
-        b.append("case when T.").append(DataTableColumns.SYNC_STATE).append("= \"")
+        b.append("case when T.").append(DataTableColumns.SYNC_STATE.getText()).append("= \"")
             .append(SyncState.new_row.name()).append("\" then \"rwd\" ")
-            .append(" when T.").append(DataTableColumns.FILTER_VALUE).append("= ?")
+            .append(" when T.").append(DataTableColumns.FILTER_VALUE.getText()).append("= ?")
             .append(" then \"rwd\" ")
-            .append(" when T.").append(DataTableColumns.FILTER_TYPE).append("= \"")
+            .append(" when T.").append(DataTableColumns.FILTER_TYPE.getText()).append("= \"")
             .append(RowFilterScope.Type.DEFAULT.name()).append("\" then \"rwd\" ")
-            .append(" when T.").append(DataTableColumns.FILTER_TYPE).append("= \"")
+            .append(" when T.").append(DataTableColumns.FILTER_TYPE.getText()).append("= \"")
             .append(RowFilterScope.Type.MODIFY.name()).append("\" then \"rw\" ")
-            .append(" else \"r\" end as ").append(DataTableColumns.EFFECTIVE_ACCESS);
+            .append(" else \"r\" end as ").append(DataTableColumns.EFFECTIVE_ACCESS.getText());
         wrappedSqlArgs.add(accessContext.activeUser);
       } else {
         // locked tables have just rwd (new_row) and r options
-        b.append("case when T.").append(DataTableColumns.SYNC_STATE).append("= \"")
+        b.append("case when T.").append(DataTableColumns.SYNC_STATE.getText()).append("= \"")
             .append(SyncState.new_row.name()).append("\" then \"rwd\" ")
-            .append(" when T.").append(DataTableColumns.FILTER_VALUE).append("= ?")
+            .append(" when T.").append(DataTableColumns.FILTER_VALUE.getText()).append("= ?")
             .append(" then \"rw\" ")
-            .append(" else \"r\" end as ").append(DataTableColumns.EFFECTIVE_ACCESS);
+            .append(" else \"r\" end as ").append(DataTableColumns.EFFECTIVE_ACCESS.getText());
         wrappedSqlArgs.add(accessContext.activeUser);
       }
     }
@@ -545,9 +545,9 @@ public class ODKDatabaseImplUtils {
     Cursor c = db.rawQuery(sqlCommand + " LIMIT 1", selectionArgs);
     if (c.moveToFirst() ) {
       // see if we have the columns needed to apply row-level filtering
-      boolean hasFilterType = c.getColumnIndex(DataTableColumns.FILTER_TYPE) != -1;
-      boolean hasFilterValue = c.getColumnIndex(DataTableColumns.FILTER_VALUE) != -1;
-      boolean hasSyncState = c.getColumnIndex(DataTableColumns.SYNC_STATE) != -1;
+      boolean hasFilterType = c.getColumnIndex(DataTableColumns.FILTER_TYPE.getText()) != -1;
+      boolean hasFilterValue = c.getColumnIndex(DataTableColumns.FILTER_VALUE.getText()) != -1;
+      boolean hasSyncState = c.getColumnIndex(DataTableColumns.SYNC_STATE.getText()) != -1;
       c.close();
 
       if ( !(hasFilterType && hasFilterValue && hasSyncState) ) {
@@ -573,14 +573,14 @@ public class ODKDatabaseImplUtils {
       // privileged users see everything.
       if ( !accessContext.isPrivilegedUser ) {
         b.append(" WHERE T.")
-            .append(DataTableColumns.FILTER_TYPE)
+            .append(DataTableColumns.FILTER_TYPE.getText())
             .append(" != \"").append(RowFilterScope.Type.HIDDEN.name()).append("\" OR T.")
-            .append(DataTableColumns.SYNC_STATE)
+            .append(DataTableColumns.SYNC_STATE.getText())
             .append(" = \"").append(SyncState.new_row.name()).append("\"");
         if (!accessContext.isUnverifiedUser && accessContext.activeUser != null &&
             accessContext.hasRole(RoleConsts.ROLE_USER)) {
           // visible if activeUser matches the filter value
-          b.append(" OR T.").append(DataTableColumns.FILTER_VALUE).append(" = ?");
+          b.append(" OR T.").append(DataTableColumns.FILTER_VALUE.getText()).append(" = ?");
           wrappedSqlArgs.add(accessContext.activeUser);
         }
       }
@@ -1105,7 +1105,7 @@ public class ODKDatabaseImplUtils {
   private boolean hasConflictRows(BaseTable table) {
     List<Row> rows = table.getRows();
     for (Row row : rows) {
-      String conflictType = row.getDataByKey(DataTableColumns.CONFLICT_TYPE);
+      String conflictType = row.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText());
       if (conflictType != null && conflictType.length() != 0) {
         return true;
       }
@@ -1165,22 +1165,22 @@ public class ODKDatabaseImplUtils {
     Object[] selectionArgs = { tableId };
     //@formatter:off
     String[] cols = {
-        ColumnDefinitionsColumns.ELEMENT_KEY,
-        ColumnDefinitionsColumns.ELEMENT_NAME,
-        ColumnDefinitionsColumns.ELEMENT_TYPE,
-        ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS
+        ColumnDefinitionsColumns.ELEMENT_KEY.getText(),
+        ColumnDefinitionsColumns.ELEMENT_NAME.getText(),
+        ColumnDefinitionsColumns.ELEMENT_TYPE.getText(),
+        ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS.getText()
       };
     //@formatter:on
     Cursor c = null;
     try {
       c = db.query(DatabaseConstants.COLUMN_DEFINITIONS_TABLE_NAME, cols, selection, selectionArgs,
-          null, null, ColumnDefinitionsColumns.ELEMENT_KEY + " ASC", null);
+          null, null, ColumnDefinitionsColumns.ELEMENT_KEY.getText() + " ASC", null);
 
-      int elemKeyIndex = c.getColumnIndexOrThrow(ColumnDefinitionsColumns.ELEMENT_KEY);
-      int elemNameIndex = c.getColumnIndexOrThrow(ColumnDefinitionsColumns.ELEMENT_NAME);
-      int elemTypeIndex = c.getColumnIndexOrThrow(ColumnDefinitionsColumns.ELEMENT_TYPE);
+      int elemKeyIndex = c.getColumnIndexOrThrow(ColumnDefinitionsColumns.ELEMENT_KEY.getText());
+      int elemNameIndex = c.getColumnIndexOrThrow(ColumnDefinitionsColumns.ELEMENT_NAME.getText());
+      int elemTypeIndex = c.getColumnIndexOrThrow(ColumnDefinitionsColumns.ELEMENT_TYPE.getText());
       int listChildrenIndex = c
-          .getColumnIndexOrThrow(ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS);
+          .getColumnIndexOrThrow(ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS.getText());
       c.moveToFirst();
       while (!c.isAfterLast()) {
         String elementKey = CursorUtils.getIndexAsString(c, elemKeyIndex);
@@ -1283,11 +1283,11 @@ public class ODKDatabaseImplUtils {
     Cursor c = null;
     try {
       c = db.query(DatabaseConstants.TABLE_DEFS_TABLE_NAME,
-          new String[] { TableDefinitionsColumns.TABLE_ID }, null, null, null, null,
-          TableDefinitionsColumns.TABLE_ID + " ASC", null);
+          new String[] { TableDefinitionsColumns.TABLE_ID.getText() }, null, null, null, null,
+          TableDefinitionsColumns.TABLE_ID.getText() + " ASC", null);
 
       if (c.moveToFirst()) {
-        int idxId = c.getColumnIndex(TableDefinitionsColumns.TABLE_ID);
+        int idxId = c.getColumnIndex(TableDefinitionsColumns.TABLE_ID.getText());
         do {
           String tableId = c.getString(idxId);
           if (tableId == null || tableId.length() == 0) {
@@ -1438,8 +1438,8 @@ public class ODKDatabaseImplUtils {
     }
 
     TreeMap<String,Object> cvTableDef = new TreeMap<String,Object>();
-    cvTableDef.put(TableDefinitionsColumns.SCHEMA_ETAG, schemaETag);
-    cvTableDef.put(TableDefinitionsColumns.LAST_DATA_ETAG, lastDataETag);
+    cvTableDef.put(TableDefinitionsColumns.SCHEMA_ETAG.getText(), schemaETag);
+    cvTableDef.put(TableDefinitionsColumns.LAST_DATA_ETAG.getText(), lastDataETag);
 
     boolean dbWithinTransaction = db.inTransaction();
     try {
@@ -1473,7 +1473,7 @@ public class ODKDatabaseImplUtils {
     }
 
     TreeMap<String,Object> cvTableDef = new TreeMap<String,Object>();
-    cvTableDef.put(TableDefinitionsColumns.LAST_SYNC_TIME,
+    cvTableDef.put(TableDefinitionsColumns.LAST_SYNC_TIME.getText(),
         TableConstants.nanoSecondsFromMillis(System.currentTimeMillis()));
 
     boolean dbWithinTransaction = db.inTransaction();
@@ -1516,10 +1516,10 @@ public class ODKDatabaseImplUtils {
       c = db.query(DatabaseConstants.TABLE_DEFS_TABLE_NAME, null, b.toString(),
           selArgs.toArray(new String[selArgs.size()]), null, null, null, null);
       if (c.moveToFirst()) {
-        int idxSchemaETag = c.getColumnIndex(TableDefinitionsColumns.SCHEMA_ETAG);
-        int idxLastDataETag = c.getColumnIndex(TableDefinitionsColumns.LAST_DATA_ETAG);
-        int idxLastSyncTime = c.getColumnIndex(TableDefinitionsColumns.LAST_SYNC_TIME);
-        int idxRevId = c.getColumnIndex(TableDefinitionsColumns.REV_ID);
+        int idxSchemaETag = c.getColumnIndex(TableDefinitionsColumns.SCHEMA_ETAG.getText());
+        int idxLastDataETag = c.getColumnIndex(TableDefinitionsColumns.LAST_DATA_ETAG.getText());
+        int idxLastSyncTime = c.getColumnIndex(TableDefinitionsColumns.LAST_SYNC_TIME.getText());
+        int idxRevId = c.getColumnIndex(TableDefinitionsColumns.REV_ID.getText());
 
         if (c.getCount() != 1) {
           throw new IllegalStateException(
@@ -1552,7 +1552,7 @@ public class ODKDatabaseImplUtils {
       c = db.query(DatabaseConstants.TABLE_DEFS_TABLE_NAME, null, b.toString(),
           selArgs.toArray(new String[selArgs.size()]), null, null, null, null);
       if (c.moveToFirst()) {
-        int idxRevId = c.getColumnIndex(TableDefinitionsColumns.REV_ID);
+        int idxRevId = c.getColumnIndex(TableDefinitionsColumns.REV_ID.getText());
 
         if (c.getCount() != 1) {
           throw new IllegalStateException(
@@ -1577,16 +1577,16 @@ public class ODKDatabaseImplUtils {
   private void addMetadataFieldsToTableCreationStatement(StringBuilder b) {
     /*
      * Resulting string should be the following String createTableCmd =
-     * "CREATE TABLE IF NOT EXISTS " + tableId + " (" + DataTableColumns.ID +
-     * " TEXT NOT NULL, " + DataTableColumns.ROW_ETAG + " TEXT NULL, " +
-     * DataTableColumns.SYNC_STATE + " TEXT NOT NULL, " +
-     * DataTableColumns.CONFLICT_TYPE + " INTEGER NULL," +
-     * DataTableColumns.FILTER_TYPE + " TEXT NULL," +
-     * DataTableColumns.FILTER_VALUE + " TEXT NULL," + DataTableColumns.FORM_ID
-     * + " TEXT NULL," + DataTableColumns.LOCALE + " TEXT NULL," +
-     * DataTableColumns.SAVEPOINT_TYPE + " TEXT NULL," +
-     * DataTableColumns.SAVEPOINT_TIMESTAMP + " TEXT NOT NULL," +
-     * DataTableColumns.SAVEPOINT_CREATOR + " TEXT NULL";
+     * "CREATE TABLE IF NOT EXISTS " + tableId + " (" + DataTableColumns.ID.getText() +
+     * " TEXT NOT NULL, " + DataTableColumns.ROW_ETAG.getText() + " TEXT NULL, " +
+     * DataTableColumns.SYNC_STATE.getText() + " TEXT NOT NULL, " +
+     * DataTableColumns.CONFLICT_TYPE.getText() + " INTEGER NULL," +
+     * DataTableColumns.FILTER_TYPE.getText() + " TEXT NULL," +
+     * DataTableColumns.FILTER_VALUE.getText() + " TEXT NULL," + DataTableColumns.FORM_ID.getText()
+     * + " TEXT NULL," + DataTableColumns.LOCALE.getText() + " TEXT NULL," +
+     * DataTableColumns.SAVEPOINT_TYPE.getText() + " TEXT NULL," +
+     * DataTableColumns.SAVEPOINT_TIMESTAMP.getText() + " TEXT NOT NULL," +
+     * DataTableColumns.SAVEPOINT_CREATOR.getText() + " TEXT NULL";
      */
 
     List<String> cols = getAdminColumns();
@@ -1598,19 +1598,19 @@ public class ODKDatabaseImplUtils {
       }
       String colName = cols.get(i);
       //@formatter:off
-      if (colName.equals(DataTableColumns.ID)
-          || colName.equals(DataTableColumns.SYNC_STATE)
-          || colName.equals(DataTableColumns.SAVEPOINT_TIMESTAMP)) {
+      if (colName.equals(DataTableColumns.ID.getText())
+          || colName.equals(DataTableColumns.SYNC_STATE.getText())
+          || colName.equals(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())) {
         b.append(colName).append(" TEXT NOT NULL").append(endSeq);
-      } else if (colName.equals(DataTableColumns.ROW_ETAG)
-          || colName.equals(DataTableColumns.FILTER_TYPE)
-          || colName.equals(DataTableColumns.FILTER_VALUE)
-          || colName.equals(DataTableColumns.FORM_ID)
-          || colName.equals(DataTableColumns.LOCALE)
-          || colName.equals(DataTableColumns.SAVEPOINT_TYPE)
-          || colName.equals(DataTableColumns.SAVEPOINT_CREATOR)) {
+      } else if (colName.equals(DataTableColumns.ROW_ETAG.getText())
+          || colName.equals(DataTableColumns.FILTER_TYPE.getText())
+          || colName.equals(DataTableColumns.FILTER_VALUE.getText())
+          || colName.equals(DataTableColumns.FORM_ID.getText())
+          || colName.equals(DataTableColumns.LOCALE.getText())
+          || colName.equals(DataTableColumns.SAVEPOINT_TYPE.getText())
+          || colName.equals(DataTableColumns.SAVEPOINT_CREATOR.getText())) {
         b.append(colName).append(" TEXT NULL").append(endSeq);
-      } else if (colName.equals(DataTableColumns.CONFLICT_TYPE)) {
+      } else if (colName.equals(DataTableColumns.CONFLICT_TYPE.getText())) {
         b.append(colName).append(" INTEGER NULL").append(endSeq);
       }
       //@formatter:on
@@ -1749,15 +1749,15 @@ public class ODKDatabaseImplUtils {
     validateKVSEntry(db.getAppName(), e.tableId, e);
 
     TreeMap<String,Object> values = new TreeMap<String,Object>();
-    values.put(KeyValueStoreColumns.TABLE_ID, e.tableId);
-    values.put(KeyValueStoreColumns.PARTITION, e.partition);
-    values.put(KeyValueStoreColumns.ASPECT, e.aspect);
-    values.put(KeyValueStoreColumns.KEY, e.key);
-    values.put(KeyValueStoreColumns.VALUE_TYPE, e.type);
-    values.put(KeyValueStoreColumns.VALUE, e.value);
+    values.put(KeyValueStoreColumns.TABLE_ID.getText(), e.tableId);
+    values.put(KeyValueStoreColumns.PARTITION.getText(), e.partition);
+    values.put(KeyValueStoreColumns.ASPECT.getText(), e.aspect);
+    values.put(KeyValueStoreColumns.KEY.getText(), e.key);
+    values.put(KeyValueStoreColumns.VALUE_TYPE.getText(), e.type);
+    values.put(KeyValueStoreColumns.VALUE.getText(), e.value);
 
     TreeMap<String, Object> metadataRev = new TreeMap<String, Object>();
-    metadataRev.put(TableDefinitionsColumns.REV_ID, UUID.randomUUID().toString());
+    metadataRev.put(TableDefinitionsColumns.REV_ID.getText(), UUID.randomUUID().toString());
 
     boolean dbWithinTransaction = db.inTransaction();
     try {
@@ -1977,12 +1977,12 @@ public class ODKDatabaseImplUtils {
       c = db.query(DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME, null, b.toString(),
           selArgs.toArray(new String[selArgs.size()]), null, null, null, null);
       if (c.moveToFirst()) {
-        int idxTableId = c.getColumnIndex(KeyValueStoreColumns.TABLE_ID);
-        int idxPartition = c.getColumnIndex(KeyValueStoreColumns.PARTITION);
-        int idxAspect = c.getColumnIndex(KeyValueStoreColumns.ASPECT);
-        int idxKey = c.getColumnIndex(KeyValueStoreColumns.KEY);
-        int idxType = c.getColumnIndex(KeyValueStoreColumns.VALUE_TYPE);
-        int idxValue = c.getColumnIndex(KeyValueStoreColumns.VALUE);
+        int idxTableId = c.getColumnIndex(KeyValueStoreColumns.TABLE_ID.getText());
+        int idxPartition = c.getColumnIndex(KeyValueStoreColumns.PARTITION.getText());
+        int idxAspect = c.getColumnIndex(KeyValueStoreColumns.ASPECT.getText());
+        int idxKey = c.getColumnIndex(KeyValueStoreColumns.KEY.getText());
+        int idxType = c.getColumnIndex(KeyValueStoreColumns.VALUE_TYPE.getText());
+        int idxValue = c.getColumnIndex(KeyValueStoreColumns.VALUE.getText());
 
         do {
           KeyValueStoreEntry e = new KeyValueStoreEntry();
@@ -2022,7 +2022,7 @@ public class ODKDatabaseImplUtils {
       b.setLength(0);
       //@formatter:off
       b.append("UPDATE ").append(DatabaseConstants.KEY_VALUE_STORE_ACTIVE_TABLE_NAME)
-          .append(" SET ").append(KeyValueStoreColumns.VALUE_TYPE).append(S_EQUALS_PARAM)
+          .append(" SET ").append(KeyValueStoreColumns.VALUE_TYPE.getText()).append(S_EQUALS_PARAM)
           .append(K_WHERE)
           .append(K_KVS_PARTITION_EQUALS_PARAM).append(S_AND)
           .append(K_KVS_KEY_EQUALS_PARAM);
@@ -2055,11 +2055,11 @@ public class ODKDatabaseImplUtils {
 
     // Add the table id into table definitions
     TreeMap<String,Object> cvTableDef = new TreeMap<String,Object>();
-    cvTableDef.put(TableDefinitionsColumns.TABLE_ID, tableId);
-    cvTableDef.put(TableDefinitionsColumns.REV_ID, UUID.randomUUID().toString());
-    cvTableDef.put(TableDefinitionsColumns.SCHEMA_ETAG, null);
-    cvTableDef.put(TableDefinitionsColumns.LAST_DATA_ETAG, null);
-    cvTableDef.put(TableDefinitionsColumns.LAST_SYNC_TIME, -1);
+    cvTableDef.put(TableDefinitionsColumns.TABLE_ID.getText(), tableId);
+    cvTableDef.put(TableDefinitionsColumns.REV_ID.getText(), UUID.randomUUID().toString());
+    cvTableDef.put(TableDefinitionsColumns.SCHEMA_ETAG.getText(), null);
+    cvTableDef.put(TableDefinitionsColumns.LAST_DATA_ETAG.getText(), null);
+    cvTableDef.put(TableDefinitionsColumns.LAST_SYNC_TIME.getText(), -1);
 
     db.replaceOrThrow(DatabaseConstants.TABLE_DEFS_TABLE_NAME, null, cvTableDef);
   }
@@ -2149,12 +2149,12 @@ public class ODKDatabaseImplUtils {
 
     // Create column definition
     TreeMap<String,Object> cvColDefVal = new TreeMap<String,Object>();
-    cvColDefVal.put(ColumnDefinitionsColumns.TABLE_ID, tableId);
-    cvColDefVal.put(ColumnDefinitionsColumns.ELEMENT_KEY, colName);
-    cvColDefVal.put(ColumnDefinitionsColumns.ELEMENT_NAME, column.getElementName());
-    cvColDefVal.put(ColumnDefinitionsColumns.ELEMENT_TYPE, column.getElementType());
+    cvColDefVal.put(ColumnDefinitionsColumns.TABLE_ID.getText(), tableId);
+    cvColDefVal.put(ColumnDefinitionsColumns.ELEMENT_KEY.getText(), colName);
+    cvColDefVal.put(ColumnDefinitionsColumns.ELEMENT_NAME.getText(), column.getElementName());
+    cvColDefVal.put(ColumnDefinitionsColumns.ELEMENT_TYPE.getText(), column.getElementType());
     cvColDefVal
-        .put(ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS, column.getListChildElementKeys());
+        .put(ColumnDefinitionsColumns.LIST_CHILD_ELEMENT_KEYS.getText(), column.getListChildElementKeys());
 
     // Now add this data into the database
     db.replaceOrThrow(DatabaseConstants.COLUMN_DEFINITIONS_TABLE_NAME, null, cvColDefVal);
@@ -2432,8 +2432,8 @@ public class ODKDatabaseImplUtils {
     // remove server conflicting rows
     b.setLength(0);
     b.append("DELETE FROM ").append(tableId).append(K_WHERE)
-        .append(DataTableColumns.SYNC_STATE).append(S_EQUALS_PARAM).append(S_AND)
-        .append(DataTableColumns.CONFLICT_TYPE).append(" IN (?, ?)");
+        .append(DataTableColumns.SYNC_STATE.getText()).append(S_EQUALS_PARAM).append(S_AND)
+        .append(DataTableColumns.CONFLICT_TYPE.getText()).append(" IN (?, ?)");
 
     String sqlConflictingServer = b.toString();
     //@formatter:off
@@ -2448,9 +2448,9 @@ public class ODKDatabaseImplUtils {
     b.setLength(0);
     //@formatter:off
     b.append("UPDATE ").append(tableId).append(" SET ")
-      .append(DataTableColumns.SYNC_STATE).append(S_EQUALS_PARAM).append(", ")
-      .append(DataTableColumns.CONFLICT_TYPE).append(" = null").append(K_WHERE)
-      .append(DataTableColumns.CONFLICT_TYPE).append(S_EQUALS_PARAM);
+      .append(DataTableColumns.SYNC_STATE.getText()).append(S_EQUALS_PARAM).append(", ")
+      .append(DataTableColumns.CONFLICT_TYPE.getText()).append(" = null").append(K_WHERE)
+      .append(DataTableColumns.CONFLICT_TYPE.getText()).append(S_EQUALS_PARAM);
     //@formatter:on
 
     String sqlConflictingLocalDeleting = b.toString();
@@ -2474,8 +2474,8 @@ public class ODKDatabaseImplUtils {
     b.setLength(0);
     //@formatter:off
     b.append("UPDATE ").append(tableId).append(" SET ")
-      .append(DataTableColumns.SYNC_STATE).append(S_EQUALS_PARAM).append(K_WHERE)
-      .append(DataTableColumns.SYNC_STATE).append(S_EQUALS_PARAM);
+      .append(DataTableColumns.SYNC_STATE.getText()).append(S_EQUALS_PARAM).append(K_WHERE)
+      .append(DataTableColumns.SYNC_STATE.getText()).append(S_EQUALS_PARAM);
     //@formatter:on
 
     String sqlRest = b.toString();
@@ -2598,8 +2598,8 @@ public class ODKDatabaseImplUtils {
     // delete the old server-values in_conflict row if it exists
     StringBuilder b = new StringBuilder();
     b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-        .append(DataTableColumns.SYNC_STATE).append(S_EQUALS_PARAM).append(S_AND)
-        .append(DataTableColumns.CONFLICT_TYPE).append(" IN ( ?, ? )");
+        .append(DataTableColumns.SYNC_STATE.getText()).append(S_EQUALS_PARAM).append(S_AND)
+        .append(DataTableColumns.CONFLICT_TYPE.getText()).append(" IN ( ?, ? )");
     Object[] whereArgs = { rowId, SyncState.in_conflict.name(),
         String.valueOf(ConflictType.SERVER_DELETED_OLD_VALUES),
         String.valueOf(ConflictType.SERVER_UPDATED_UPDATED_VALUES) };
@@ -2770,18 +2770,18 @@ public class ODKDatabaseImplUtils {
 
       Row localRow = baseTable.getRowAtIndex(0);
 
-      if ( localRow.getDataByKey(DataTableColumns.SAVEPOINT_TYPE) == null ) {
+      if ( localRow.getDataByKey(DataTableColumns.SAVEPOINT_TYPE.getText()) == null ) {
         throw new IllegalArgumentException("row has checkpoints");
       }
 
-      String strSyncState = localRow.getDataByKey(DataTableColumns.SYNC_STATE);
+      String strSyncState = localRow.getDataByKey(DataTableColumns.SYNC_STATE.getText());
       SyncState state = SyncState.valueOf(strSyncState);
 
       int localRowConflictTypeBeforeSync = -1;
       if (state == SyncState.in_conflict) {
         // we need to remove the in_conflict records that refer to the
         // prior state of the server
-        String localRowConflictTypeBeforeSyncStr = localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE);
+        String localRowConflictTypeBeforeSyncStr = localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText());
         if (localRowConflictTypeBeforeSyncStr == null) {
           // this row is in conflict. It MUST have a non-null conflict type.
           throw new IllegalStateException("conflict type is null on an in-conflict row");
@@ -2796,7 +2796,7 @@ public class ODKDatabaseImplUtils {
       }
 
       boolean isServerRowDeleted =
-          serverValues.getAsString(DataTableColumns.SYNC_STATE).equals(SyncState.deleted.name());
+          serverValues.getAsString(DataTableColumns.SYNC_STATE.getText()).equals(SyncState.deleted.name());
 
       boolean executeDropThrough = false;
 
@@ -2839,10 +2839,10 @@ public class ODKDatabaseImplUtils {
         boolean isDifferent = false;
         for ( int i = 0 ; i < baseTable.getWidth() ; ++i ) {
           String colName = baseTable.getElementKey(i);
-          if ( DataTableColumns.ID.equals(colName) ||
-              DataTableColumns.CONFLICT_TYPE.equals(colName) ||
-              DataTableColumns.EFFECTIVE_ACCESS.equals(colName) ||
-              DataTableColumns.SYNC_STATE.equals(colName) ) {
+          if ( DataTableColumns.ID.getText().equals(colName) ||
+              DataTableColumns.CONFLICT_TYPE.getText().equals(colName) ||
+              DataTableColumns.EFFECTIVE_ACCESS.getText().equals(colName) ||
+              DataTableColumns.SYNC_STATE.getText().equals(colName) ) {
             // these values are ignored during comparisons
             continue;
           }
@@ -2888,10 +2888,10 @@ public class ODKDatabaseImplUtils {
           // update the row from the changes on the server
           ContentValues values = new ContentValues(serverValues);
 
-          values.put(DataTableColumns.SYNC_STATE, (hasNonNullAttachments ||
+          values.put(DataTableColumns.SYNC_STATE.getText(), (hasNonNullAttachments ||
               (state == SyncState.synced_pending_files))
               ? SyncState.synced_pending_files.name() : SyncState.synced.name());
-          values.putNull(DataTableColumns.CONFLICT_TYPE);
+          values.putNull(DataTableColumns.CONFLICT_TYPE.getText());
 
           this.privilegedUpdateRowWithId(db, tableId, orderedColumns, values, rowId, activeUser,
               locale, false);
@@ -2934,8 +2934,8 @@ public class ODKDatabaseImplUtils {
         // should **not match** our local row -- indicating that the server has a change from
         // another source, and that we should place the row into conflict.
         //
-        String localRowETag = localRow.getDataByKey(DataTableColumns.ROW_ETAG);
-        String serverRowETag = serverValues.getAsString(DataTableColumns.ROW_ETAG);
+        String localRowETag = localRow.getDataByKey(DataTableColumns.ROW_ETAG.getText());
+        String serverRowETag = serverValues.getAsString(DataTableColumns.ROW_ETAG.getText());
         boolean isDifferentRowETag = (localRowETag == null) || !localRowETag.equals(serverRowETag);
         if (!isDifferentRowETag) {
           // ignore the server record.
@@ -2947,7 +2947,7 @@ public class ODKDatabaseImplUtils {
             ContentValues values = new ContentValues();
             for ( int i = 0 ; i < baseTable.getWidth() ; ++i ) {
               String colName = baseTable.getElementKey(i);
-              if ( DataTableColumns.EFFECTIVE_ACCESS.equals(colName) ) {
+              if ( DataTableColumns.EFFECTIVE_ACCESS.getText().equals(colName) ) {
                 continue;
               }
               if ( localRow.getDataByIndex(i) == null ) {
@@ -2956,9 +2956,9 @@ public class ODKDatabaseImplUtils {
                 values.put(colName, localRow.getDataByIndex(i));
               }
             }
-            values.put(DataTableColumns.ID, rowId);
-            values.putNull(DataTableColumns.CONFLICT_TYPE);
-            values.put(DataTableColumns.SYNC_STATE,
+            values.put(DataTableColumns.ID.getText(), rowId);
+            values.putNull(DataTableColumns.CONFLICT_TYPE.getText());
+            values.put(DataTableColumns.SYNC_STATE.getText(),
                 (localRowConflictTypeBeforeSync == ConflictType.LOCAL_DELETED_OLD_VALUES) ?
                   SyncState.deleted.name() : SyncState.changed.name());
 
@@ -2991,8 +2991,8 @@ public class ODKDatabaseImplUtils {
           boolean isDifferentPrivilegedFields = false;
           {
             String[] privilegedColumns = new String[] {
-                DataTableColumns.FILTER_TYPE,
-                DataTableColumns.FILTER_VALUE };
+                DataTableColumns.FILTER_TYPE.getText(),
+                DataTableColumns.FILTER_VALUE.getText() };
             for ( int i = 0 ; i < privilegedColumns.length ; ++i ) {
               String colName = privilegedColumns[i];
               String localValue = localRow.getDataByKey(colName);
@@ -3018,13 +3018,13 @@ public class ODKDatabaseImplUtils {
           boolean isDifferentExcludingPrivilegedFields = false;
           for ( int i = 0 ; i < baseTable.getWidth() ; ++i ) {
             String colName = baseTable.getElementKey(i);
-            if ( DataTableColumns.ID.equals(colName) ||
-                DataTableColumns.CONFLICT_TYPE.equals(colName) ||
-                DataTableColumns.EFFECTIVE_ACCESS.equals(colName) ||
-                DataTableColumns.SYNC_STATE.equals(colName) ||
-                DataTableColumns.ROW_ETAG.equals(colName) ||
-                DataTableColumns.FILTER_TYPE.equals(colName) ||
-                DataTableColumns.FILTER_VALUE.equals(colName) ) {
+            if ( DataTableColumns.ID.getText().equals(colName) ||
+                DataTableColumns.CONFLICT_TYPE.getText().equals(colName) ||
+                DataTableColumns.EFFECTIVE_ACCESS.getText().equals(colName) ||
+                DataTableColumns.SYNC_STATE.getText().equals(colName) ||
+                DataTableColumns.ROW_ETAG.getText().equals(colName) ||
+                DataTableColumns.FILTER_TYPE.getText().equals(colName) ||
+                DataTableColumns.FILTER_VALUE.getText().equals(colName) ) {
               // these values are ignored during this comparison
               continue;
             }
@@ -3078,8 +3078,8 @@ public class ODKDatabaseImplUtils {
                  (accessContext.isPrivilegedUser && isDifferentPrivilegedFields) ) {
 
               this.placeRowIntoConflict(db, tableId, rowId, localRowConflictType);
-              serverValues.put(DataTableColumns.SYNC_STATE, SyncState.in_conflict.name());
-              serverValues.put(DataTableColumns.CONFLICT_TYPE,
+              serverValues.put(DataTableColumns.SYNC_STATE.getText(), SyncState.in_conflict.name());
+              serverValues.put(DataTableColumns.CONFLICT_TYPE.getText(),
                   (isServerRowDeleted ?
                     ConflictType.SERVER_DELETED_OLD_VALUES :
                     ConflictType.SERVER_UPDATED_UPDATED_VALUES ));
@@ -3087,9 +3087,9 @@ public class ODKDatabaseImplUtils {
                   rowId, activeUser, locale, false);
             } else {
               // just apply the server RowETag and filterScope to the local row
-              values.put(DataTableColumns.SYNC_STATE, hasNonNullDifferingServerAttachments
+              values.put(DataTableColumns.SYNC_STATE.getText(), hasNonNullDifferingServerAttachments
                   ? SyncState.synced_pending_files.name() : SyncState.synced.name());
-              values.putNull(DataTableColumns.CONFLICT_TYPE);
+              values.putNull(DataTableColumns.CONFLICT_TYPE.getText());
 
               // move the local conflict back into the normal non-conflict (null) state
               // set the sync state to "changed" temporarily (otherwise we can't update)
@@ -3108,12 +3108,12 @@ public class ODKDatabaseImplUtils {
                 ? SyncState.synced_pending_files : SyncState.synced;
 
             if ((state != destState) || isDifferentRowETag ||
-                (localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE) != null) ) {
+                (localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()) != null) ) {
               // todo: handle case where local row was in conflict
               // server has now matched the local row's state. i.e.,
               // update rowEtag, clear conflictType and adjust syncState on row.
-              values.put(DataTableColumns.SYNC_STATE, destState.name());
-              values.putNull(DataTableColumns.CONFLICT_TYPE);
+              values.put(DataTableColumns.SYNC_STATE.getText(), destState.name());
+              values.putNull(DataTableColumns.CONFLICT_TYPE.getText());
 
               // move the local conflict back into the normal non-conflict (null) state
               // set the sync state to "changed" temporarily (otherwise we can't update)
@@ -3156,12 +3156,12 @@ public class ODKDatabaseImplUtils {
 
     StringBuilder b = new StringBuilder();
     b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-        .append(DataTableColumns.CONFLICT_TYPE).append(S_IS_NULL);
+        .append(DataTableColumns.CONFLICT_TYPE.getText()).append(S_IS_NULL);
     Object[] whereArgs = { rowId };
 
     TreeMap<String,Object> cv = new TreeMap<String,Object>();
-    cv.put(DataTableColumns.SYNC_STATE, SyncState.in_conflict.name());
-    cv.put(DataTableColumns.CONFLICT_TYPE, conflictType);
+    cv.put(DataTableColumns.SYNC_STATE.getText(), SyncState.in_conflict.name());
+    cv.put(DataTableColumns.CONFLICT_TYPE.getText(), conflictType);
 
     boolean dbWithinTransaction = db.inTransaction();
     try {
@@ -3203,17 +3203,17 @@ public class ODKDatabaseImplUtils {
 
     if (conflictType == null) {
       b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-          .append(DataTableColumns.CONFLICT_TYPE).append(S_IS_NULL);
+          .append(DataTableColumns.CONFLICT_TYPE.getText()).append(S_IS_NULL);
       whereArgs = new Object[] { rowId };
     } else {
       b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-          .append(DataTableColumns.CONFLICT_TYPE).append(S_EQUALS_PARAM);
+          .append(DataTableColumns.CONFLICT_TYPE.getText()).append(S_EQUALS_PARAM);
       whereArgs = new Object[] { rowId, conflictType };
     }
 
     TreeMap<String,Object> cv = new TreeMap<String,Object>();
-    cv.put(DataTableColumns.CONFLICT_TYPE, null);
-    cv.put(DataTableColumns.SYNC_STATE, syncState.name());
+    cv.put(DataTableColumns.CONFLICT_TYPE.getText(), null);
+    cv.put(DataTableColumns.SYNC_STATE.getText(), syncState.name());
     boolean dbWithinTransaction = db.inTransaction();
     try {
       if (!dbWithinTransaction) {
@@ -3246,11 +3246,11 @@ public class ODKDatabaseImplUtils {
       String rowId) throws IllegalStateException {
     Cursor c = null;
     try {
-      c = db.query(tableId, new String[] { DataTableColumns.SYNC_STATE },
+      c = db.query(tableId, new String[] { DataTableColumns.SYNC_STATE.getText() },
           K_DATATABLE_ID_EQUALS_PARAM, new Object[] { rowId }, null, null, null, null);
 
       if (c.moveToFirst()) {
-        int syncStateIndex = c.getColumnIndex(DataTableColumns.SYNC_STATE);
+        int syncStateIndex = c.getColumnIndex(DataTableColumns.SYNC_STATE.getText());
         if (c.isNull(syncStateIndex)) {
           throw new IllegalStateException(t + ": row had a null sync state!");
         }
@@ -3321,14 +3321,14 @@ public class ODKDatabaseImplUtils {
       Cursor c = null;
       try {
         c = db.query(tableId,
-            new String[] { DataTableColumns.SYNC_STATE, DataTableColumns.FILTER_TYPE,
-                DataTableColumns.FILTER_VALUE }, whereClause, whereArgs, null, null,
-                DataTableColumns.SAVEPOINT_TIMESTAMP + " ASC", null);
+            new String[] { DataTableColumns.SYNC_STATE.getText(), DataTableColumns.FILTER_TYPE.getText(),
+                DataTableColumns.FILTER_VALUE.getText() }, whereClause, whereArgs, null, null,
+                DataTableColumns.SAVEPOINT_TIMESTAMP.getText() + " ASC", null);
         boolean hasFirst = c.moveToFirst();
 
-        int idxSyncState = c.getColumnIndex(DataTableColumns.SYNC_STATE);
-        int idxFilterType = c.getColumnIndex(DataTableColumns.FILTER_TYPE);
-        int idxFilterValue = c.getColumnIndex(DataTableColumns.FILTER_VALUE);
+        int idxSyncState = c.getColumnIndex(DataTableColumns.SYNC_STATE.getText());
+        int idxFilterType = c.getColumnIndex(DataTableColumns.FILTER_TYPE.getText());
+        int idxFilterValue = c.getColumnIndex(DataTableColumns.FILTER_VALUE.getText());
 
         List<String> rolesArray = getRolesArray(rolesList);
 
@@ -3355,7 +3355,7 @@ public class ODKDatabaseImplUtils {
       }
 
       // delete any checkpoints
-      whereClause = K_DATATABLE_ID_EQUALS_PARAM + S_AND + DataTableColumns.SAVEPOINT_TYPE + S_IS_NULL;
+      whereClause = K_DATATABLE_ID_EQUALS_PARAM + S_AND + DataTableColumns.SAVEPOINT_TYPE.getText() + S_IS_NULL;
       db.delete(tableId, whereClause, whereArgs);
 
       // this will return null if there are no rows.
@@ -3375,8 +3375,8 @@ public class ODKDatabaseImplUtils {
       } else if (syncState != SyncState.in_conflict) {
 
         TreeMap<String,Object> values = new TreeMap<String,Object>();
-        values.put(DataTableColumns.SYNC_STATE, SyncState.deleted.name());
-        values.put(DataTableColumns.SAVEPOINT_TIMESTAMP,
+        values.put(DataTableColumns.SYNC_STATE.getText(), SyncState.deleted.name());
+        values.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(),
             TableConstants.nanoSecondsFromMillis(System.currentTimeMillis()));
 
         db.update(tableId, values, K_DATATABLE_ID_EQUALS_PARAM, whereArgs);
@@ -3434,13 +3434,13 @@ public class ODKDatabaseImplUtils {
       Cursor c = null;
       try {
         c = db.query(tableId,
-            new String[] { DataTableColumns.SYNC_STATE, DataTableColumns.FILTER_TYPE,
-                DataTableColumns.FILTER_VALUE }, whereClause, whereArgs, null, null, null, null);
+            new String[] { DataTableColumns.SYNC_STATE.getText(), DataTableColumns.FILTER_TYPE.getText(),
+                DataTableColumns.FILTER_VALUE.getText() }, whereClause, whereArgs, null, null, null, null);
         boolean hasRow = c.moveToFirst();
 
-        int idxSyncState = c.getColumnIndex(DataTableColumns.SYNC_STATE);
-        int idxFilterType = c.getColumnIndex(DataTableColumns.FILTER_TYPE);
-        int idxFilterValue = c.getColumnIndex(DataTableColumns.FILTER_VALUE);
+        int idxSyncState = c.getColumnIndex(DataTableColumns.SYNC_STATE.getText());
+        int idxFilterType = c.getColumnIndex(DataTableColumns.FILTER_TYPE.getText());
+        int idxFilterValue = c.getColumnIndex(DataTableColumns.FILTER_VALUE.getText());
 
         List<String> rolesArray = getRolesArray(rolesList);
 
@@ -3471,7 +3471,7 @@ public class ODKDatabaseImplUtils {
       // If there are none, then we should delete all the attachments for this row.
       c = null;
       try {
-        c = db.query(tableId, new String[] { DataTableColumns.SYNC_STATE },
+        c = db.query(tableId, new String[] { DataTableColumns.SYNC_STATE.getText() },
             K_DATATABLE_ID_EQUALS_PARAM, new Object[] { rowId }, null, null, null, null);
         c.moveToFirst();
         // the row is entirely removed -- delete the attachments
@@ -3522,7 +3522,7 @@ public class ODKDatabaseImplUtils {
       throws ActionNotAuthorizedException {
     StringBuilder b = new StringBuilder();
     b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-        .append(DataTableColumns.SAVEPOINT_TYPE).append(S_IS_NULL);
+        .append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(S_IS_NULL);
 
     rawCheckpointDeleteDataInTable(db, tableId, rowId,
         b.toString(),
@@ -3547,9 +3547,9 @@ public class ODKDatabaseImplUtils {
       throws ActionNotAuthorizedException {
     StringBuilder b = new StringBuilder();
     b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-        .append(DataTableColumns.SAVEPOINT_TYPE).append(S_IS_NULL).append(S_AND)
-        .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(" IN (SELECT MAX(")
-             .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(") FROM ").append(tableId)
+        .append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(S_IS_NULL).append(S_AND)
+        .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(" IN (SELECT MAX(")
+             .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(") FROM ").append(tableId)
            .append(K_WHERE).append(K_DATATABLE_ID_EQUALS_PARAM).append(")");
 
     rawCheckpointDeleteDataInTable(db, tableId, rowId,
@@ -3581,13 +3581,13 @@ public class ODKDatabaseImplUtils {
 
       StringBuilder b = new StringBuilder();
       b.append("UPDATE ").append(tableId).append(" SET ")
-          .append(DataTableColumns.SAVEPOINT_TYPE).append(S_EQUALS_PARAM).append(K_WHERE)
+          .append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(S_EQUALS_PARAM).append(K_WHERE)
           .append(K_DATATABLE_ID_EQUALS_PARAM);
       db.execSQL(b.toString(), new Object[] { SavepointTypeManipulator.incomplete(), rowId });
       b.setLength(0);
       b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-          .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(" NOT IN (SELECT MAX(")
-          .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(") FROM ").append(tableId)
+          .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(" NOT IN (SELECT MAX(")
+          .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(") FROM ").append(tableId)
           .append(K_WHERE).append(K_DATATABLE_ID_EQUALS_PARAM).append(")");
       db.delete(tableId, b.toString(), new Object[] { rowId, rowId });
 
@@ -3626,14 +3626,14 @@ public class ODKDatabaseImplUtils {
 
       StringBuilder b = new StringBuilder();
       b.append("UPDATE ").append(tableId).append(" SET ")
-          .append(DataTableColumns.SAVEPOINT_TYPE).append(S_EQUALS_PARAM).append(K_WHERE)
+          .append(DataTableColumns.SAVEPOINT_TYPE.getText()).append(S_EQUALS_PARAM).append(K_WHERE)
           .append(K_DATATABLE_ID_EQUALS_PARAM);
       db.execSQL(b.toString(), new Object[] { SavepointTypeManipulator.complete(), rowId });
 
       b.setLength(0);
       b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-          .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(" NOT IN (SELECT MAX(")
-               .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(") FROM ").append(tableId)
+          .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(" NOT IN (SELECT MAX(")
+               .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(") FROM ").append(tableId)
           .append(K_WHERE).append(K_DATATABLE_ID_EQUALS_PARAM).append(")");
       db.delete(tableId, b.toString(), new Object[] { rowId, rowId });
 
@@ -3675,7 +3675,7 @@ public class ODKDatabaseImplUtils {
     }
 
     HashMap<String,Object> cvDataTableVal = new HashMap<String,Object>();
-    cvDataTableVal.put(DataTableColumns.ID, rowId);
+    cvDataTableVal.put(DataTableColumns.ID.getText(), rowId);
     for (String key: cvValues.keySet()) {
       cvDataTableVal.put(key, cvValues.get(key));
     }
@@ -3695,7 +3695,7 @@ public class ODKDatabaseImplUtils {
       throw new IllegalArgumentException(t + ": No values to add into table " + tableId);
     }
 
-    if (!cvValues.containsKey(DataTableColumns.ID)) {
+    if (!cvValues.containsKey(DataTableColumns.ID.getText())) {
       throw new IllegalArgumentException(t + ": No rowId in cvValues map " + tableId);
     }
 
@@ -3733,7 +3733,7 @@ public class ODKDatabaseImplUtils {
     }
 
     HashMap<String,Object> cvDataTableVal = new HashMap<String,Object>();
-    cvDataTableVal.put(DataTableColumns.ID, rowId);
+    cvDataTableVal.put(DataTableColumns.ID.getText(), rowId);
     for (String key: cvValues.keySet()) {
       cvDataTableVal.put(key, cvValues.get(key));
     }
@@ -3902,10 +3902,10 @@ public class ODKDatabaseImplUtils {
       // the local record is always before the server record (due to conflict_type values)
       StringBuilder b = new StringBuilder();
       b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-          .append(DataTableColumns.CONFLICT_TYPE).append(S_IS_NOT_NULL);
+          .append(DataTableColumns.CONFLICT_TYPE.getText()).append(S_IS_NOT_NULL);
       BaseTable table = privilegedQuery(db, tableId,
           QueryUtil.buildSqlStatement(tableId, b.toString(), null, null,
-              new String[] { DataTableColumns.CONFLICT_TYPE }, new String[] { "ASC" }),
+              new String[] { DataTableColumns.CONFLICT_TYPE.getText() }, new String[] { "ASC" }),
           new Object[] { rowId }, null, accessContext);
 
       if (table.getNumberOfRows() != 2) {
@@ -3916,10 +3916,10 @@ public class ODKDatabaseImplUtils {
       Row serverRow = table.getRowAtIndex(1);
 
       int localConflictType = Integer
-          .parseInt(localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE));
+          .parseInt(localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()));
 
       int serverConflictType = Integer
-          .parseInt(serverRow.getDataByKey(DataTableColumns.CONFLICT_TYPE));
+          .parseInt(serverRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()));
 
       if (localConflictType != ConflictType.LOCAL_UPDATED_UPDATED_VALUES
           && localConflictType != ConflictType.LOCAL_DELETED_OLD_VALUES) {
@@ -3939,21 +3939,21 @@ public class ODKDatabaseImplUtils {
       //
       // No need to specify them here.
       TreeMap<String,Object> updateValues = new TreeMap<String,Object>();
-      updateValues.put(DataTableColumns.ID, rowId);
+      updateValues.put(DataTableColumns.ID.getText(), rowId);
       updateValues
-          .put(DataTableColumns.ROW_ETAG, serverRow.getDataByKey(DataTableColumns.ROW_ETAG));
+          .put(DataTableColumns.ROW_ETAG.getText(), serverRow.getDataByKey(DataTableColumns.ROW_ETAG.getText()));
 
       // take the server's filter metadata values ...
       TreeMap<String,Object> privilegedUpdateValues = new TreeMap<String,Object>();
-      privilegedUpdateValues.put(DataTableColumns.ID, rowId);
+      privilegedUpdateValues.put(DataTableColumns.ID.getText(), rowId);
       privilegedUpdateValues
-          .put(DataTableColumns.FILTER_TYPE, serverRow.getDataByKey(DataTableColumns.FILTER_TYPE));
-      privilegedUpdateValues.put(DataTableColumns.FILTER_VALUE,
-          serverRow.getDataByKey(DataTableColumns.FILTER_VALUE));
-      privilegedUpdateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP,
-          serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP));
-      privilegedUpdateValues.put(DataTableColumns.SAVEPOINT_CREATOR,
-          serverRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR));
+          .put(DataTableColumns.FILTER_TYPE.getText(), serverRow.getDataByKey(DataTableColumns.FILTER_TYPE.getText()));
+      privilegedUpdateValues.put(DataTableColumns.FILTER_VALUE.getText(),
+          serverRow.getDataByKey(DataTableColumns.FILTER_VALUE.getText()));
+      privilegedUpdateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(),
+          serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()));
+      privilegedUpdateValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(),
+          serverRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR.getText()));
 
       // Figure out whether to take the server or local metadata fields.
       // and whether to take the server or local data fields.
@@ -3972,14 +3972,14 @@ public class ODKDatabaseImplUtils {
 
         // copy everything over from the server row
         updateValues
-            .put(DataTableColumns.FORM_ID, serverRow.getDataByKey(DataTableColumns.FORM_ID));
-        updateValues.put(DataTableColumns.LOCALE, serverRow.getDataByKey(DataTableColumns.LOCALE));
-        updateValues.put(DataTableColumns.SAVEPOINT_TYPE,
-            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TYPE));
-        updateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP,
-            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP));
-        updateValues.put(DataTableColumns.SAVEPOINT_CREATOR,
-            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR));
+            .put(DataTableColumns.FORM_ID.getText(), serverRow.getDataByKey(DataTableColumns.FORM_ID.getText()));
+        updateValues.put(DataTableColumns.LOCALE.getText(), serverRow.getDataByKey(DataTableColumns.LOCALE.getText()));
+        updateValues.put(DataTableColumns.SAVEPOINT_TYPE.getText(),
+            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TYPE.getText()));
+        updateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(),
+            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()));
+        updateValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(),
+            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR.getText()));
 
         // including the values of the user fields on the server
         for (String elementKey : orderedColumns.getRetentionColumnNames()) {
@@ -4066,8 +4066,8 @@ public class ODKDatabaseImplUtils {
       // the local record is always before the server record (due to conflict_type values)
       BaseTable table = privilegedQuery(db, tableId,
           QueryUtil.buildSqlStatement(tableId, K_DATATABLE_ID_EQUALS_PARAM +
-                  S_AND + DataTableColumns.CONFLICT_TYPE + S_IS_NOT_NULL, null, null,
-              new String[] { DataTableColumns.CONFLICT_TYPE }, new String[] { "ASC" }),
+                  S_AND + DataTableColumns.CONFLICT_TYPE.getText() + S_IS_NOT_NULL, null, null,
+              new String[] { DataTableColumns.CONFLICT_TYPE.getText() }, new String[] { "ASC" }),
           new Object[] { rowId }, null, accessContext);
 
       if (table.getNumberOfRows() != 2) {
@@ -4078,10 +4078,10 @@ public class ODKDatabaseImplUtils {
       Row serverRow = table.getRowAtIndex(1);
 
       int localConflictType = Integer
-          .parseInt(localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE));
+          .parseInt(localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()));
 
       int serverConflictType = Integer
-          .parseInt(serverRow.getDataByKey(DataTableColumns.CONFLICT_TYPE));
+          .parseInt(serverRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()));
 
       if (localConflictType != ConflictType.LOCAL_UPDATED_UPDATED_VALUES
           && localConflictType != ConflictType.LOCAL_DELETED_OLD_VALUES) {
@@ -4107,9 +4107,9 @@ public class ODKDatabaseImplUtils {
 
       // clean up the incoming map of server values to retain
       cleanUpValuesMap(orderedColumns, updateValues);
-      updateValues.put(DataTableColumns.ID, rowId);
+      updateValues.put(DataTableColumns.ID.getText(), rowId);
       updateValues
-          .put(DataTableColumns.ROW_ETAG, serverRow.getDataByKey(DataTableColumns.ROW_ETAG));
+          .put(DataTableColumns.ROW_ETAG.getText(), serverRow.getDataByKey(DataTableColumns.ROW_ETAG.getText()));
 
       // update what was the local conflict record with the local's changes
       // by the time we apply the update, the local conflict record will be
@@ -4119,26 +4119,26 @@ public class ODKDatabaseImplUtils {
 
       // but take the local's metadata values (i.e., do not change these
       // during the update) ...
-      updateValues.put(DataTableColumns.FORM_ID, localRow.getDataByKey(DataTableColumns.FORM_ID));
-      updateValues.put(DataTableColumns.LOCALE, localRow.getDataByKey(DataTableColumns.LOCALE));
-      updateValues.put(DataTableColumns.SAVEPOINT_TYPE,
-          localRow.getDataByKey(DataTableColumns.SAVEPOINT_TYPE));
-      updateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP,
-          localRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP));
-      updateValues.put(DataTableColumns.SAVEPOINT_CREATOR,
-          localRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR));
+      updateValues.put(DataTableColumns.FORM_ID.getText(), localRow.getDataByKey(DataTableColumns.FORM_ID.getText()));
+      updateValues.put(DataTableColumns.LOCALE.getText(), localRow.getDataByKey(DataTableColumns.LOCALE.getText()));
+      updateValues.put(DataTableColumns.SAVEPOINT_TYPE.getText(),
+          localRow.getDataByKey(DataTableColumns.SAVEPOINT_TYPE.getText()));
+      updateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(),
+          localRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()));
+      updateValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(),
+          localRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR.getText()));
 
       // take the server's filter metadata values ...
       TreeMap<String,Object> privilegedUpdateValues = new TreeMap<String,Object>();
-      privilegedUpdateValues.put(DataTableColumns.ID, rowId);
+      privilegedUpdateValues.put(DataTableColumns.ID.getText(), rowId);
       privilegedUpdateValues
-          .put(DataTableColumns.FILTER_TYPE, serverRow.getDataByKey(DataTableColumns.FILTER_TYPE));
-      privilegedUpdateValues.put(DataTableColumns.FILTER_VALUE,
-          serverRow.getDataByKey(DataTableColumns.FILTER_VALUE));
-      privilegedUpdateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP,
-          serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP));
-      privilegedUpdateValues.put(DataTableColumns.SAVEPOINT_CREATOR,
-          serverRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR));
+          .put(DataTableColumns.FILTER_TYPE.getText(), serverRow.getDataByKey(DataTableColumns.FILTER_TYPE.getText()));
+      privilegedUpdateValues.put(DataTableColumns.FILTER_VALUE.getText(),
+          serverRow.getDataByKey(DataTableColumns.FILTER_VALUE.getText()));
+      privilegedUpdateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(),
+          serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()));
+      privilegedUpdateValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(),
+          serverRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR.getText()));
 
       // delete the record of the server row
       deleteServerConflictRowWithId(db, tableId, rowId);
@@ -4205,10 +4205,10 @@ public class ODKDatabaseImplUtils {
       // the local record is always before the server record (due to conflict_type values)
       StringBuilder b = new StringBuilder();
       b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-          .append(DataTableColumns.CONFLICT_TYPE).append(S_IS_NOT_NULL);
+          .append(DataTableColumns.CONFLICT_TYPE.getText()).append(S_IS_NOT_NULL);
       BaseTable table = privilegedQuery(db, tableId,
           QueryUtil.buildSqlStatement(tableId, b.toString(), null, null,
-              new String[] { DataTableColumns.CONFLICT_TYPE }, new String[] { "ASC" }),
+              new String[] { DataTableColumns.CONFLICT_TYPE.getText() }, new String[] { "ASC" }),
           new Object[] { rowId }, null, accessContext);
 
       if (table.getNumberOfRows() != 2) {
@@ -4219,10 +4219,10 @@ public class ODKDatabaseImplUtils {
       Row serverRow = table.getRowAtIndex(1);
 
       int localConflictType = Integer
-          .parseInt(localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE));
+          .parseInt(localRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()));
 
       int serverConflictType = Integer
-          .parseInt(serverRow.getDataByKey(DataTableColumns.CONFLICT_TYPE));
+          .parseInt(serverRow.getDataByKey(DataTableColumns.CONFLICT_TYPE.getText()));
 
       if (localConflictType != ConflictType.LOCAL_UPDATED_UPDATED_VALUES
           && localConflictType != ConflictType.LOCAL_DELETED_OLD_VALUES) {
@@ -4256,9 +4256,9 @@ public class ODKDatabaseImplUtils {
       } else {
         // update the local conflict record with the server's changes
         HashMap<String,Object> updateValues = new HashMap<String,Object>();
-        updateValues.put(DataTableColumns.ID, rowId);
+        updateValues.put(DataTableColumns.ID.getText(), rowId);
         updateValues
-            .put(DataTableColumns.ROW_ETAG, serverRow.getDataByKey(DataTableColumns.ROW_ETAG));
+            .put(DataTableColumns.ROW_ETAG.getText(), serverRow.getDataByKey(DataTableColumns.ROW_ETAG.getText()));
 
         // update what was the local conflict record with the server's changes
         // by the time we apply the update, the local conflict record will be
@@ -4267,19 +4267,19 @@ public class ODKDatabaseImplUtils {
         // No need to specify them here.
 
         // take the server's metadata values too...
-        updateValues.put(DataTableColumns.FILTER_TYPE,
-            serverRow.getDataByKey(DataTableColumns.FILTER_TYPE));
-        updateValues.put(DataTableColumns.FILTER_VALUE,
-            serverRow.getDataByKey(DataTableColumns.FILTER_VALUE));
+        updateValues.put(DataTableColumns.FILTER_TYPE.getText(),
+            serverRow.getDataByKey(DataTableColumns.FILTER_TYPE.getText()));
+        updateValues.put(DataTableColumns.FILTER_VALUE.getText(),
+            serverRow.getDataByKey(DataTableColumns.FILTER_VALUE.getText()));
         updateValues
-            .put(DataTableColumns.FORM_ID, serverRow.getDataByKey(DataTableColumns.FORM_ID));
-        updateValues.put(DataTableColumns.LOCALE, serverRow.getDataByKey(DataTableColumns.LOCALE));
-        updateValues.put(DataTableColumns.SAVEPOINT_TYPE,
-            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TYPE));
-        updateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP,
-            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP));
-        updateValues.put(DataTableColumns.SAVEPOINT_CREATOR,
-            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR));
+            .put(DataTableColumns.FORM_ID.getText(), serverRow.getDataByKey(DataTableColumns.FORM_ID.getText()));
+        updateValues.put(DataTableColumns.LOCALE.getText(), serverRow.getDataByKey(DataTableColumns.LOCALE.getText()));
+        updateValues.put(DataTableColumns.SAVEPOINT_TYPE.getText(),
+            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TYPE.getText()));
+        updateValues.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(),
+            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()));
+        updateValues.put(DataTableColumns.SAVEPOINT_CREATOR.getText(),
+            serverRow.getDataByKey(DataTableColumns.SAVEPOINT_CREATOR.getText()));
 
         // take all the data values from the server...
         for (String elementKey : orderedColumns.getRetentionColumnNames()) {
@@ -4374,37 +4374,37 @@ public class ODKDatabaseImplUtils {
     // these are all managed in the database layer...
     // the user should NOT set them...
 
-    if (cvValues.containsKey(DataTableColumns.SAVEPOINT_TIMESTAMP)) {
+    if (cvValues.containsKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())) {
       throw new IllegalArgumentException(
           t + ": No user supplied savepoint timestamp can be included for a checkpoint");
     }
 
-    if (cvValues.containsKey(DataTableColumns.SAVEPOINT_TYPE)) {
+    if (cvValues.containsKey(DataTableColumns.SAVEPOINT_TYPE.getText())) {
       throw new IllegalArgumentException(
           t + ": No user supplied savepoint type can be included for a checkpoint");
     }
 
-    if (cvValues.containsKey(DataTableColumns.ROW_ETAG)) {
+    if (cvValues.containsKey(DataTableColumns.ROW_ETAG.getText())) {
       throw new IllegalArgumentException(
           t + ": No user supplied row ETag can be included for a checkpoint");
     }
 
-    if (cvValues.containsKey(DataTableColumns.SYNC_STATE)) {
+    if (cvValues.containsKey(DataTableColumns.SYNC_STATE.getText())) {
       throw new IllegalArgumentException(
           t + ": No user supplied sync state can be included for a checkpoint");
     }
 
-    if (cvValues.containsKey(DataTableColumns.CONFLICT_TYPE)) {
+    if (cvValues.containsKey(DataTableColumns.CONFLICT_TYPE.getText())) {
       throw new IllegalArgumentException(
           t + ": No user supplied conflict type can be included for a checkpoint");
     }
 
-    if (cvValues.containsKey(DataTableColumns.FILTER_VALUE)) {
+    if (cvValues.containsKey(DataTableColumns.FILTER_VALUE.getText())) {
       throw new IllegalArgumentException(
           t + ": No user supplied filter value can be included for a checkpoint");
     }
 
-    if (cvValues.containsKey(DataTableColumns.FILTER_TYPE)) {
+    if (cvValues.containsKey(DataTableColumns.FILTER_TYPE.getText())) {
       throw new IllegalArgumentException(
           t + ": No user supplied filter type can be included for a checkpoint");
     }
@@ -4425,7 +4425,7 @@ public class ODKDatabaseImplUtils {
           currValues.put(key, cvValues.get(key));
         }
         currValues.put(DataTableColumns._ID, rowIdToUse);
-        currValues.put(DataTableColumns.SYNC_STATE, SyncState.new_row.name());
+        currValues.put(DataTableColumns.SYNC_STATE.getText(), SyncState.new_row.name());
         insertCheckpointIntoExistingTable(db, tableId, orderedColumns, currValues, activeUser,
             rolesList, locale, true, null, null);
         return;
@@ -4433,8 +4433,8 @@ public class ODKDatabaseImplUtils {
 
       StringBuilder b = new StringBuilder();
       b.append(K_DATATABLE_ID_EQUALS_PARAM).append(S_AND)
-          .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(" IN (SELECT MAX(")
-              .append(DataTableColumns.SAVEPOINT_TIMESTAMP).append(") FROM ")
+          .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(" IN (SELECT MAX(")
+              .append(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()).append(") FROM ")
                  .append(tableId).append(K_WHERE).append(K_DATATABLE_ID_EQUALS_PARAM).append(")");
       c = db.query(tableId, null, b.toString(), new Object[] { rowId, rowId }, null,
           null, null, null);
@@ -4451,14 +4451,14 @@ public class ODKDatabaseImplUtils {
           currValues.put(key, cvValues.get(key));
         }
         currValues.put(DataTableColumns._ID, rowId);
-        currValues.put(DataTableColumns.SYNC_STATE, SyncState.new_row.name());
+        currValues.put(DataTableColumns.SYNC_STATE.getText(), SyncState.new_row.name());
         insertCheckpointIntoExistingTable(db, tableId, orderedColumns, currValues, activeUser,
             rolesList, locale, true, null, null);
         return;
       } else {
         // Make sure that the conflict_type of any existing row
         // is null, otherwise throw an exception
-        int conflictIndex = c.getColumnIndex(DataTableColumns.CONFLICT_TYPE);
+        int conflictIndex = c.getColumnIndex(DataTableColumns.CONFLICT_TYPE.getText());
         if (!c.isNull(conflictIndex)) {
           throw new IllegalStateException(
               t + ":  A checkpoint cannot be added for a row that is in conflict");
@@ -4486,19 +4486,19 @@ public class ODKDatabaseImplUtils {
           }
 
           // omitting savepoint timestamp will generate a new timestamp.
-          if (name.equals(DataTableColumns.SAVEPOINT_TIMESTAMP)) {
+          if (name.equals(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())) {
             continue;
           }
 
           // set savepoint type to null to mark this as a checkpoint
-          if (name.equals(DataTableColumns.SAVEPOINT_TYPE)) {
+          if (name.equals(DataTableColumns.SAVEPOINT_TYPE.getText())) {
             currValues.put(name, null);
             continue;
           }
 
           // sync state (a non-null field) should either remain 'new_row'
           // or be set to 'changed' for all other existing values.
-          if (name.equals(DataTableColumns.SYNC_STATE)) {
+          if (name.equals(DataTableColumns.SYNC_STATE.getText())) {
             String priorState = c.getString(i);
             if (priorState.equals(SyncState.new_row.name())) {
               currValues.put(name, SyncState.new_row.name());
@@ -4518,11 +4518,11 @@ public class ODKDatabaseImplUtils {
           Object object = CursorUtils.getIndexAsType(c, theClass, i);
           insertValueIntoContentValues(currValues, theClass, name, object);
 
-          if (name.equals(DataTableColumns.FILTER_TYPE)) {
+          if (name.equals(DataTableColumns.FILTER_TYPE.getText())) {
             priorFilterType = c.getString(i);
           }
 
-          if (name.equals(DataTableColumns.FILTER_VALUE)) {
+          if (name.equals(DataTableColumns.FILTER_VALUE.getText())) {
             priorFilterValue = c.getString(i);
           }
         }
@@ -4598,7 +4598,7 @@ public class ODKDatabaseImplUtils {
     }
 
     HashMap<String,Object> cvDataTableVal = new HashMap<String,Object>();
-    cvDataTableVal.put(DataTableColumns.ID, rowId);
+    cvDataTableVal.put(DataTableColumns.ID.getText(), rowId);
     for ( String key : cvValues.keySet() ) {
       cvDataTableVal.put(key, cvValues.get(key));
     }
@@ -4639,7 +4639,7 @@ public class ODKDatabaseImplUtils {
     }
 
     HashMap<String,Object> cvDataTableVal = new HashMap<String,Object>();
-    cvDataTableVal.put(DataTableColumns.ID, rowId);
+    cvDataTableVal.put(DataTableColumns.ID.getText(), rowId);
     for ( String key : cvValues.keySet() ) {
       cvDataTableVal.put(key, cvValues.get(key));
     }
@@ -4673,49 +4673,49 @@ public class ODKDatabaseImplUtils {
     HashMap<String,Object> cvDataTableVal = new HashMap<String,Object>();
     cvDataTableVal.putAll(cvValues);
 
-    if (cvDataTableVal.containsKey(DataTableColumns.ID)) {
+    if (cvDataTableVal.containsKey(DataTableColumns.ID.getText())) {
 
-      rowId = (String) cvDataTableVal.get(DataTableColumns.ID);
+      rowId = (String) cvDataTableVal.get(DataTableColumns.ID.getText());
       if (rowId == null) {
-        throw new IllegalArgumentException(DataTableColumns.ID + ", if specified, cannot be null");
+        throw new IllegalArgumentException(DataTableColumns.ID.getText() + ", if specified, cannot be null");
       }
     } else {
       throw new IllegalArgumentException(t
           + ": rowId should not be null in insertCheckpointIntoExistingTable in the ContentValues");
     }
 
-    if (!cvDataTableVal.containsKey(DataTableColumns.ROW_ETAG)
-        || cvDataTableVal.get(DataTableColumns.ROW_ETAG) == null) {
-      cvDataTableVal.put(DataTableColumns.ROW_ETAG, DataTableColumns.DEFAULT_ROW_ETAG);
+    if (!cvDataTableVal.containsKey(DataTableColumns.ROW_ETAG.getText())
+        || cvDataTableVal.get(DataTableColumns.ROW_ETAG.getText()) == null) {
+      cvDataTableVal.put(DataTableColumns.ROW_ETAG.getText(), DataTableColumns.DEFAULT_ROW_ETAG);
     }
 
-    if (!cvDataTableVal.containsKey(DataTableColumns.CONFLICT_TYPE)) {
-      cvDataTableVal.put(DataTableColumns.CONFLICT_TYPE, null);
+    if (!cvDataTableVal.containsKey(DataTableColumns.CONFLICT_TYPE.getText())) {
+      cvDataTableVal.put(DataTableColumns.CONFLICT_TYPE.getText(), null);
     }
 
-    if (!cvDataTableVal.containsKey(DataTableColumns.FORM_ID)) {
-      cvDataTableVal.put(DataTableColumns.FORM_ID, null);
+    if (!cvDataTableVal.containsKey(DataTableColumns.FORM_ID.getText())) {
+      cvDataTableVal.put(DataTableColumns.FORM_ID.getText(), null);
     }
 
-    if (!cvDataTableVal.containsKey(DataTableColumns.LOCALE) || (
-        cvDataTableVal.get(DataTableColumns.LOCALE) == null)) {
-      cvDataTableVal.put(DataTableColumns.LOCALE, locale);
+    if (!cvDataTableVal.containsKey(DataTableColumns.LOCALE.getText()) || (
+        cvDataTableVal.get(DataTableColumns.LOCALE.getText()) == null)) {
+      cvDataTableVal.put(DataTableColumns.LOCALE.getText(), locale);
     }
 
-    if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TYPE) || (
-        cvDataTableVal.get(DataTableColumns.SAVEPOINT_TYPE) == null)) {
-      cvDataTableVal.put(DataTableColumns.SAVEPOINT_TYPE, null);
+    if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TYPE.getText()) || (
+        cvDataTableVal.get(DataTableColumns.SAVEPOINT_TYPE.getText()) == null)) {
+      cvDataTableVal.put(DataTableColumns.SAVEPOINT_TYPE.getText(), null);
     }
 
-    if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TIMESTAMP)
-        || cvDataTableVal.get(DataTableColumns.SAVEPOINT_TIMESTAMP) == null) {
+    if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())
+        || cvDataTableVal.get(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()) == null) {
       String timeStamp = TableConstants.nanoSecondsFromMillis(System.currentTimeMillis());
-      cvDataTableVal.put(DataTableColumns.SAVEPOINT_TIMESTAMP, timeStamp);
+      cvDataTableVal.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), timeStamp);
     }
 
-    if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_CREATOR) || (
-        cvDataTableVal.get(DataTableColumns.SAVEPOINT_CREATOR) == null)) {
-      cvDataTableVal.put(DataTableColumns.SAVEPOINT_CREATOR, activeUser);
+    if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_CREATOR.getText()) || (
+        cvDataTableVal.get(DataTableColumns.SAVEPOINT_CREATOR.getText()) == null)) {
+      cvDataTableVal.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), activeUser);
     }
 
     cleanUpValuesMap(orderedColumns, cvDataTableVal);
@@ -4735,16 +4735,16 @@ public class ODKDatabaseImplUtils {
 
         // ensure that filter type and value are defined. Use defaults if not.
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.FILTER_TYPE) || (
-            cvDataTableVal.get(DataTableColumns.FILTER_TYPE) == null)) {
-          cvDataTableVal.put(DataTableColumns.FILTER_TYPE, tss.filterTypeOnCreation);
+        if (!cvDataTableVal.containsKey(DataTableColumns.FILTER_TYPE.getText()) || (
+            cvDataTableVal.get(DataTableColumns.FILTER_TYPE.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.FILTER_TYPE.getText(), tss.filterTypeOnCreation);
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.FILTER_VALUE)) {
-          cvDataTableVal.put(DataTableColumns.FILTER_VALUE, activeUser);
+        if (!cvDataTableVal.containsKey(DataTableColumns.FILTER_VALUE.getText())) {
+          cvDataTableVal.put(DataTableColumns.FILTER_VALUE.getText(), activeUser);
         }
 
-        cvDataTableVal.put(DataTableColumns.SYNC_STATE, SyncState.new_row.name());
+        cvDataTableVal.put(DataTableColumns.SYNC_STATE.getText(), SyncState.new_row.name());
 
         tss.allowRowChange(activeUser, rolesArray, SyncState.new_row.name(), priorFilterType,
             priorFilterValue, RowChange.NEW_ROW);
@@ -4752,14 +4752,14 @@ public class ODKDatabaseImplUtils {
       } else {
 
         // don't allow changes to filter type or value or syncState when inserting checkpoints
-        cvDataTableVal.put(DataTableColumns.FILTER_TYPE, priorFilterType);
+        cvDataTableVal.put(DataTableColumns.FILTER_TYPE.getText(), priorFilterType);
 
-        cvDataTableVal.put(DataTableColumns.FILTER_VALUE, priorFilterValue);
+        cvDataTableVal.put(DataTableColumns.FILTER_VALUE.getText(), priorFilterValue);
 
         // for this call path, syncState is already updated by caller
 
         tss.allowRowChange(activeUser, rolesArray,
-            (String) cvDataTableVal.get(DataTableColumns.SYNC_STATE), priorFilterType,
+            (String) cvDataTableVal.get(DataTableColumns.SYNC_STATE.getText()), priorFilterType,
             priorFilterValue, RowChange.CHANGE_ROW);
       }
 
@@ -5038,7 +5038,7 @@ public class ODKDatabaseImplUtils {
 
     String filterType = (filterTypeOnCreation != null) ? filterTypeOnCreation.value : null;
     if (filterType == null) {
-      filterType = DataTableColumns.DEFAULT_FILTER_TYPE;
+      filterType = DataTableColumns.DEFAULT_FILTER_TYPE.getText();
     }
 
     return new TableSecuritySettings(tableId, isLocked, canUnverifiedUserCreateRow, filterType);
@@ -5056,13 +5056,13 @@ public class ODKDatabaseImplUtils {
 
     String rowId = null;
     String whereClause = null;
-    boolean specifiesConflictType = cvValues.containsKey(DataTableColumns.CONFLICT_TYPE);
+    boolean specifiesConflictType = cvValues.containsKey(DataTableColumns.CONFLICT_TYPE.getText());
     boolean nullConflictType =
-        specifiesConflictType && (cvValues.get(DataTableColumns.CONFLICT_TYPE) == null);
+        specifiesConflictType && (cvValues.get(DataTableColumns.CONFLICT_TYPE.getText()) == null);
     Object[] whereArgs = new Object[specifiesConflictType ? (1 + (nullConflictType ? 0 : 1)) : 1];
     boolean update = false;
     String updatedSyncState = SyncState.new_row.name();
-    String priorFilterType = DataTableColumns.DEFAULT_FILTER_TYPE;
+    String priorFilterType = DataTableColumns.DEFAULT_FILTER_TYPE.getText();
     String priorFilterValue = null;
 
     if (cvValues.size() <= 0) {
@@ -5098,7 +5098,7 @@ public class ODKDatabaseImplUtils {
         db.beginTransactionNonExclusive();
       }
 
-      if (cvDataTableVal.containsKey(DataTableColumns.ID)) {
+      if (cvDataTableVal.containsKey(DataTableColumns.ID.getText())) {
         // The user specified a row id; we need to determine whether to
         // insert or update the record, or to reject the action because
         // there are either checkpoint records for this row id, or, if
@@ -5115,22 +5115,22 @@ public class ODKDatabaseImplUtils {
         // and all local changes are flagged local. Remote only exists
         // if the server is in conflict.
 
-        rowId = (String) cvDataTableVal.get(DataTableColumns.ID);
+        rowId = (String) cvDataTableVal.get(DataTableColumns.ID.getText());
         if (rowId == null) {
           throw new IllegalArgumentException(
-              DataTableColumns.ID + ", if specified, cannot be null");
+              DataTableColumns.ID.getText() + ", if specified, cannot be null");
         }
 
         if (specifiesConflictType) {
           if (nullConflictType) {
-            whereClause = K_DATATABLE_ID_EQUALS_PARAM + S_AND + DataTableColumns.CONFLICT_TYPE
+            whereClause = K_DATATABLE_ID_EQUALS_PARAM + S_AND + DataTableColumns.CONFLICT_TYPE.getText()
                 + S_IS_NULL;
             whereArgs[0] = rowId;
           } else {
             whereClause =
-                K_DATATABLE_ID_EQUALS_PARAM + S_AND + DataTableColumns.CONFLICT_TYPE + S_EQUALS_PARAM;
+                K_DATATABLE_ID_EQUALS_PARAM + S_AND + DataTableColumns.CONFLICT_TYPE.getText() + S_EQUALS_PARAM;
             whereArgs[0] = rowId;
-            whereArgs[1] = cvValues.get(DataTableColumns.CONFLICT_TYPE);
+            whereArgs[1] = cvValues.get(DataTableColumns.CONFLICT_TYPE.getText());
           }
         } else {
           whereClause = K_DATATABLE_ID_EQUALS_PARAM;
@@ -5147,14 +5147,14 @@ public class ODKDatabaseImplUtils {
         // There must be only one row in the db for the update to work
         if (shouldUpdate) {
           if (data.getNumberOfRows() == 1) {
-            int filterTypeCursorIndex = data.getColumnIndexOfElementKey(DataTableColumns.FILTER_TYPE);
+            int filterTypeCursorIndex = data.getColumnIndexOfElementKey(DataTableColumns.FILTER_TYPE.getText());
             priorFilterType = data.getRowAtIndex(0).getDataByIndex(filterTypeCursorIndex);
             if (priorFilterType == null) {
-              priorFilterType = DataTableColumns.DEFAULT_FILTER_TYPE;
+              priorFilterType = DataTableColumns.DEFAULT_FILTER_TYPE.getText();
             }
-            int filterValueCursorIndex = data.getColumnIndexOfElementKey(DataTableColumns.FILTER_VALUE);
+            int filterValueCursorIndex = data.getColumnIndexOfElementKey(DataTableColumns.FILTER_VALUE.getText());
             priorFilterValue =  data.getRowAtIndex(0).getDataByIndex(filterValueCursorIndex);
-            int syncStateCursorIndex = data.getColumnIndexOfElementKey(DataTableColumns.SYNC_STATE);
+            int syncStateCursorIndex = data.getColumnIndexOfElementKey(DataTableColumns.SYNC_STATE.getText());
             updatedSyncState = data.getRowAtIndex(0).getDataByIndex(syncStateCursorIndex);
 
             if (updatedSyncState.equals(SyncState.deleted.name()) || updatedSyncState
@@ -5186,8 +5186,8 @@ public class ODKDatabaseImplUtils {
       // TODO: This is broken w.r.t. updates of partial fields
       // TODO: This is broken w.r.t. updates of partial fields
 
-      if (!cvDataTableVal.containsKey(DataTableColumns.ID)) {
-        cvDataTableVal.put(DataTableColumns.ID, rowId);
+      if (!cvDataTableVal.containsKey(DataTableColumns.ID.getText())) {
+        cvDataTableVal.put(DataTableColumns.ID.getText(), rowId);
       }
 
       List<String> rolesArray = getRolesArray(rolesList);
@@ -5197,8 +5197,8 @@ public class ODKDatabaseImplUtils {
 
       if (!asServerRequestedChange) {
         // do not allow filterType or filterValue to be modified in normal workflow
-        if (cvDataTableVal.containsKey(DataTableColumns.FILTER_TYPE) || cvDataTableVal
-            .containsKey(DataTableColumns.FILTER_VALUE)) {
+        if (cvDataTableVal.containsKey(DataTableColumns.FILTER_TYPE.getText()) || cvDataTableVal
+            .containsKey(DataTableColumns.FILTER_VALUE.getText())) {
 
           tss.canModifyFilterTypeAndValue(rolesArray);
         }
@@ -5208,9 +5208,9 @@ public class ODKDatabaseImplUtils {
 
         // MODIFYING
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.SYNC_STATE) || (
-            cvDataTableVal.get(DataTableColumns.SYNC_STATE) == null)) {
-          cvDataTableVal.put(DataTableColumns.SYNC_STATE, updatedSyncState);
+        if (!cvDataTableVal.containsKey(DataTableColumns.SYNC_STATE.getText()) || (
+            cvDataTableVal.get(DataTableColumns.SYNC_STATE.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.SYNC_STATE.getText(), updatedSyncState);
         }
 
         if (!asServerRequestedChange) {
@@ -5222,78 +5222,78 @@ public class ODKDatabaseImplUtils {
 
         }
 
-        if (cvDataTableVal.containsKey(DataTableColumns.LOCALE) && (
-            cvDataTableVal.get(DataTableColumns.LOCALE) == null)) {
-          cvDataTableVal.put(DataTableColumns.LOCALE, locale);
+        if (cvDataTableVal.containsKey(DataTableColumns.LOCALE.getText()) && (
+            cvDataTableVal.get(DataTableColumns.LOCALE.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.LOCALE.getText(), locale);
         }
 
-        if (cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TYPE) && (
-            cvDataTableVal.get(DataTableColumns.SAVEPOINT_TYPE) == null)) {
-          cvDataTableVal.put(DataTableColumns.SAVEPOINT_TYPE, SavepointTypeManipulator.complete());
+        if (cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TYPE.getText()) && (
+            cvDataTableVal.get(DataTableColumns.SAVEPOINT_TYPE.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.SAVEPOINT_TYPE.getText(), SavepointTypeManipulator.complete());
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TIMESTAMP)
-            || cvDataTableVal.get(DataTableColumns.SAVEPOINT_TIMESTAMP) == null) {
+        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())
+            || cvDataTableVal.get(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()) == null) {
           String timeStamp = TableConstants.nanoSecondsFromMillis(System.currentTimeMillis());
-          cvDataTableVal.put(DataTableColumns.SAVEPOINT_TIMESTAMP, timeStamp);
+          cvDataTableVal.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), timeStamp);
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_CREATOR) || (
-            cvDataTableVal.get(DataTableColumns.SAVEPOINT_CREATOR) == null)) {
-          cvDataTableVal.put(DataTableColumns.SAVEPOINT_CREATOR, activeUser);
+        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_CREATOR.getText()) || (
+            cvDataTableVal.get(DataTableColumns.SAVEPOINT_CREATOR.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), activeUser);
         }
       } else {
 
         // INSERTING
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.ROW_ETAG)
-            || cvDataTableVal.get(DataTableColumns.ROW_ETAG) == null) {
-          cvDataTableVal.put(DataTableColumns.ROW_ETAG, DataTableColumns.DEFAULT_ROW_ETAG);
+        if (!cvDataTableVal.containsKey(DataTableColumns.ROW_ETAG.getText())
+            || cvDataTableVal.get(DataTableColumns.ROW_ETAG.getText()) == null) {
+          cvDataTableVal.put(DataTableColumns.ROW_ETAG.getText(), DataTableColumns.DEFAULT_ROW_ETAG);
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.SYNC_STATE) || (
-            cvDataTableVal.get(DataTableColumns.SYNC_STATE) == null)) {
-          cvDataTableVal.put(DataTableColumns.SYNC_STATE, SyncState.new_row.name());
+        if (!cvDataTableVal.containsKey(DataTableColumns.SYNC_STATE.getText()) || (
+            cvDataTableVal.get(DataTableColumns.SYNC_STATE.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.SYNC_STATE.getText(), SyncState.new_row.name());
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.CONFLICT_TYPE)) {
-          cvDataTableVal.put(DataTableColumns.CONFLICT_TYPE, null);
+        if (!cvDataTableVal.containsKey(DataTableColumns.CONFLICT_TYPE.getText())) {
+          cvDataTableVal.put(DataTableColumns.CONFLICT_TYPE.getText(), null);
         }
 
         if (!asServerRequestedChange) {
 
-          cvDataTableVal.put(DataTableColumns.FILTER_TYPE, tss.filterTypeOnCreation);
+          cvDataTableVal.put(DataTableColumns.FILTER_TYPE.getText(), tss.filterTypeOnCreation);
 
           // activeUser
-          cvDataTableVal.put(DataTableColumns.FILTER_VALUE, activeUser);
+          cvDataTableVal.put(DataTableColumns.FILTER_VALUE.getText(), activeUser);
 
           tss.allowRowChange(activeUser, rolesArray, updatedSyncState, priorFilterType,
               priorFilterValue, RowChange.NEW_ROW);
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.FORM_ID)) {
-          cvDataTableVal.put(DataTableColumns.FORM_ID, null);
+        if (!cvDataTableVal.containsKey(DataTableColumns.FORM_ID.getText())) {
+          cvDataTableVal.put(DataTableColumns.FORM_ID.getText(), null);
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.LOCALE) || (
-            cvDataTableVal.get(DataTableColumns.LOCALE) == null)) {
-          cvDataTableVal.put(DataTableColumns.LOCALE, locale);
+        if (!cvDataTableVal.containsKey(DataTableColumns.LOCALE.getText()) || (
+            cvDataTableVal.get(DataTableColumns.LOCALE.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.LOCALE.getText(), locale);
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TYPE) || (
-            cvDataTableVal.get(DataTableColumns.SAVEPOINT_TYPE) == null)) {
-          cvDataTableVal.put(DataTableColumns.SAVEPOINT_TYPE, SavepointTypeManipulator.complete());
+        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TYPE.getText()) || (
+            cvDataTableVal.get(DataTableColumns.SAVEPOINT_TYPE.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.SAVEPOINT_TYPE.getText(), SavepointTypeManipulator.complete());
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TIMESTAMP)
-            || cvDataTableVal.get(DataTableColumns.SAVEPOINT_TIMESTAMP) == null) {
+        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_TIMESTAMP.getText())
+            || cvDataTableVal.get(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()) == null) {
           String timeStamp = TableConstants.nanoSecondsFromMillis(System.currentTimeMillis());
-          cvDataTableVal.put(DataTableColumns.SAVEPOINT_TIMESTAMP, timeStamp);
+          cvDataTableVal.put(DataTableColumns.SAVEPOINT_TIMESTAMP.getText(), timeStamp);
         }
 
-        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_CREATOR) || (
-            cvDataTableVal.get(DataTableColumns.SAVEPOINT_CREATOR) == null)) {
-          cvDataTableVal.put(DataTableColumns.SAVEPOINT_CREATOR, activeUser);
+        if (!cvDataTableVal.containsKey(DataTableColumns.SAVEPOINT_CREATOR.getText()) || (
+            cvDataTableVal.get(DataTableColumns.SAVEPOINT_CREATOR.getText()) == null)) {
+          cvDataTableVal.put(DataTableColumns.SAVEPOINT_CREATOR.getText(), activeUser);
         }
       }
 
@@ -5334,8 +5334,8 @@ public class ODKDatabaseImplUtils {
 
     TreeMap<String,Object> cvDataTableVal = new TreeMap<String,Object>();
 
-    cvDataTableVal.put(DataTableColumns.ROW_ETAG, rowETag);
-    cvDataTableVal.put(DataTableColumns.SYNC_STATE, state.name());
+    cvDataTableVal.put(DataTableColumns.ROW_ETAG.getText(), rowETag);
+    cvDataTableVal.put(DataTableColumns.SYNC_STATE.getText(), state.name());
 
     boolean dbWithinTransaction = db.inTransaction();
     try {
@@ -5380,27 +5380,27 @@ public class ODKDatabaseImplUtils {
     TreeMap<String, String> toBeResolved = new TreeMap<String, String>();
 
     for (String key : values.keySet()) {
-      if (DataTableColumns.CONFLICT_TYPE.equals(key)) {
+      if (DataTableColumns.CONFLICT_TYPE.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.FILTER_TYPE.equals(key)) {
+      } else if (DataTableColumns.FILTER_TYPE.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.FILTER_VALUE.equals(key)) {
+      } else if (DataTableColumns.FILTER_VALUE.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.FORM_ID.equals(key)) {
+      } else if (DataTableColumns.FORM_ID.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.ID.equals(key)) {
+      } else if (DataTableColumns.ID.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.LOCALE.equals(key)) {
+      } else if (DataTableColumns.LOCALE.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.ROW_ETAG.equals(key)) {
+      } else if (DataTableColumns.ROW_ETAG.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.SAVEPOINT_CREATOR.equals(key)) {
+      } else if (DataTableColumns.SAVEPOINT_CREATOR.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.SAVEPOINT_TIMESTAMP.equals(key)) {
+      } else if (DataTableColumns.SAVEPOINT_TIMESTAMP.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.SAVEPOINT_TYPE.equals(key)) {
+      } else if (DataTableColumns.SAVEPOINT_TYPE.getText().equals(key)) {
         continue;
-      } else if (DataTableColumns.SYNC_STATE.equals(key)) {
+      } else if (DataTableColumns.SYNC_STATE.getText().equals(key)) {
         continue;
       } else if (DataTableColumns._ID.equals(key)) {
         continue;

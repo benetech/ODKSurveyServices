@@ -300,8 +300,8 @@ public class CsvUtil {
                     String v_savepoint_creator = "anonymous";
                     String v_savepoint_timestamp = TableConstants.nanoSecondsFromMillis(Long.valueOf(System.currentTimeMillis()));
                     String v_row_etag = null;
-                    String v_filter_type = DataTableColumns.DEFAULT_FILTER_TYPE;
-                    String v_filter_value = DataTableColumns.DEFAULT_FILTER_VALUE;
+                    String v_filter_type = DataTableColumns.DEFAULT_FILTER_TYPE.getText();
+                    String v_filter_value = DataTableColumns.DEFAULT_FILTER_VALUE.getText();
                     valueMap.clear();
                     boolean e3 = false;
 

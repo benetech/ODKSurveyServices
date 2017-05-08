@@ -141,7 +141,7 @@ class OdkResolveCheckpointFieldLoader extends AsyncTaskLoader<ResolveActionList>
 
     int rowStartingIndex = table.getNumberOfRows() - 1;
     Row rowStarting = table.getRowAtIndex(rowStartingIndex);
-    String type = rowStarting.getDataByKey(DataTableColumns.SAVEPOINT_TYPE);
+    String type = rowStarting.getDataByKey(DataTableColumns.SAVEPOINT_TYPE.getText());
     boolean deleteEntirely = (type == null || type.length() == 0);
 
     if (!deleteEntirely) {
