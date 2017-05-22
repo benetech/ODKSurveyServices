@@ -24,7 +24,7 @@ the License.
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="@string/surveys_in_progress"
         android:textSize="20dp" />
 
@@ -32,8 +32,9 @@ the License.
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:divider="@null"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"/>
 
     <TextView
         android:id="@android:id/empty"

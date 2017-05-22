@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:background="@android:color/darker_gray"
+    android:layout_height="60dp"
+    android:background="@color/form_list_name_header_background"
+    android:elevation="2dp"
     >
 
     <TextView
@@ -11,7 +12,10 @@
         android:layout_height="wrap_content"
         android:text="This is a header"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        android:textStyle="bold"
         />
 
 </RelativeLayout>

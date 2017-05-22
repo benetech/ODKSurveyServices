@@ -12,6 +12,8 @@
     <color name="white">#ffffffff</color>
     <color name="yellow">#77ffff00</color>
     <color name="tool_bar_background">#0288D1</color>
-    <color name="navigation_bar_header_background">#5B9BD5</color>
-    <color name="navigation_bar_menu_background">#8497B0</color>
+    <color name="navigation_bar_header_background">#FF5B9BD5</color>
+    <color name="navigation_bar_menu_background">#FF8497B0</color>
+    <color name="form_list_name_header_background">#FFF2F2F2</color>
+    <color name="in_progress_pie_chart_background">#FFBBDEFB</color>
 </resources>

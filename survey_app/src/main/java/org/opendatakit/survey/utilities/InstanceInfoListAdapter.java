@@ -16,6 +16,7 @@ package org.opendatakit.survey.utilities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class InstanceInfoListAdapter extends BaseAdapter {
   private final ArrayList<Object> mItems = new ArrayList<Object>();
 
   private static final String TAG = InstanceInfoListAdapter.class.getSimpleName();
-  private static final int TYPE_PERSON = 0;
+  private static final int INSTANCE = 0;
   private static final int TYPE_DIVIDER = 1;
 
   public InstanceInfoListAdapter(Context context, int layout,int savepoint_timestamp_id,
@@ -76,7 +77,7 @@ public class InstanceInfoListAdapter extends BaseAdapter {
   @Override
   public int getItemViewType(int position) {
     if (getItem(position) instanceof InstanceInfo) {
-      return TYPE_PERSON;
+      return INSTANCE;
     }
 
     return TYPE_DIVIDER;
@@ -84,7 +85,7 @@ public class InstanceInfoListAdapter extends BaseAdapter {
 
   @Override
   public boolean isEnabled(int position) {
-    return (getItemViewType(position) == TYPE_PERSON);
+    return (getItemViewType(position) == INSTANCE);
   }
 
   @Override
@@ -99,7 +100,7 @@ public class InstanceInfoListAdapter extends BaseAdapter {
       LayoutInflater layoutInflater =
               (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       switch (type) {
-        case TYPE_PERSON:
+        case INSTANCE:
           view = layoutInflater.inflate(mLayout, parent, false);
           break;
         case TYPE_DIVIDER:
@@ -108,41 +109,31 @@ public class InstanceInfoListAdapter extends BaseAdapter {
       }
     }
     switch (type) {
-      case TYPE_PERSON:
-    InstanceInfo info = (InstanceInfo) mItems.get(position);
+      case INSTANCE:
+        InstanceInfo info = (InstanceInfo) mItems.get(position);
 
-    //if ( mFormLastUpdateDateId != -1) {
-      TextView formDateView = (TextView) view.findViewById(mSavepointTimestamp);
-      formDateView.setText(info.savepointTimestamp);
-   // }
-    TextView formBeneficiaryView = (TextView) view.findViewById(mBeneficiaryInformation);
-    formBeneficiaryView.setText(info.beneficiaryInformation);
-    TextView formCountView = (TextView) view.findViewById(mQuestionsLeft);
-    formCountView.setText(String.valueOf(info.questionsLeft));
+        TextView formDateView = (TextView) view.findViewById(mSavepointTimestamp);
+        formDateView.setText(info.savepointTimestamp);
+        TextView formBeneficiaryView = (TextView) view.findViewById(mBeneficiaryInformation);
+        formBeneficiaryView.setText(info.beneficiaryInformation);
+        TextView formCountView = (TextView) view.findViewById(mQuestionsLeft);
+        formCountView.setText(String.valueOf(info.questionsLeft));
 
-        PieGraph pg = (PieGraph)view.findViewById(R.id.graph);
-        if(pg.getSlices().size()!=2) {
-          PieSlice slice = new PieSlice();
-          slice.setColor(Color.parseColor("#99CC00"));
-          slice.setValue(info.questionsFulfilled);
-          pg.addSlice(slice);
-          slice = new PieSlice();
-          slice.setColor(Color.parseColor("#FFBB33"));
-          slice.setValue(info.questionsLeft);
-          pg.addSlice(slice);
-        }
+            PieGraph pg = (PieGraph)view.findViewById(R.id.graph);
+            pg.setBorderColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
+            pg.setBorderSize(10);
+            if(pg.getSlices().size()!=2) {
+              PieSlice slice = new PieSlice();
+              slice.setColor(Color.WHITE);
+              slice.setValue(info.questionsFulfilled);
+              pg.addSlice(slice);
+              slice = new PieSlice();
+              slice.setColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
+              slice.setValue(info.questionsLeft);
+              pg.addSlice(slice);
+            }
+        break;
 
-    /*if ( mTableIdFormVersionId != -1 ) {
-      TextView v = (TextView) view.findViewById(mTableIdFormVersionId);
-      v.setVisibility(View.VISIBLE);
-      if ( info.formVersion != null) {
-        v.setText(mContext.getString(R.string.table_id_form_id_version, info.tableId, info.formId,
-            info.formVersion));
-      } else {
-        v.setText(mContext.getString(R.string.table_id_form_id, info.tableId, info.formId));
-      }
-    }*/
-    break;
       case TYPE_DIVIDER:
         TextView title = (TextView)view.findViewById(R.id.headerTitle);
         String titleString = (String)getItem(position);

@@ -5,8 +5,8 @@
 	android:layout_height="wrap_content"
 	android:paddingRight="8dip"
 	android:paddingLeft="40dip"
-	android:paddingTop="10dip"
-	android:paddingBottom="30dip"
+	android:paddingTop="20dip"
+	android:paddingBottom="20dip"
 	android:minHeight="?android:attr/listPreferredItemHeight">
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -41,9 +41,8 @@
 			android:layout_below="@id/questionsLeft"
 			android:textSize="15dp"/>
 		<org.opendatakit.survey.utilities.PieGraph
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:layout_toRightOf="@+id/questionsLeftLabel"
+			android:layout_width="80dp"
+			android:layout_height="80dp"
 			android:layout_alignParentRight="true"
 			android:id="@+id/graph"/>
 </RelativeLayout>
