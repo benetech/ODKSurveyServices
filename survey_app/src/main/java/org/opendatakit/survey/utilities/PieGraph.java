@@ -26,6 +26,7 @@ package org.opendatakit.survey.utilities;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -120,8 +121,14 @@ public class PieGraph extends View {
 
             p.close();
 
-            canvas.drawPath(p, mPaint);
             currentAngle = currentAngle + currentSweep;
+
+            if (currentAngle == 360) {
+                Bitmap cloud = BitmapFactory.decodeResource(getResources(), R.drawable.cloud, null);
+                canvas.drawBitmap(cloud, mBackgroundImageAnchor.x, mBackgroundImageAnchor.y, mPaint);
+            } else {
+                canvas.drawPath(p, mPaint);
+            }
 
         }
         mDrawCompleted = true;
