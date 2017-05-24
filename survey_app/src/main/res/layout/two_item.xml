@@ -46,8 +46,9 @@
 			android:layout_alignParentRight="true"
 			android:id="@+id/cloud"/>
 		<org.opendatakit.survey.utilities.PieGraph
-			android:layout_width="80dp"
-			android:layout_height="80dp"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
 			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
 			android:id="@+id/graph"/>
 </RelativeLayout>

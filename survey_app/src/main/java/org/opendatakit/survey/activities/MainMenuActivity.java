@@ -1802,7 +1802,11 @@ public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyAct
     // Handle navigation view item clicks here.
     int id = item.getItemId();
 
-    //switch with handling clicks in future
+    switch (id) {
+      case R.id.in_progress_menuitem:
+        swapToFragmentView(ScreenList.FRONT_PAGE);
+        break;
+    }
 
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
