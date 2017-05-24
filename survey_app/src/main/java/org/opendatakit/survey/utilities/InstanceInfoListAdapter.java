@@ -15,6 +15,8 @@
 package org.opendatakit.survey.utilities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -118,20 +120,24 @@ public class InstanceInfoListAdapter extends BaseAdapter {
         formBeneficiaryView.setText(info.beneficiaryInformation);
         TextView formCountView = (TextView) view.findViewById(mQuestionsLeft);
         formCountView.setText(String.valueOf(info.questionsLeft));
-
-            PieGraph pg = (PieGraph)view.findViewById(R.id.graph);
-            pg.setBorderColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
-            pg.setBorderSize(10);
-            if(pg.getSlices().size()!=2) {
-              PieSlice slice = new PieSlice();
-              slice.setColor(Color.WHITE);
-              slice.setValue(info.questionsFulfilled);
-              pg.addSlice(slice);
-              slice = new PieSlice();
-              slice.setColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
-              slice.setValue(info.questionsLeft);
-              pg.addSlice(slice);
-            }
+        if (info.questionsLeft == 0) {
+          CloudImage cloud = (CloudImage) view.findViewById(R.id.cloud);
+          cloud.setBackground(null);
+        } else {
+          PieGraph pg = (PieGraph) view.findViewById(R.id.graph);
+          pg.setBorderColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
+          pg.setBorderSize(10);
+          if (pg.getSlices().size() != 2) {
+            PieSlice slice = new PieSlice();
+            slice.setColor(Color.WHITE);
+            slice.setValue(info.questionsFulfilled);
+            pg.addSlice(slice);
+            slice = new PieSlice();
+            slice.setColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
+            slice.setValue(info.questionsLeft);
+            pg.addSlice(slice);
+          }
+        }
         break;
 
       case TYPE_DIVIDER:

@@ -40,6 +40,11 @@
 			android:layout_height="wrap_content"
 			android:layout_below="@id/questionsLeft"
 			android:textSize="15dp"/>
+		<org.opendatakit.survey.utilities.CloudImage
+			android:layout_width="80dp"
+			android:layout_height="80dp"
+			android:layout_alignParentRight="true"
+			android:id="@+id/cloud"/>
 		<org.opendatakit.survey.utilities.PieGraph
 			android:layout_width="80dp"
 			android:layout_height="80dp"

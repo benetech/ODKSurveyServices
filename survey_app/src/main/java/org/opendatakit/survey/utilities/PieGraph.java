@@ -97,11 +97,12 @@ public class PieGraph extends View {
             totalValue += slice.getValue();
         }
 
-        //draw border
-        mPaint.setColor(borderColor);
-        canvas.drawCircle(midX, midY, radius + borderSize, mPaint);
-
         for (PieSlice slice : mSlices) {
+            //draw border
+            mPaint.setColor(borderColor);
+            canvas.drawCircle(midX, midY, radius + borderSize, mPaint);
+            mPaint.setColor(Color.WHITE);
+            canvas.drawCircle(midX, midY, radius, mPaint);
             Path p = slice.getPath();
             p.reset();
 
@@ -120,16 +121,8 @@ public class PieGraph extends View {
                     -(currentSweep));
 
             p.close();
-
+            canvas.drawPath(p, mPaint);
             currentAngle = currentAngle + currentSweep;
-
-            if (currentAngle == 360) {
-                Bitmap cloud = BitmapFactory.decodeResource(getResources(), R.drawable.cloud, null);
-                canvas.drawBitmap(cloud, mBackgroundImageAnchor.x, mBackgroundImageAnchor.y, mPaint);
-            } else {
-                canvas.drawPath(p, mPaint);
-            }
-
         }
         mDrawCompleted = true;
     }
