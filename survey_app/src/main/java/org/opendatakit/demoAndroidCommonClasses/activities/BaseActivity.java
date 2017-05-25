@@ -1,11 +1,12 @@
 package org.opendatakit.demoAndroidCommonClasses.activities;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+
 import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.demoAndroidCommonClasses.application.CommonApplication;
 import org.opendatakit.demoAndroidCommonClasses.listener.DatabaseConnectionListener;
 
-public abstract class BaseActivity extends Activity implements DatabaseConnectionListener, IAppAwareActivity {
+public abstract class BaseActivity extends AppCompatActivity implements DatabaseConnectionListener, IAppAwareActivity {
     public BaseActivity() {
     }
 

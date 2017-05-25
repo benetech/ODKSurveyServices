@@ -34,6 +34,7 @@ import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.survey.R;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -61,7 +62,7 @@ import android.widget.Toast;
  * @author Carl Hartung
  *
  */
-public class SplashScreenActivity extends BaseActivity {
+public class SplashScreenActivity extends Activity {
 
   private static final String t = "SplashScreenActivity";
 
@@ -87,8 +88,7 @@ public class SplashScreenActivity extends BaseActivity {
       initialize();
     }
   }
-  
-  @Override
+
   public String getAppName() {
     return appName;
   }
@@ -206,13 +206,6 @@ public class SplashScreenActivity extends BaseActivity {
     mAlertDialog.show();
   }
 
-  @Override
-  public void databaseAvailable() {
-  }
-
-  @Override
-  public void databaseUnavailable() {
-  }
 
   public static boolean hasPermissions(Context context, String... permissions) {
     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {

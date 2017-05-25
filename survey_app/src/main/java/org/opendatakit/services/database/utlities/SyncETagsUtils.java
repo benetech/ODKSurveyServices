@@ -76,7 +76,7 @@ public class SyncETagsUtils {
 
     b.append("DELETE FROM ")
             .append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" WHERE ")
-            .append(SyncETagColumns.IS_MANIFEST);
+            .append(SyncETagColumns.IS_MANIFEST.getText());
 
     b.append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(true)));
@@ -226,7 +226,7 @@ public class SyncETagsUtils {
       b.append("=?");
       bindArgs.add(tableId);
     }
-    b.append(" AND ").append(SyncETagColumns.IS_MANIFEST).append("=?");
+    b.append(" AND ").append(SyncETagColumns.IS_MANIFEST.getText()).append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(true)));
     b.append(" AND ").append(SyncETagColumns.URL).append("=?");
     bindArgs.add(url);
@@ -275,7 +275,7 @@ public class SyncETagsUtils {
       b.append("=?");
       bindArgs.add(tableId);
     }
-    b.append(" AND ").append(SyncETagColumns.IS_MANIFEST).append("=?");
+    b.append(" AND ").append(SyncETagColumns.IS_MANIFEST.getText()).append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(true)));
     b.append(" AND ").append(SyncETagColumns.URL).append("=?");
     bindArgs.add(url);
@@ -293,7 +293,7 @@ public class SyncETagsUtils {
         //@formatter:off
         b.append("INSERT INTO ").append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" (")
          .append(SyncETagColumns.TABLE_ID).append(",")
-         .append(SyncETagColumns.IS_MANIFEST).append(",")
+         .append(SyncETagColumns.IS_MANIFEST.getText()).append(",")
          .append(SyncETagColumns.URL).append(",")
          .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(",")
          .append(SyncETagColumns.ETAG_MD5_HASH.getText()).append(") VALUES (");
@@ -345,7 +345,7 @@ public class SyncETagsUtils {
       b.append("=?");
       bindArgs.add(tableId);
     }
-    b.append(" AND ").append(SyncETagColumns.IS_MANIFEST).append("=?");
+    b.append(" AND ").append(SyncETagColumns.IS_MANIFEST.getText()).append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(false)));
     b.append(" AND ").append(SyncETagColumns.URL).append("=?");
     bindArgs.add(url);
@@ -400,7 +400,7 @@ public class SyncETagsUtils {
       b.append("=?");
       bindArgs.add(tableId);
     }
-    b.append(" AND ").append(SyncETagColumns.IS_MANIFEST).append("=?");
+    b.append(" AND ").append(SyncETagColumns.IS_MANIFEST.getText()).append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(false)));
     b.append(" AND ").append(SyncETagColumns.URL).append("=?");
     bindArgs.add(url);
@@ -418,7 +418,7 @@ public class SyncETagsUtils {
         //@formatter:off
         b.append("INSERT INTO ").append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" (")
          .append(SyncETagColumns.TABLE_ID).append(",")
-         .append(SyncETagColumns.IS_MANIFEST).append(",")
+         .append(SyncETagColumns.IS_MANIFEST.getText()).append(",")
          .append(SyncETagColumns.URL).append(",")
          .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(",")
          .append(SyncETagColumns.ETAG_MD5_HASH.getText()).append(") VALUES (");

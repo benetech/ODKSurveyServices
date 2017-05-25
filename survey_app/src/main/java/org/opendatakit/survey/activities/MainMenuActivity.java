@@ -45,6 +45,7 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
+import org.opendatakit.demoAndroidCommonClasses.activities.BaseActivity;
 import org.opendatakit.demoAndroidCommonClasses.application.CommonApplication;
 import org.opendatakit.demoAndroidCommonClasses.listener.DatabaseConnectionListener;
 import org.opendatakit.demoAndroidCommonClasses.views.ExecutorContext;
@@ -98,7 +99,7 @@ import java.util.UUID;
  *
  * @author mitchellsundt@gmail.com
  */
-public class MainMenuActivity extends AppCompatActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity, IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener {
+public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity, IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener {
 
   private static final String t = "MainMenuActivity";
 

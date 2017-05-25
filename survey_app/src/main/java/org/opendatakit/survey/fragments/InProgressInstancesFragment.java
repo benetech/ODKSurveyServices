@@ -77,12 +77,15 @@ public class InProgressInstancesFragment extends ListFragment
       Bundle savedInstanceState) {
     view = inflater.inflate(ID, container, false);
 
-    FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.newFormFloatingActionButton);
-    myFab.setOnClickListener(new View.OnClickListener() {
+    FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.newFormFloatingActionButton);
+    fab.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
         Toast.makeText(getActivity(), "here we should take user to new form fullfilment when it will be ready", Toast.LENGTH_SHORT).show();
       }
     });
+
+    if(mAdapter.getCount()==0)
+      fab.hide();
 
     return view;
   }
