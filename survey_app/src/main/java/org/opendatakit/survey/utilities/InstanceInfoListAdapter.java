@@ -121,10 +121,17 @@ public class InstanceInfoListAdapter extends BaseAdapter {
         TextView formCountView = (TextView) view.findViewById(mQuestionsLeft);
         formCountView.setText(String.valueOf(info.questionsLeft));
         if (info.questionsLeft == 0) {
-          CloudImage cloud = (CloudImage) view.findViewById(R.id.cloud);
-          cloud.setBackground(null);
-        } else {
           PieGraph pg = (PieGraph) view.findViewById(R.id.graph);
+          pg.setVisibility(View.GONE);
+
+          ImageView cloud = (ImageView) view.findViewById(R.id.cloud);
+          cloud.setVisibility(View.VISIBLE);
+        } else {
+          ImageView cloud = (ImageView) view.findViewById(R.id.cloud);
+          cloud.setVisibility(View.GONE);
+
+          PieGraph pg = (PieGraph) view.findViewById(R.id.graph);
+          pg.setVisibility(View.VISIBLE);
           pg.setBorderColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
           pg.setBorderSize(10);
           if (pg.getSlices().size() != 2) {

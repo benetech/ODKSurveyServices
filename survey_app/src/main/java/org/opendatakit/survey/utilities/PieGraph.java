@@ -97,17 +97,14 @@ public class PieGraph extends View {
             totalValue += slice.getValue();
         }
 
+        //draw border
+        mPaint.setColor(borderColor);
+        canvas.drawCircle(midX, midY, radius + borderSize, mPaint);
+
         for (PieSlice slice : mSlices) {
-            //draw border
-            mPaint.setColor(borderColor);
-            canvas.drawCircle(midX, midY, radius + borderSize, mPaint);
-            mPaint.setColor(Color.WHITE);
-            canvas.drawCircle(midX, midY, radius, mPaint);
             Path p = slice.getPath();
             p.reset();
-
-
-                mPaint.setColor(slice.getColor());
+            mPaint.setColor(slice.getColor());
 
             currentSweep = (slice.getValue() / totalValue) * (360);
 
