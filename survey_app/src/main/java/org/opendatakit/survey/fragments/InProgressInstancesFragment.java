@@ -27,10 +27,12 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.opendatakit.survey.utilities.InstanceInfoListAdapter;
 
@@ -74,6 +76,14 @@ public class InProgressInstancesFragment extends ListFragment
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     view = inflater.inflate(ID, container, false);
+
+    FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.newFormFloatingActionButton);
+    myFab.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v) {
+        Toast.makeText(getActivity(), "here we should take user to new form fullfilment when it will be ready", Toast.LENGTH_SHORT).show();
+      }
+    });
+
     return view;
   }
 
@@ -89,12 +99,12 @@ public class InProgressInstancesFragment extends ListFragment
     super.onListItemClick(l, v, position, id);
 
     // get uri to form
-    /*InstanceInfo info = (InstanceInfo) mAdapter.getItem(position);
+    InstanceInfo info = (InstanceInfo) mAdapter.getItem(position);
     Uri formUri = Uri.withAppendedPath(Uri.withAppendedPath(
         Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI,
             ((IAppAwareActivity) getActivity()).getAppName()), info.tableId), info.formId);
 
-    ((IOdkSurveyActivity) getActivity()).chooseForm(formUri);*/
+    ((IOdkSurveyActivity) getActivity()).chooseForm(formUri);
   }
 
   @Override public Loader<ArrayList<Object>> onCreateLoader(int id, Bundle args) {

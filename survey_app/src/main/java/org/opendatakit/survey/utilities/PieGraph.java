@@ -87,9 +87,9 @@ public class PieGraph extends View {
         midX = getWidth() / 2;
         midY = getHeight() / 2;
         if (midX < midY) {
-            radius = midX/2;
+            radius = (float) (midX/1.5);
         } else {
-            radius = midY/2;
+            radius = (float) (midY/1.5);
         }
         innerRadius = radius * mInnerCircleRatio / 255;
 

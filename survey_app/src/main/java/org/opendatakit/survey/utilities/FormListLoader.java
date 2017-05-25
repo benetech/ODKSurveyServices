@@ -87,6 +87,7 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
 
       if (c != null && c.moveToFirst() ) {
         int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
+        int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
         int idxFormTitle = c.getColumnIndex(FormsColumns.DISPLAY_NAME.getText());
 
         do {
@@ -101,6 +102,8 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
               do {
                 int[] arr = countEmptyAndFilledColumns(c2);
                 InstanceInfo info = new InstanceInfo(
+                        c.getString(idxTableId),
+                        c.getString(idxFormId),
                         LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
                         formatter.format(new Date(TableConstants.milliSecondsFromNanos(c2.getString(c2.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()))))),
                         "Jan Kowalski",
