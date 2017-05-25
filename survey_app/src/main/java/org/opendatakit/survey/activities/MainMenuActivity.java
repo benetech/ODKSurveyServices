@@ -708,6 +708,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
           } else {
             createErrorDialog(getString(R.string.invalid_uri_expecting_one_segment, uri.toString()),
                 EXIT);
+            
             return;
           }
 
@@ -1765,7 +1766,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
             };
 
             Cursor f = getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, null);
-            counter += f.getCount();
+            if(f!=null) {
+              counter += f.getCount();
+            }
 
             if(f!=null) {
               f.close();

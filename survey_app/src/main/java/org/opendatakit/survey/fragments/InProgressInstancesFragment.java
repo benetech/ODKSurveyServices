@@ -84,9 +84,6 @@ public class InProgressInstancesFragment extends ListFragment
       }
     });
 
-    if(mAdapter.getCount()==0)
-      fab.hide();
-
     return view;
   }
 
@@ -102,6 +99,7 @@ public class InProgressInstancesFragment extends ListFragment
     super.onListItemClick(l, v, position, id);
 
     // get uri to form
+    ((MainMenuActivity)getActivity()).setSubmenuPage("new_row");
     InstanceInfo info = (InstanceInfo) mAdapter.getItem(position);
     Uri formUri = Uri.withAppendedPath(Uri.withAppendedPath(
         Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI,
