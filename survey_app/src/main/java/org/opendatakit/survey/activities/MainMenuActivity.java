@@ -1846,6 +1846,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       case R.id.new_survey_menuitem:
         swapToFragmentView(ScreenList.BENEFICIARY_INFORMATION);
         break;
+      case R.id.settings_menuitem:
+        launchSettings();
+        break;
     }
 
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -1861,4 +1864,11 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
   }
 
+  private void launchSettings() {
+    Intent settingsIntent = new Intent();
+    settingsIntent.setComponent(new ComponentName(IntentConsts.AppProperties.APPLICATION_NAME,
+            IntentConsts.AppProperties.ACTIVITY_NAME));
+    settingsIntent.setAction(Intent.ACTION_DEFAULT);
+    this.startActivity(settingsIntent);
+  }
 }
