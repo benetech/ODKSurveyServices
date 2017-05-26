@@ -8,13 +8,13 @@
 
         <item
             android:id="@+id/in_progress_menuitem"
-            android:title="@string/surveys_in_progress"
+            android:title="@string/menu_in_progress"
             android:icon="@drawable/ic_event_note_white_36dp"
             app:actionViewClass="android.widget.TextView"/>
 
         <item
             android:id="@+id/submitted_menuitem"
-            android:title="@string/submitted_forms"
+            android:title="@string/menu_submitted_forms"
             android:icon="@drawable/ic_event_available_white_36dp"
             app:actionViewClass="android.widget.TextView"/>
 

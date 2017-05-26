@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="org.opendatakit.survey.fragments.BeneficiaryInformationFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:background="@color/form_list_name_header_background"
+       android:elevation="5dp">
+
+       <Button android:id="@+id/beneficiary_information_cancel_button"
+           android:layout_weight="1"
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:text="@string/beneficiary_information_cancel_button"
+           android:background="@android:color/transparent"
+           android:gravity="center"/>
+
+       <TextView
+           android:layout_weight="2"
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:text="@string/beneficiary_information_new_survey_label"
+           android:background="@android:color/transparent"
+           android:gravity="center"
+           android:textSize="20dp"
+           android:textColor="@color/black"/>
+
+       <Button android:id="@+id/beneficiary_information_next_button"
+           android:layout_weight="1"
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:text="@string/beneficiary_information_next_button"
+           android:background="@android:color/transparent"
+           android:gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/beneficiary_information"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
+
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/firstnameWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            app:hintTextAppearance="@style/TextLabel">
+
+            <EditText android:id="@+id/firstnameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/first_name"
+                    android:inputType="textEmailAddress"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/lastnameWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            app:hintTextAppearance="@style/TextLabel">
+
+            <EditText android:id="@+id/lastnameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/last_name"
+                android:inputType="textEmailAddress"/>
+        </android.support.design.widget.TextInputLayout>
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

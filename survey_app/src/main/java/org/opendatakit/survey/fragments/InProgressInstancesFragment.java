@@ -80,7 +80,7 @@ public class InProgressInstancesFragment extends ListFragment
     FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.newFormFloatingActionButton);
     fab.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
-        Toast.makeText(getActivity(), "here we should take user to new form fullfilment when it will be ready", Toast.LENGTH_SHORT).show();
+        ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.BENEFICIARY_INFORMATION);
       }
     });
 

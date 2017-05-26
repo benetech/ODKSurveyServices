@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-	<!--
+<?xml version="1.0" encoding="utf-8"?>    <!--
 		Copyright (C) 2009 University of Washington Licensed under the Apache
 		License, Version 2.0 (the "License"); you may not use this file except
 		in compliance with the License. You may obtain a copy of the License
@@ -10,7 +9,7 @@
 		the specific language governing permissions and limitations under the
 		License.
 	-->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- start pre restructuring -->
     <string name="accept_location">Record Location</string>
     <string name="reset_location">Clear</string>
@@ -109,7 +108,8 @@
     <string name="new_survey">NEW SURVEY</string>
     <string name="surveys_in_progress">In Progress Surveys</string>
     <string name="submitted_surveys">Submitted Forms</string>
-    <string name="submitted_forms">SUBMITTED</string>
+    <string name="menu_submitted_forms">SUBMITTED</string>
+    <string name="menu_in_progress">IN PROGRESS</string>
     <string name="settings">SETTINGS</string>
     <string name="sync">Sync</string>
     <string name="poverty">poverty</string>
@@ -179,6 +179,12 @@
     <string name="conflict_auto_apply">No user-defined field differences -- automatically taking server metadata revisions.</string>
     <string name="conflict_auto_apply_all">No user-defined field differences in any rows.\nAutomatically took server revisions.</string>
     <string name="resolve_row_display_name">Form: %1$s Instance: %2$s</string>
+    <string name="beneficiary_information_cancel_button">CANCEL</string>
+    <string name="beneficiary_information_new_survey_label">New Survey</string>
+    <string name="beneficiary_information_next_button">NEXT</string>
+    <string name="beneficiary_information">Beneficiary Information</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
 
     <!-- Sync Service and Notifications stuff -->
 
@@ -344,9 +350,9 @@
 
     <!-- strings from merged libraries -->
     <string name="abort_error_accessing_database">Aborted: Error accessing database</string>
-    <string name="credential_type_google_account" >google_account</string>
-    <string name="credential_type_none" >none</string>
-    <string name="credential_type_username_password" >username_password</string>
+    <string name="credential_type_google_account">google_account</string>
+    <string name="credential_type_none">none</string>
+    <string name="credential_type_username_password">username_password</string>
     <string name="csv_file_not_found">Warning: CSV File not found: %1$s - skipped</string>
     <string name="default_sync_server_url">https://open-data-kit.appspot.com</string>
     <string name="defining_tableid_error">Error processing table definition for tableId %1$s</string>
@@ -376,4 +382,7 @@
         <item>username_password</item>
         <item>google_account</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

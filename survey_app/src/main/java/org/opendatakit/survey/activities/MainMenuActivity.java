@@ -78,6 +78,8 @@ import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.application.Survey;
 import org.opendatakit.survey.fragments.BackPressWebkitConfirmationDialogFragment;
+import org.opendatakit.survey.fragments.BeneficiaryInformationFragment;
+import org.opendatakit.survey.fragments.ChooseFormFragment;
 import org.opendatakit.survey.fragments.InProgressInstancesFragment;
 import org.opendatakit.survey.fragments.InitializationFragment;
 import org.opendatakit.survey.fragments.SubmittedInstancesFragment;
@@ -99,12 +101,14 @@ import java.util.UUID;
  *
  * @author mitchellsundt@gmail.com
  */
-public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity, IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener {
+public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity,
+        IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener, BeneficiaryInformationFragment.DataPassListener {
 
   private static final String t = "MainMenuActivity";
 
   public static enum ScreenList {
-    MAIN_SCREEN, FORM_CHOOSER, WEBKIT, INITIALIZATION_DIALOG, ABOUT_MENU, IN_PROGRESS, SUBMITTED
+    MAIN_SCREEN, FORM_CHOOSER, WEBKIT, INITIALIZATION_DIALOG, ABOUT_MENU, IN_PROGRESS, SUBMITTED,
+    BENEFICIARY_INFORMATION, CHOOSE_FORM
   };
 
   // Extra returned from gp activity
@@ -247,6 +251,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
    * can operate)
    */
   Bundle mConflictTables = new Bundle();
+  private Bundle beneficiaryInformation = new Bundle();
 
   /**
    * Member variables that do not need to be preserved across orientation
@@ -1094,6 +1099,17 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       if (newFragment == null) {
         newFragment = new SubmittedInstancesFragment();
       }
+    } else if (newScreenType == ScreenList.BENEFICIARY_INFORMATION) {
+      newFragment = mgr.findFragmentByTag(newScreenType.name());
+      if (newFragment == null) {
+        newFragment = new BeneficiaryInformationFragment();
+      }
+    } else if (newScreenType == ScreenList.CHOOSE_FORM) {
+      newFragment = mgr.findFragmentByTag(newScreenType.name());
+      if (newFragment == null) {
+        newFragment = new ChooseFormFragment();
+      }
+      newFragment.setArguments(beneficiaryInformation);
     } else if (newScreenType == ScreenList.INITIALIZATION_DIALOG) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
@@ -1820,10 +1836,21 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       case R.id.submitted_menuitem:
         swapToFragmentView(ScreenList.SUBMITTED);
         break;
+      case R.id.new_survey_menuitem:
+        swapToFragmentView(ScreenList.BENEFICIARY_INFORMATION);
+        break;
     }
 
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
     return true;
   }
+
+  @Override
+  public void passData(String firstname, String lastname) {
+    beneficiaryInformation.clear();
+    beneficiaryInformation.putString("firstname", firstname);
+    beneficiaryInformation.putString("lastname", lastname);
+  }
+
 }
