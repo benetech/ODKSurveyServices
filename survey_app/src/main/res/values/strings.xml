@@ -51,7 +51,7 @@
     <string name="font_size_medium">Medium</string>
     <string name="font_size_small">Small</string>
     <string name="font_size_extra_small">Extra Small</string>
-    <string name="last_updated_on_date_at_time">\'Last Updated on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
+    <string name="last_updated_on_date_at_time">\'Last saved on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
     <string name="sent_on_date_at_time">\'Sent on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
     <string name="sending_failed_on_date_at_time">\'Sending failed on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
     <string name="media_save_failed">Save of media attachment failed.</string>
@@ -108,6 +108,7 @@
     <string name="reset_image">Reset</string>
     <string name="new_survey">NEW SURVEY</string>
     <string name="surveys_in_progress">In Progress Surveys</string>
+    <string name="submitted_surveys">Submitted Forms</string>
     <string name="submitted_forms">SUBMITTED</string>
     <string name="settings">SETTINGS</string>
     <string name="sync">Sync</string>

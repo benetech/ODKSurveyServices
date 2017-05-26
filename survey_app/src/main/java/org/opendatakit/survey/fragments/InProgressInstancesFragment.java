@@ -66,8 +66,8 @@ public class InProgressInstancesFragment extends ListFragment
     super.onActivityCreated(savedInstanceState);
 
     // render total instance view
-    mAdapter = new InstanceInfoListAdapter(getActivity(), R.layout.two_item, R.id.savepointTimestamp,
-            R.id.beneficiaryName, R.id.questionsLeft);
+    mAdapter = new InstanceInfoListAdapter(getActivity(), R.layout.in_progress_row, R.id.savepointTimestamp,
+            R.id.beneficiaryName, R.id.questionsLeft, ((MainMenuActivity)getActivity()).getSubmenuPage());
     setListAdapter(mAdapter);
 
     getLoaderManager().initLoader(FORM_CHOOSER_LIST_LOADER, null, this);
@@ -99,7 +99,6 @@ public class InProgressInstancesFragment extends ListFragment
     super.onListItemClick(l, v, position, id);
 
     // get uri to form
-    ((MainMenuActivity)getActivity()).setSubmenuPage("new_row");
     InstanceInfo info = (InstanceInfo) mAdapter.getItem(position);
     Uri formUri = Uri.withAppendedPath(Uri.withAppendedPath(
         Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI,

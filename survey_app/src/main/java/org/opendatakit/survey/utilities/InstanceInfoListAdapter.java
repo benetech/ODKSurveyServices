@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import org.opendatakit.survey.R;
+import org.opendatakit.survey.activities.MainMenuActivity;
 
 import java.util.ArrayList;
 
@@ -38,19 +39,22 @@ public class InstanceInfoListAdapter extends BaseAdapter {
   private final int mSavepointTimestamp;
   private final int mBeneficiaryInformation;
   private final int mQuestionsLeft;
+  private final String submenuPage;
   private final ArrayList<Object> mItems = new ArrayList<Object>();
 
   private static final String TAG = InstanceInfoListAdapter.class.getSimpleName();
   private static final int INSTANCE = 0;
   private static final int TYPE_DIVIDER = 1;
 
-  public InstanceInfoListAdapter(Context context, int layout,int savepoint_timestamp_id,
-                                 int beneficiary_information_id, int questions_left_id) {
+  public InstanceInfoListAdapter(Context context, int layout, int savepoint_timestamp_id,
+                                 int beneficiary_information_id, int questions_left_id,
+                                 String submenuPage) {
     this.mContext = context;
     this.mLayout = layout;
     this.mSavepointTimestamp = savepoint_timestamp_id;
     this.mBeneficiaryInformation = beneficiary_information_id;
     this.mQuestionsLeft = questions_left_id;
+    this.submenuPage = submenuPage;
   }
 
   public void clear() {
@@ -101,56 +105,76 @@ public class InstanceInfoListAdapter extends BaseAdapter {
     if (view == null) {
       LayoutInflater layoutInflater =
               (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
       switch (type) {
         case INSTANCE:
           view = layoutInflater.inflate(mLayout, parent, false);
+
+          InstanceInfo info = (InstanceInfo) mItems.get(position);
+          TextView formBeneficiaryView = (TextView) view.findViewById(mBeneficiaryInformation);
+          formBeneficiaryView.setText(info.beneficiaryInformation);
+          PieGraph pg = (PieGraph) view.findViewById(R.id.graph);
+
+          if (submenuPage.equals("new_row")) {
+            ImageView cloud = (ImageView) view.findViewById(R.id.cloud);
+            TextView formDateView = (TextView) view.findViewById(mSavepointTimestamp);
+            formDateView.setText(info.savepointTimestamp);
+            TextView formCountView = (TextView) view.findViewById(mQuestionsLeft);
+            formCountView.setText(String.valueOf(info.questionsLeft));
+
+            if (info.questionsLeft == 0) {
+              pg.setVisibility(View.GONE);
+              cloud.setVisibility(View.VISIBLE);
+            } else {
+              cloud.setVisibility(View.GONE);
+              pg.setVisibility(View.VISIBLE);
+            }
+
+            pg.setBorderColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
+            pg.setBorderSize(10);
+            if (pg.getSlices().size() != 2) {
+              PieSlice slice = new PieSlice();
+              slice.setColor(Color.WHITE);
+              slice.setValue(info.questionsFulfilled);
+              pg.addSlice(slice);
+              slice = new PieSlice();
+              slice.setColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
+              slice.setValue(info.questionsLeft);
+              pg.addSlice(slice);
+            }
+
+          } else {
+            TextView formDateView = (TextView) view.findViewById(mSavepointTimestamp); //zmienic
+            formDateView.setText(info.savepointTimestamp);
+
+            pg.setInnerCircleRatio(100);
+            if (pg.getSlices().size() != 3) {
+              PieSlice slice = new PieSlice();
+              slice.setColor(ContextCompat.getColor(mContext, R.color.submitted_donut_char_green));
+              slice.setValue(info.greenAnswers);
+              pg.addSlice(slice);
+              slice = new PieSlice();
+              slice.setColor(ContextCompat.getColor(mContext, R.color.submitted_donut_char_yellow));
+              slice.setValue(info.yellowAnswers);
+              pg.addSlice(slice);
+              slice = new PieSlice();
+              slice.setColor(ContextCompat.getColor(mContext, R.color.submitted_donut_char_red));
+              slice.setValue(info.redAnswers);
+              pg.addSlice(slice);
+            }
+          }
           break;
+
         case TYPE_DIVIDER:
           view = layoutInflater.inflate(R.layout.row_header, parent, false);
+          TextView title = (TextView) view.findViewById(R.id.headerTitle);
+          String titleString = (String) getItem(position);
+          title.setText(titleString);
           break;
       }
     }
-    switch (type) {
-      case INSTANCE:
-        InstanceInfo info = (InstanceInfo) mItems.get(position);
-
-        TextView formDateView = (TextView) view.findViewById(mSavepointTimestamp);
-        formDateView.setText(info.savepointTimestamp);
-        TextView formBeneficiaryView = (TextView) view.findViewById(mBeneficiaryInformation);
-        formBeneficiaryView.setText(info.beneficiaryInformation);
-        TextView formCountView = (TextView) view.findViewById(mQuestionsLeft);
-        formCountView.setText(String.valueOf(info.questionsLeft));
-        PieGraph pg = (PieGraph) view.findViewById(R.id.graph);
-        ImageView cloud = (ImageView) view.findViewById(R.id.cloud);
-        if (info.questionsLeft == 0) {
-          pg.setVisibility(View.GONE);
-          cloud.setVisibility(View.VISIBLE);
-        } else {
-          cloud.setVisibility(View.GONE);
-          pg.setVisibility(View.VISIBLE);
-          pg.setBorderColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
-          pg.setBorderSize(10);
-          if (pg.getSlices().size() != 2) {
-            PieSlice slice = new PieSlice();
-            slice.setColor(Color.WHITE);
-            slice.setValue(info.questionsFulfilled);
-            pg.addSlice(slice);
-            slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
-            slice.setValue(info.questionsLeft);
-            pg.addSlice(slice);
-          }
-        }
-        break;
-
-      case TYPE_DIVIDER:
-        TextView title = (TextView)view.findViewById(R.id.headerTitle);
-        String titleString = (String)getItem(position);
-        title.setText(titleString);
-        break;
-    }
 
     return view;
-  }
 
+  }
 }

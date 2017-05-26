@@ -19,9 +19,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.opendatakit.aggregate.odktables.rest.TableConstants;
-import org.opendatakit.demoAndroidlibraryClasses.database.data.KeyValueStoreEntry;
 import org.opendatakit.demoAndroidlibraryClasses.provider.ChoiceListColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.ColumnDefinitionsColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
@@ -36,12 +34,8 @@ import org.opendatakit.demoAndroidlibraryClasses.provider.TableDefinitionsColumn
 import org.opendatakit.demoAndroidlibraryClasses.utilities.LocalizationUtils;
 import org.opendatakit.survey.R;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -58,17 +52,28 @@ import static android.database.Cursor.FIELD_TYPE_STRING;
 public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
 
   private final String appName;
-  private String submenuPage;
 
   private String[] whereArgs = new String[] {
-          "new_row"
+          ""
   };
+
+  private final List<String> defaultColumns;
 
 
   public FormListLoader(Context context, String appName, String submenuPage) {
     super(context);
     this.appName = appName;
-    this.submenuPage = submenuPage;
+    whereArgs[0] = submenuPage;
+
+    defaultColumns = DataTableColumns.getValues();
+    defaultColumns.addAll(ChoiceListColumns.getValues());
+    defaultColumns.addAll(ColumnDefinitionsColumns.getValues());
+    defaultColumns.addAll(FormsColumns.getValues());
+    defaultColumns.addAll(InstanceColumns.getValues());
+    defaultColumns.addAll(TableDefinitionsColumns.getValues());
+    defaultColumns.addAll(SyncETagColumns.getValues());
+    defaultColumns.addAll(SurveyConfigurationColumns.getValues());
+    defaultColumns.addAll(KeyValueStoreColumns.getValues());
   }
 
   @Override public ArrayList<Object> loadInBackground() {
@@ -100,15 +105,19 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
             if (c2 != null && c2.moveToFirst()) {
               forms.add(LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)));
               do {
-                int[] arr = countEmptyAndFilledColumns(c2);
+                int[] emptyFilledColumns = countEmptyAndFilledColumns(c2);
+                int[] spotlightAnswers = countStoplightAnswers(c2);
                 InstanceInfo info = new InstanceInfo(
                         c.getString(idxTableId),
                         c.getString(idxFormId),
                         LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
                         formatter.format(new Date(TableConstants.milliSecondsFromNanos(c2.getString(c2.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()))))),
                         "Jan Kowalski",
-                        arr[0],
-                        arr[1]);
+                        emptyFilledColumns[0],
+                        emptyFilledColumns[1],
+                        spotlightAnswers[0],
+                        spotlightAnswers[1],
+                        spotlightAnswers[2]);
                 forms.add(info);
               } while (c2.moveToNext());
             }
@@ -132,47 +141,69 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
   }
 
   private int[] countEmptyAndFilledColumns(Cursor c) {
-    int res = 0;
-    int res2 =0;
+    int empty = 0;
+    int fulfilled = 0;
     boolean isDefColumn;
-    //dac to w gore gdzies
-    List<String> fields0 = DataTableColumns.getValues();
-    fields0.addAll(ChoiceListColumns.getValues());
-    fields0.addAll(ColumnDefinitionsColumns.getValues());
-    fields0.addAll(FormsColumns.getValues());
-    fields0.addAll(InstanceColumns.getValues());
-    fields0.addAll(TableDefinitionsColumns.getValues());
-    fields0.addAll(SyncETagColumns.getValues());
-    fields0.addAll(SurveyConfigurationColumns.getValues());
-    fields0.addAll(KeyValueStoreColumns.getValues());
 
     for (int i = 0; i < c.getColumnCount(); i++) {
       isDefColumn = false;
-      if(fields0.contains(c.getColumnName(i))) {
+      if(defaultColumns.contains(c.getColumnName(i))) {
           isDefColumn = true;
       }
       if (!isDefColumn) {
         switch (c.getType(i)) {
           case FIELD_TYPE_NULL:
-            res++;
+            empty++;
             break;
           case FIELD_TYPE_INTEGER:
-            res2++;
+            fulfilled++;
             break;
           case FIELD_TYPE_FLOAT:
-            res2++;
+            fulfilled++;
             break;
           case FIELD_TYPE_STRING:
             if (!c.getColumnName(i).contains("_contentType"))
-              res2++;
+              fulfilled++;
             break;
           case FIELD_TYPE_BLOB:
-            res2++;
+            fulfilled++;
             break;
         }
       }
     }
-    int[] array = {res, res2};
+    int[] array = {empty, fulfilled};
+    return array;
+  }
+
+  private int[] countStoplightAnswers(Cursor c) {
+    int red = 0;
+    int yellow = 0;
+    int green = 0;
+    boolean isDefColumn;
+
+    for (int i = 0; i < c.getColumnCount(); i++) {
+      isDefColumn = false;
+      if(defaultColumns.contains(c.getColumnName(i))) {
+        isDefColumn = true;
+      }
+      if (!isDefColumn) {
+        if (c.getType(i) == FIELD_TYPE_STRING) {
+            //if (!c.getColumnName(i).contains("_contentType")) here we will filter it
+          switch(c.getString(i)){
+            case "red":
+              red++;
+              break;
+            case "yellow":
+              yellow++;
+              break;
+            case "green":
+              green++;
+              break;
+          }
+        }
+      }
+    }
+    int[] array = {red, yellow, green};
     return array;
   }
 

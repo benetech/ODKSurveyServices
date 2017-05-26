@@ -35,7 +35,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -81,6 +80,7 @@ import org.opendatakit.survey.application.Survey;
 import org.opendatakit.survey.fragments.BackPressWebkitConfirmationDialogFragment;
 import org.opendatakit.survey.fragments.InProgressInstancesFragment;
 import org.opendatakit.survey.fragments.InitializationFragment;
+import org.opendatakit.survey.fragments.SubmittedInstancesFragment;
 import org.opendatakit.survey.fragments.WebViewFragment;
 import org.opendatakit.survey.logic.FormIdStruct;
 import org.opendatakit.survey.logic.SurveyDataExecutorProcessor;
@@ -104,7 +104,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private static final String t = "MainMenuActivity";
 
   public static enum ScreenList {
-    MAIN_SCREEN, FORM_CHOOSER, WEBKIT, INITIALIZATION_DIALOG, ABOUT_MENU, FRONT_PAGE
+    MAIN_SCREEN, FORM_CHOOSER, WEBKIT, INITIALIZATION_DIALOG, ABOUT_MENU, IN_PROGRESS, SUBMITTED
   };
 
   // Extra returned from gp activity
@@ -214,7 +214,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
    * Member variables that are saved and restored across orientation changes.
    */
 
-  private ScreenList currentFragment = ScreenList.FRONT_PAGE;
+  private ScreenList currentFragment = ScreenList.IN_PROGRESS;
 
   private String dispatchStringWaitingForData = null;
   private String actionWaitingForData = null;
@@ -1082,10 +1082,17 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     Fragment newFragment = null;
     if (newScreenType == ScreenList.MAIN_SCREEN) {
       throw new IllegalStateException("unexpected reference to generic main screen");
-    } else if (newScreenType == ScreenList.FRONT_PAGE) {
+    } else if (newScreenType == ScreenList.IN_PROGRESS) {
+      setSubmenuPage("new_row");
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new InProgressInstancesFragment();
+      }
+    } else if (newScreenType == ScreenList.SUBMITTED) {
+      setSubmenuPage("submitted");
+      newFragment = mgr.findFragmentByTag(newScreenType.name());
+      if (newFragment == null) {
+        newFragment = new SubmittedInstancesFragment();
       }
     } else if (newScreenType == ScreenList.INITIALIZATION_DIALOG) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
@@ -1179,7 +1186,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
                     Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName),
                       tableId), formId);
           } else {
-            swapToFragmentView(ScreenList.FRONT_PAGE);
+            swapToFragmentView(ScreenList.IN_PROGRESS);
             createErrorDialog(
                 getString(R.string.invalid_uri_expecting_n_segments, uri.toString(), 2), EXIT);
             return;
@@ -1188,7 +1195,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
           FormIdStruct newForm = FormIdStruct.retrieveFormIdStruct(getContentResolver(), formUri);
           if (newForm == null) {
             // error
-            swapToFragmentView(ScreenList.FRONT_PAGE);
+            swapToFragmentView(ScreenList.IN_PROGRESS);
             createErrorDialog(getString(R.string.form_not_found, segments.get(1)), EXIT);
             return;
           } else {
@@ -1728,7 +1735,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       }
     } else if (requestCode == SYNC_ACTIVITY_CODE) {
       ((Survey) getApplication()).setRunInitializationTask(getAppName());
-      this.swapToFragmentView((currentFragment == null) ? ScreenList.FRONT_PAGE : currentFragment);
+      this.swapToFragmentView((currentFragment == null) ? ScreenList.IN_PROGRESS : currentFragment);
     }
   }
 
@@ -1798,7 +1805,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private void updateCounters(){
     //Gravity property aligns the text
     inProgress.setText(countFormsInstances("new_row"));
-    submitted.setText(countFormsInstances("synced"));
+    submitted.setText(countFormsInstances("submitted"));
   }
 
   @Override
@@ -1808,7 +1815,10 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
     switch (id) {
       case R.id.in_progress_menuitem:
-        swapToFragmentView(ScreenList.FRONT_PAGE);
+        swapToFragmentView(ScreenList.IN_PROGRESS);
+        break;
+      case R.id.submitted_menuitem:
+        swapToFragmentView(ScreenList.SUBMITTED);
         break;
     }
 

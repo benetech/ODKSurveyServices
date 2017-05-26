@@ -12,9 +12,12 @@ public final class InstanceInfo {
   public final int questionsFulfilled;
   public final String tableId;
   public final String formId;
+  public final int redAnswers;
+  public final int yellowAnswers;
+  public final int greenAnswers;
 
   InstanceInfo(String tableId, String formId, String formDisplayName, String savepointTimestamp, String beneficiaryInformation,
-               int questionsleft, int questionsFulfilled) {
+               int questionsleft, int questionsFulfilled, int redAnswers, int yellowAnswers, int greenAnswers) {
     this.tableId = tableId;
     this.formId = formId;
     this.formDisplayName = formDisplayName;
@@ -22,5 +25,8 @@ public final class InstanceInfo {
     this.beneficiaryInformation = beneficiaryInformation;
     this.questionsLeft = questionsleft;
     this.questionsFulfilled = questionsFulfilled;
+    this.redAnswers = redAnswers;
+    this.yellowAnswers = yellowAnswers;
+    this.greenAnswers = greenAnswers;
   }
 }

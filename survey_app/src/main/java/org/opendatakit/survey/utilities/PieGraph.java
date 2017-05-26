@@ -87,9 +87,9 @@ public class PieGraph extends View {
         midX = getWidth() / 2;
         midY = getHeight() / 2;
         if (midX < midY) {
-            radius = (float) (midX/1.5);
+            radius = (float) (midX/1.2);
         } else {
-            radius = (float) (midY/1.5);
+            radius = (float) (midY/1.2);
         }
         innerRadius = radius * mInnerCircleRatio / 255;
 
@@ -98,8 +98,10 @@ public class PieGraph extends View {
         }
 
         //draw border
-        mPaint.setColor(borderColor);
-        canvas.drawCircle(midX, midY, radius + borderSize, mPaint);
+        if(borderSize > 0) {
+            mPaint.setColor(borderColor);
+            canvas.drawCircle(midX, midY, radius + borderSize, mPaint);
+        }
 
         for (PieSlice slice : mSlices) {
             Path p = slice.getPath();
