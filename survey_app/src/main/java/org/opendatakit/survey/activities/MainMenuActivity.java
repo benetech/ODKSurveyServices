@@ -82,6 +82,7 @@ import org.opendatakit.survey.fragments.BeneficiaryInformationFragment;
 import org.opendatakit.survey.fragments.ChooseFormFragment;
 import org.opendatakit.survey.fragments.InProgressInstancesFragment;
 import org.opendatakit.survey.fragments.InitializationFragment;
+import org.opendatakit.survey.fragments.SettingsFragment;
 import org.opendatakit.survey.fragments.SubmittedInstancesFragment;
 import org.opendatakit.survey.fragments.SummaryPageFragment;
 import org.opendatakit.survey.fragments.WebViewFragment;
@@ -111,7 +112,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
   public static enum ScreenList {
     MAIN_SCREEN, FORM_CHOOSER, WEBKIT, INITIALIZATION_DIALOG, ABOUT_MENU, IN_PROGRESS, SUBMITTED,
-    BENEFICIARY_INFORMATION, CHOOSE_FORM, SUMMARY_PAGE
+    BENEFICIARY_INFORMATION, CHOOSE_FORM, SUMMARY_PAGE, SETTINGS
   };
 
   // Extra returned from gp activity
@@ -254,6 +255,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
    * can operate)
    */
   Bundle mConflictTables = new Bundle();
+  private Bundle beneficiaryInformation = new Bundle();
   private Bundle passedData = new Bundle();
 
   /**
@@ -1117,6 +1119,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new SummaryPageFragment();
+        newFragment.setArguments(beneficiaryInformation);
+      }
+    } else if (newScreenType == ScreenList.SETTINGS) {
+      setSubmenuPage("settings");
+      newFragment = mgr.findFragmentByTag(newScreenType.name());
+      if (newFragment == null) {
+        newFragment = new SettingsFragment();
       }
     } else if (newScreenType == ScreenList.INITIALIZATION_DIALOG) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
@@ -1772,7 +1781,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   }
 
   public void setSubmenuPage(String value){
-    this.submenuPage =value;
+    this.submenuPage = value;
   }
 
   public String countFormsInstances(String arg){
@@ -1847,7 +1856,8 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         swapToFragmentView(ScreenList.BENEFICIARY_INFORMATION);
         break;
       case R.id.settings_menuitem:
-        launchSettings();
+        swapToFragmentView(ScreenList.SETTINGS);
+        //launchSettings();
         break;
     }
 
