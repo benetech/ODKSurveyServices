@@ -53,6 +53,8 @@
     <string name="last_updated_on_date_at_time">\'Last saved on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
     <string name="sent_on_date_at_time">\'Sent on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
     <string name="sending_failed_on_date_at_time">\'Sending failed on\' EEE, MMM dd, yyyy \'at\' HH:mm</string><!-- http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
+    <string name="european_date_format">dd/MM/yyyy</string>
+    <string name="formdefs_formversion">yyyyMMdd</string>
     <string name="media_save_failed">Save of media attachment failed.</string>
     <string name="not_yet_sent">Never Uploaded</string>
     <string name="form_not_found">The requested form is missing: %1$s</string>
@@ -183,8 +185,16 @@
     <string name="beneficiary_information_new_survey_label">New Survey</string>
     <string name="beneficiary_information_next_button">NEXT</string>
     <string name="beneficiary_information">Beneficiary Information</string>
+    <string name="choose_form_choose_template">Choose Template</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
+    <string name="title">Title:</string>
+    <string name="no_forms_to_display">Nothing available to display.\n\nTry downloading forms first.</string>
+    <string name="check_for_updates">CHECK FOR UPDATES</string>
+    <string name="last_updated">Last updated:</string>
+    <string name="just_now">Just now</string>
+    <string name="ago"> ago</string>
+    <string name="never">Never</string>
 
     <!-- Sync Service and Notifications stuff -->
 

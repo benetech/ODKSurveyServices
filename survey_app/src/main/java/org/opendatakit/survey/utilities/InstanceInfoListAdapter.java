@@ -42,7 +42,6 @@ public class InstanceInfoListAdapter extends BaseAdapter {
   private final String submenuPage;
   private final ArrayList<Object> mItems = new ArrayList<Object>();
 
-  private static final String TAG = InstanceInfoListAdapter.class.getSimpleName();
   private static final int INSTANCE = 0;
   private static final int TYPE_DIVIDER = 1;
 

@@ -83,6 +83,7 @@ import org.opendatakit.survey.fragments.ChooseFormFragment;
 import org.opendatakit.survey.fragments.InProgressInstancesFragment;
 import org.opendatakit.survey.fragments.InitializationFragment;
 import org.opendatakit.survey.fragments.SubmittedInstancesFragment;
+import org.opendatakit.survey.fragments.SummaryPageFragment;
 import org.opendatakit.survey.fragments.WebViewFragment;
 import org.opendatakit.survey.logic.FormIdStruct;
 import org.opendatakit.survey.logic.SurveyDataExecutorProcessor;
@@ -108,7 +109,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
   public static enum ScreenList {
     MAIN_SCREEN, FORM_CHOOSER, WEBKIT, INITIALIZATION_DIALOG, ABOUT_MENU, IN_PROGRESS, SUBMITTED,
-    BENEFICIARY_INFORMATION, CHOOSE_FORM
+    BENEFICIARY_INFORMATION, CHOOSE_FORM, SUMMARY_PAGE
   };
 
   // Extra returned from gp activity
@@ -1110,6 +1111,11 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         newFragment = new ChooseFormFragment();
       }
       newFragment.setArguments(beneficiaryInformation);
+    } else if (newScreenType == ScreenList.SUMMARY_PAGE) {
+      newFragment = mgr.findFragmentByTag(newScreenType.name());
+      if (newFragment == null) {
+        newFragment = new SummaryPageFragment();
+      }
     } else if (newScreenType == ScreenList.INITIALIZATION_DIALOG) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {

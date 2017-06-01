@@ -38,6 +38,7 @@ public class CommonToolProperties {
     public static final String KEY_USERS_LIST = "common.users";
     public static final String KEY_ADMIN_PW = "common.admin_pw";
     public static final String KEY_OFFICE_ID = "common.office_id";
+    public static final String LAST_FORMS_UPDATE_TIME = "common.last_forms_update_time";
     private static CommonToolProperties.CommonPropertiesSingletonFactory factory = null;
 
     public CommonToolProperties() {
@@ -54,6 +55,7 @@ public class CommonToolProperties {
         generalProperties.put("common.change_username_password", "true");
         generalProperties.put("common.change_font_size", "true");
         generalProperties.put("common.change_splash_settings", "true");
+        generalProperties.put("common.last_forms_update_time", "");
         deviceProperties.put("common.auth_credentials", "none");
         deviceProperties.put("common.account", "");
         deviceProperties.put("common.username", "");

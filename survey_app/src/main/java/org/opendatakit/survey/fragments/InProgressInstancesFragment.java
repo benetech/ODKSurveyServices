@@ -20,7 +20,7 @@ import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.IOdkSurveyActivity;
 import org.opendatakit.survey.activities.MainMenuActivity;
 import org.opendatakit.survey.utilities.InstanceInfo;
-import org.opendatakit.survey.utilities.FormListLoader;
+import org.opendatakit.survey.utilities.InstanceListLoader;
 
 import android.app.ListFragment;
 import android.app.LoaderManager;
@@ -32,7 +32,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.opendatakit.survey.utilities.InstanceInfoListAdapter;
 
@@ -47,7 +46,6 @@ public class InProgressInstancesFragment extends ListFragment
     implements LoaderManager.LoaderCallbacks<ArrayList<Object>> {
 
   @SuppressWarnings("unused") private static final String t = "InProgressInstancesFragment";
-  private static final int FORM_CHOOSER_LIST_LOADER = 0x02;
 
   public static final int ID = R.layout.fragment_in_progress_instances;
 
@@ -70,7 +68,7 @@ public class InProgressInstancesFragment extends ListFragment
             R.id.beneficiaryName, R.id.questionsLeft, ((MainMenuActivity)getActivity()).getSubmenuPage());
     setListAdapter(mAdapter);
 
-    getLoaderManager().initLoader(FORM_CHOOSER_LIST_LOADER, null, this);
+    getLoaderManager().initLoader(0, null, this);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,7 +108,7 @@ public class InProgressInstancesFragment extends ListFragment
   @Override public Loader<ArrayList<Object>> onCreateLoader(int id, Bundle args) {
     // This is called when a new Loader needs to be created. This
     // sample only has one Loader, so we don't care about the ID.
-    return new FormListLoader(getActivity(), ((IAppAwareActivity) getActivity()).getAppName(), ((MainMenuActivity)getActivity()).getSubmenuPage());
+    return new InstanceListLoader(getActivity(), ((IAppAwareActivity) getActivity()).getAppName(), ((MainMenuActivity)getActivity()).getSubmenuPage());
   }
 
   @Override public void onLoadFinished(Loader<ArrayList<Object>> loader,

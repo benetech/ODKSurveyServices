@@ -19,7 +19,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import org.opendatakit.aggregate.odktables.rest.TableConstants;
 import org.opendatakit.demoAndroidlibraryClasses.provider.ChoiceListColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.ColumnDefinitionsColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
@@ -34,181 +33,106 @@ import org.opendatakit.demoAndroidlibraryClasses.provider.TableDefinitionsColumn
 import org.opendatakit.demoAndroidlibraryClasses.utilities.LocalizationUtils;
 import org.opendatakit.survey.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-import static android.database.Cursor.FIELD_TYPE_BLOB;
-import static android.database.Cursor.FIELD_TYPE_FLOAT;
-import static android.database.Cursor.FIELD_TYPE_INTEGER;
-import static android.database.Cursor.FIELD_TYPE_NULL;
-import static android.database.Cursor.FIELD_TYPE_STRING;
-
-/**
- * @author mitchellsundt@gmail.com
- */
 public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
 
-  private final String appName;
+    private final String appName;
+    private final List<String> defaultColumns;
 
-  private String[] whereArgs = new String[] {
-          ""
-  };
+    public FormListLoader(Context context, String appName) {
+        super(context);
+        this.appName = appName;
 
-  private final List<String> defaultColumns;
+        defaultColumns = DataTableColumns.getValues();
+        defaultColumns.addAll(ChoiceListColumns.getValues());
+        defaultColumns.addAll(ColumnDefinitionsColumns.getValues());
+        defaultColumns.addAll(FormsColumns.getValues());
+        defaultColumns.addAll(InstanceColumns.getValues());
+        defaultColumns.addAll(TableDefinitionsColumns.getValues());
+        defaultColumns.addAll(SyncETagColumns.getValues());
+        defaultColumns.addAll(SurveyConfigurationColumns.getValues());
+        defaultColumns.addAll(KeyValueStoreColumns.getValues());
+    }
 
+    @Override public ArrayList<Object> loadInBackground() {
+        // This is called when a new Loader needs to be created. This
+        // sample only has one Loader, so we don't care about the ID.
+        // First, pick the base URI to use depending on whether we are
+        // currently filtering.
+        Uri baseUri = Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName);
+        SimpleDateFormat sdf = new SimpleDateFormat(getContext().getString(R.string
+                .formdefs_formversion));
+        SimpleDateFormat sdf2 = new SimpleDateFormat(getContext().getString(R.string
+                .european_date_format));
+        ArrayList<Object> forms = new ArrayList<Object>();
+        Cursor c = null;
 
-  public FormListLoader(Context context, String appName, String submenuPage) {
-    super(context);
-    this.appName = appName;
-    whereArgs[0] = submenuPage;
+        try {
+            c = getContext().getContentResolver().query(baseUri, null, null, null, null);
 
-    defaultColumns = DataTableColumns.getValues();
-    defaultColumns.addAll(ChoiceListColumns.getValues());
-    defaultColumns.addAll(ColumnDefinitionsColumns.getValues());
-    defaultColumns.addAll(FormsColumns.getValues());
-    defaultColumns.addAll(InstanceColumns.getValues());
-    defaultColumns.addAll(TableDefinitionsColumns.getValues());
-    defaultColumns.addAll(SyncETagColumns.getValues());
-    defaultColumns.addAll(SurveyConfigurationColumns.getValues());
-    defaultColumns.addAll(KeyValueStoreColumns.getValues());
-  }
+            if (c != null && c.moveToFirst() ) {
+                do {
+                    int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
+                    int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
+                    int idxFormTitle = c.getColumnIndex(FormsColumns.DISPLAY_NAME.getText());
+                    int idxDate = c.getColumnIndex(FormsColumns.FORM_VERSION.getText());
 
-  @Override public ArrayList<Object> loadInBackground() {
-    // This is called when a new Loader needs to be created. This
-    // sample only has one Loader, so we don't care about the ID.
-    // First, pick the base URI to use depending on whether we are
-    // currently filtering.
-    Uri baseUri = Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName);
+                    int questions = 0;
+                    Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
+                            + c.getString(idxTableId));
+                    Cursor c2 = null;
 
-    ArrayList<Object> forms = new ArrayList<Object>();
-    SimpleDateFormat formatter = new SimpleDateFormat(getContext().getString(R.string
-            .last_updated_on_date_at_time), Locale.getDefault());
-    Cursor c = null;
-    try {
-      c = getContext().getContentResolver().query(baseUri, null, null, null, null);
+                    try {
+                        c2 = getContext().getContentResolver().query(formUri, null, null, null, DataTableColumns.SAVEPOINT_TIMESTAMP.getText() + " DESC");
+                        if (c2 != null) {
+                            questions = countColumns(c2);
+                        }
+                    } finally {
+                        if (c2 != null && !c2.isClosed()) {
+                            c2.close();
+                        }
+                    }
+                    try {
+                        Date date = sdf.parse(c.getString(idxDate));
+                        FormInfo info = new FormInfo(
+                                c.getString(idxTableId),
+                                c.getString(idxFormId),
+                                LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
+                                sdf2.format(date),
+                                questions);
 
-      if (c != null && c.moveToFirst() ) {
-        int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
-        int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
-        int idxFormTitle = c.getColumnIndex(FormsColumns.DISPLAY_NAME.getText());
-
-        do {
-          Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
-                  + c.getString(idxTableId));
-
-          Cursor c2 = null;
-          try {
-            c2 = getContext().getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, DataTableColumns.SAVEPOINT_TIMESTAMP.getText() + " DESC");
-            if (c2 != null && c2.moveToFirst()) {
-              forms.add(LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)));
-              do {
-                int[] emptyFilledColumns = countEmptyAndFilledColumns(c2);
-                int[] spotlightAnswers = countStoplightAnswers(c2);
-                InstanceInfo info = new InstanceInfo(
-                        c.getString(idxTableId),
-                        c.getString(idxFormId),
-                        LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
-                        formatter.format(new Date(TableConstants.milliSecondsFromNanos(c2.getString(c2.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()))))),
-                        "Jan Kowalski",
-                        emptyFilledColumns[0],
-                        emptyFilledColumns[1],
-                        spotlightAnswers[0],
-                        spotlightAnswers[1],
-                        spotlightAnswers[2]);
-                forms.add(info);
-              } while (c2.moveToNext());
+                        forms.add(info);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } while (c.moveToNext());
+            }} finally {
+            if ( c != null && !c.isClosed() ) {
+                c.close();
             }
+        }
 
-          } finally {
-            if (c2 != null && !c2.isClosed()) {
-              c2.close();
+        return forms;
+    }
+
+    @Override protected void onStartLoading() {
+        super.onStartLoading();
+        forceLoad();
+    }
+
+    private int countColumns(Cursor c) {
+        int questions = 0;
+
+        for (int i = 0; i < c.getColumnCount(); i++) {
+            if(!defaultColumns.contains(c.getColumnName(i))) {
+                questions++;
             }
-          }
         }
-        while (c.moveToNext());
-
-
-      }} finally {
-      if ( c != null && !c.isClosed() ) {
-        c.close();
-      }
+        return questions;
     }
-
-    return forms;
-  }
-
-  private int[] countEmptyAndFilledColumns(Cursor c) {
-    int empty = 0;
-    int fulfilled = 0;
-    boolean isDefColumn;
-
-    for (int i = 0; i < c.getColumnCount(); i++) {
-      isDefColumn = false;
-      if(defaultColumns.contains(c.getColumnName(i))) {
-          isDefColumn = true;
-      }
-      if (!isDefColumn) {
-        switch (c.getType(i)) {
-          case FIELD_TYPE_NULL:
-            empty++;
-            break;
-          case FIELD_TYPE_INTEGER:
-            fulfilled++;
-            break;
-          case FIELD_TYPE_FLOAT:
-            fulfilled++;
-            break;
-          case FIELD_TYPE_STRING:
-            if (!c.getColumnName(i).contains("_contentType"))
-              fulfilled++;
-            break;
-          case FIELD_TYPE_BLOB:
-            fulfilled++;
-            break;
-        }
-      }
-    }
-    int[] array = {empty, fulfilled};
-    return array;
-  }
-
-  private int[] countStoplightAnswers(Cursor c) {
-    int red = 0;
-    int yellow = 0;
-    int green = 0;
-    boolean isDefColumn;
-
-    for (int i = 0; i < c.getColumnCount(); i++) {
-      isDefColumn = false;
-      if(defaultColumns.contains(c.getColumnName(i))) {
-        isDefColumn = true;
-      }
-      if (!isDefColumn) {
-        if (c.getType(i) == FIELD_TYPE_STRING) {
-            //if (!c.getColumnName(i).contains("_contentType")) here we will filter it
-          switch(c.getString(i)){
-            case "red":
-              red++;
-              break;
-            case "yellow":
-              yellow++;
-              break;
-            case "green":
-              green++;
-              break;
-          }
-        }
-      }
-    }
-    int[] array = {red, yellow, green};
-    return array;
-  }
-
-  @Override protected void onStartLoading() {
-    super.onStartLoading();
-    forceLoad();
-  }
 }
