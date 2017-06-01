@@ -73,35 +73,14 @@
         android:textColor="@color/black"
         android:textSize="21sp" />
 
-    <ListView android:id="@android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="380dp"
-        android:layout_marginTop="15dp"
-        android:layout_below="@id/formTitle"
-        android:divider="@null"
-        android:choiceMode="singleChoice"
-        android:descendantFocusability="beforeDescendants"/>
-
-    <Button android:id="@+id/checkForUpdatesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/check_for_updates"
-        android:layout_below="@android:id/list"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@color/check_for_updates_button_background"
-        android:textColor="@color/white"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"/>
-
     <LinearLayout android:id="@+id/lastUpdated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/checkForUpdatesButton"
-        android:layout_marginTop="10dp">
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -116,5 +95,28 @@
             android:textColor="@color/black"/>
 
     </LinearLayout>
+
+    <Button android:id="@+id/checkForUpdatesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/check_for_updates"
+        android:layout_above="@id/lastUpdated"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@color/check_for_updates_button_background"
+        android:textColor="@color/white"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"/>
+
+    <ListView android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_above="@id/checkForUpdatesButton"
+        android:layout_below="@id/formTitle"
+        android:divider="@null"
+        android:choiceMode="singleChoice"
+        android:descendantFocusability="beforeDescendants"/>
 
 </RelativeLayout>
