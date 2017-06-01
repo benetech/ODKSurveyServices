@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import org.opendatakit.survey.R;
@@ -118,9 +119,11 @@ public class BeneficiaryInformationFragment extends Fragment implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.beneficiary_information_cancel_button:
+                hideKeyboard(getActivity());
                 getActivity().onBackPressed();
                 break;
             case R.id.beneficiary_information_next_button:
+                hideKeyboard(getActivity());
                 mCallback.passData(firstnameEditText.getText().toString(), lastnameEditText.getText().toString());
                 ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.CHOOSE_FORM); //moze zmienic nazwe
                 break;
@@ -137,6 +140,18 @@ public class BeneficiaryInformationFragment extends Fragment implements View.OnC
             throw new ClassCastException(context.toString()
                     + " must implement DataPassListener");
         }
+    }
+
+    public static void hideKeyboard(Context ctx) {
+        InputMethodManager inputManager = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // check if no view has focus:
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
 }
