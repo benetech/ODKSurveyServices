@@ -10,7 +10,7 @@
         android:background="@color/form_list_name_header_background"
         android:elevation="5dp">
 
-        <Button android:id="@+id/beneficiary_information_cancel_button"
+        <Button android:id="@+id/chooseFormCancelButton"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:textSize="20dp"
             android:textColor="@color/black"/>
 
-        <Button android:id="@+id/beneficiary_information_next_button"
+        <Button android:id="@+id/chooseFormNextButton"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/checkForUpdatesButton"
+        android:layout_below="@id/checkForUpdatesButton"
         android:layout_marginTop="10dp">
 
         <TextView

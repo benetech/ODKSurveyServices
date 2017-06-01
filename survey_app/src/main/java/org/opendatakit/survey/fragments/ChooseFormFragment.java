@@ -2,6 +2,7 @@ package org.opendatakit.survey.fragments;
 
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
@@ -23,23 +25,20 @@ import org.opendatakit.survey.utilities.FormListLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class ChooseFormFragment extends ListFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<ArrayList<Object>>{
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
+    private static final String CHOOSEN_TABLE_ID = "table_id";
 
-    // TODO: Rename and change types of parameters
     private String firstname;
     private String lastname;
     private FormInfoListAdapter mAdapter;
     Button nextButton = null;
 
-    DataPassListener mCallback;
-    public interface DataPassListener{
-        public void passData(String firstname, String lastname);
-    }
+    BeneficiaryInformationFragment.DataPassListener mCallback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,9 +74,11 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         test.setText(firstname + " " + lastname + " - " + currentDateandTime);
         TextView updateTime = (TextView) view.findViewById(R.id.lastUpdateTime);
         updateTime.setText(calculateTimeFromLastUpdate(lastUpdateTime));
-        Button cancelButton = (Button) view.findViewById(R.id.beneficiary_information_cancel_button);
-        nextButton = (Button) view.findViewById(R.id.beneficiary_information_next_button);
+        Button checkForUpdatesButton = (Button) view.findViewById(R.id.checkForUpdatesButton);
+        Button cancelButton = (Button) view.findViewById(R.id.chooseFormCancelButton);
+        nextButton = (Button) view.findViewById(R.id.chooseFormNextButton);
         cancelButton.setOnClickListener(this);
+        checkForUpdatesButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         nextButton.setEnabled(false);
 
@@ -87,12 +88,19 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.beneficiary_information_cancel_button:
+            case R.id.chooseFormCancelButton:
                 getActivity().onBackPressed();
                 break;
-            case R.id.beneficiary_information_next_button:
-                mCallback.passData(firstname, lastname);
-                ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.CHOOSE_FORM);
+            case R.id.chooseFormNextButton:
+                HashMap<String, String> values = new HashMap<>();
+                values.put(FIRSTNAME, firstname);
+                values.put(LASTNAME, lastname);
+                values.put(CHOOSEN_TABLE_ID, mAdapter.getSelectedTabeID());
+                mCallback.passData(values);
+                ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUMMARY_PAGE);
+                break;
+            case  R.id.checkForUpdatesButton:
+                Toast.makeText(getActivity(), "Here we should download forms", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -147,6 +155,18 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
             return hours + getActivity().getString(R.string.ago);
         } else {
             return days + getActivity().getString(R.string.ago);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Make sure that container activity implement the callback interface
+        try {
+            mCallback = (BeneficiaryInformationFragment.DataPassListener)context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DataPassListener");
         }
     }
 

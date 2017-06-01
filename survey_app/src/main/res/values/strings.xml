@@ -195,6 +195,7 @@
     <string name="just_now">Just now</string>
     <string name="ago"> ago</string>
     <string name="never">Never</string>
+    <string name="questions_left">questions left</string>
 
     <!-- Sync Service and Notifications stuff -->
 

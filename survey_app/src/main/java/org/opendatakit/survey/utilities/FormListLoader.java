@@ -80,7 +80,7 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
                     int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
                     int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
                     int idxFormTitle = c.getColumnIndex(FormsColumns.DISPLAY_NAME.getText());
-                    int idxDate = c.getColumnIndex(FormsColumns.FORM_VERSION.getText());
+                    int idxDate = c.getColumnIndex(FormsColumns.DATE.getText());
 
                     int questions = 0;
                     Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
@@ -97,8 +97,8 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
                             c2.close();
                         }
                     }
-                    try {
-                        Date date = sdf.parse(c.getString(idxDate));
+
+                        Date date = new Date(Long.parseLong(c.getString(idxDate)));
                         FormInfo info = new FormInfo(
                                 c.getString(idxTableId),
                                 c.getString(idxFormId),
@@ -107,9 +107,7 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
                                 questions);
 
                         forms.add(info);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+
                 } while (c.moveToNext());
             }} finally {
             if ( c != null && !c.isClosed() ) {

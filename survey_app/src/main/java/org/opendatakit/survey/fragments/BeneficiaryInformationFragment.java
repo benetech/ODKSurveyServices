@@ -21,16 +21,20 @@ import android.widget.Button;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.MainMenuActivity;
 
+import java.util.HashMap;
+
 public class BeneficiaryInformationFragment extends Fragment implements View.OnClickListener{
 
     private View view;
 
     AppCompatEditText firstnameEditText;
     AppCompatEditText lastnameEditText;
+    private static final String FIRSTNAME = "firstname";
+    private static final String LASTNAME = "lastname";
 
     DataPassListener mCallback;
     public interface DataPassListener{
-        public void passData(String firstname, String lastname);
+        public void passData(HashMap<String, String> data);
     }
 
     @Override
@@ -124,7 +128,10 @@ public class BeneficiaryInformationFragment extends Fragment implements View.OnC
                 break;
             case R.id.beneficiary_information_next_button:
                 hideKeyboard(getActivity());
-                mCallback.passData(firstnameEditText.getText().toString(), lastnameEditText.getText().toString());
+                HashMap<String, String> values = new HashMap<>();
+                values.put(FIRSTNAME, firstnameEditText.getText().toString());
+                values.put(LASTNAME, lastnameEditText.getText().toString());
+                mCallback.passData(values);
                 ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.CHOOSE_FORM); //moze zmienic nazwe
                 break;
         }

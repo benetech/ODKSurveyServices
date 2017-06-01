@@ -91,9 +91,11 @@ import org.opendatakit.survey.logic.SurveyDataExecutorProcessor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -252,7 +254,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
    * can operate)
    */
   Bundle mConflictTables = new Bundle();
-  private Bundle beneficiaryInformation = new Bundle();
+  private Bundle passedData = new Bundle();
 
   /**
    * Member variables that do not need to be preserved across orientation
@@ -1110,7 +1112,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       if (newFragment == null) {
         newFragment = new ChooseFormFragment();
       }
-      newFragment.setArguments(beneficiaryInformation);
+      newFragment.setArguments(passedData);
     } else if (newScreenType == ScreenList.SUMMARY_PAGE) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
@@ -1853,10 +1855,11 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   }
 
   @Override
-  public void passData(String firstname, String lastname) {
-    beneficiaryInformation.clear();
-    beneficiaryInformation.putString("firstname", firstname);
-    beneficiaryInformation.putString("lastname", lastname);
+  public void passData(HashMap<String, String> keyValues) {
+    passedData.clear();
+    for(Map.Entry<String, String> pair : keyValues.entrySet()){
+      passedData.putString(pair.getKey(), pair.getValue());
+    }
   }
 
 }

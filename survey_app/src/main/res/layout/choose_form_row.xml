@@ -16,24 +16,34 @@
         android:textColor="@color/black"
         android:textSize="20dp"/>
     <TextView
+        android:id="@+id/updateDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/formName"
+        android:text="@string/last_updated"
+        android:textSize="15dp"/>
+    <TextView
         android:id="@+id/updateDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/formName"
+        android:layout_toRightOf="@+id/updateDateLabel"
+        android:layout_marginLeft="5dp"
         android:textSize="15dp"/>
     <TextView
         android:id="@+id/questions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/updateDate"
+        android:layout_below="@+id/updateDateLabel"
         android:textSize="15dp"/>
     <TextView
         android:id="@+id/questionsLeftLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/updateDate"
+        android:layout_below="@+id/updateDateLabel"
         android:layout_toRightOf="@id/questions"
-        android:text=" questions left"
+        android:layout_marginLeft="5dp"
+        android:text="@string/questions_left"
         android:textSize="15dp"/>
     <RadioButton android:id="@+id/formRadioButton"
         android:layout_width="wrap_content"
