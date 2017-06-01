@@ -7,20 +7,17 @@
     android:paddingBottom="10dip"
     android:minHeight="?android:attr/listPreferredItemHeight">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_vertical"
-        android:id="@+id/line1"
-        android:layout_marginTop="20dp">
+
+
+
 
         <TextView
             android:id="@+id/beneficiaryName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"/>
 
         <TextView
             android:id="@+id/savepointTimestamp"
@@ -29,13 +26,13 @@
             android:layout_below="@id/beneficiaryName"
             android:textSize="15dp"/>
 
-    </LinearLayout>
+
 
     <org.opendatakit.survey.utilities.PieGraph
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/graph"
-        android:layout_toRightOf="@+id/line1"
+        android:layout_alignParentRight="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"/>
 
