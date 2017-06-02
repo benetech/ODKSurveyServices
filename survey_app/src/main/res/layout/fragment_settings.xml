@@ -22,7 +22,7 @@
             android:textColor="@color/black"
             android:textSize="20dp" />
 
-        <Button android:id="@+id/save"
+        <Button android:id="@+id/settings_save_button"
             android:background="?android:selectableItemBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                 android:textColor="@color/black"
                 android:textSize="18dp"/>
 
-            <EditText
+            <EditText android:id="@+id/reporter_name_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -87,7 +87,7 @@
                 android:textColor="@color/black"
                 android:textSize="18dp" />
 
-            <EditText
+            <EditText android:id="@+id/reporter_id_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.58"
@@ -126,7 +126,7 @@
                     android:textColor="@color/black"
                     android:textSize="18dp" />
 
-                <EditText
+                <EditText android:id="@+id/office_id_edit_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="15.51"
@@ -134,6 +134,47 @@
                     android:textSize="18dp"
                     android:labelFor="@id/office_id"
                     android:hint="@string/office_id_hint"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="@string/server"
+                android:textColor="@color/black"
+                android:textSize="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="50dp">
+
+                <TextView android:id="@+id/sync_server_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/server_url"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
+
+                <EditText android:id="@+id/sync_server_url_edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.04"
+                    android:inputType="text"
+                    android:textSize="18dp"
+                    android:labelFor="@id/sync_server_url"
+                    android:hint="@string/server_url_hint"/>
 
             </LinearLayout>
 
