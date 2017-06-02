@@ -196,6 +196,9 @@
     <string name="ago"> ago</string>
     <string name="never">Never</string>
     <string name="questions_left">questions left</string>
+    <string name="minutes">minutes</string>
+    <string name="hours">hours</string>
+    <string name="days">days</string>
 
     <!-- Sync Service and Notifications stuff -->
 

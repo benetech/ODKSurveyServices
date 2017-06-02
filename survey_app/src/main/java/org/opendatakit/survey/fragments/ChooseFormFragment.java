@@ -41,6 +41,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     Button nextButton = null;
 
     BeneficiaryInformationFragment.DataPassListener mCallback;
+    PropertiesSingleton props;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
             firstname = getArguments().getString(FIRSTNAME);
             lastname = getArguments().getString(LASTNAME);
         }
+        props = ((IOdkAppPropertiesActivity) this.getActivity()).getProps();
     }
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
@@ -68,7 +70,6 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         SimpleDateFormat sdf = new SimpleDateFormat(getActivity().getString(R.string
                 .european_date_format));
         String currentDateandTime = sdf.format(new Date());
-        PropertiesSingleton props = ((IOdkAppPropertiesActivity) this.getActivity()).getProps();
         String lastUpdateTime = props.getProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME);
 
         View view = inflater.inflate(R.layout.fragment_choose_form, container, false);
@@ -102,7 +103,8 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUMMARY_PAGE);
                 break;
             case  R.id.checkForUpdatesButton:
-                Toast.makeText(getActivity(), "Here we should download forms", Toast.LENGTH_SHORT).show();
+                props.setProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME, new Date().toString());
+                Toast.makeText(getActivity(), "Here we should download forms and later update the Last updated indicator", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -146,17 +148,17 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         Date currentTime = new Date();
         long diff = currentTime.getTime() - lastUpdate.getTime();
         long seconds = diff/1000;
-        long minutes = diff/60;
-        long hours = diff/60;
-        long days = diff/24;
+        long minutes = seconds/60;
+        long hours = minutes/60;
+        long days = hours/24;
         if(seconds < 60) {
             return getActivity().getString(R.string.just_now);
         } else if (minutes >= 2) {
-            return minutes + getActivity().getString(R.string.ago);
+            return minutes +  " " + getActivity().getString(R.string.minutes) + " " + getActivity().getString(R.string.ago);
         } else if (hours >= 1) {
-            return hours + getActivity().getString(R.string.ago);
+            return hours + " " + getActivity().getString(R.string.hours) + " " + getActivity().getString(R.string.ago);
         } else {
-            return days + getActivity().getString(R.string.ago);
+            return days + " " + getActivity().getString(R.string.days) + " " + getActivity().getString(R.string.ago);
         }
     }
 
