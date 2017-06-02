@@ -153,7 +153,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         long days = hours/24;
         if(seconds < 60) {
             return getActivity().getString(R.string.just_now);
-        } else if (minutes >= 2) {
+        } else if (minutes >= 1) {
             return minutes +  " " + getActivity().getString(R.string.minutes) + " " + getActivity().getString(R.string.ago);
         } else if (hours >= 1) {
             return hours + " " + getActivity().getString(R.string.hours) + " " + getActivity().getString(R.string.ago);
