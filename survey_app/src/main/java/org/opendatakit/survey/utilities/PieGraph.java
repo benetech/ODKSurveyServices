@@ -100,7 +100,8 @@ public class PieGraph extends View {
         //draw border
         if(borderSize > 0) {
             mPaint.setColor(borderColor);
-            canvas.drawCircle(midX, midY, radius + borderSize, mPaint);
+            canvas.drawCircle(midX, midY, radius, mPaint);
+            radius -= borderSize;
         }
 
         for (PieSlice slice : mSlices) {
