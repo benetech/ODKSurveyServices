@@ -1,10 +1,12 @@
 package org.opendatakit.survey.fragments;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.support.design.widget.TextInputEditText;
@@ -137,6 +139,7 @@ public class BeneficiaryInformationFragment extends Fragment implements View.OnC
         }
     }
 
+    @TargetApi(23)
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -146,6 +149,19 @@ public class BeneficiaryInformationFragment extends Fragment implements View.OnC
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DataPassListener");
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (Build.VERSION.SDK_INT < 23) {
+            try {
+                mCallback = (DataPassListener)activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement DataPassListener");
+            }
         }
     }
 

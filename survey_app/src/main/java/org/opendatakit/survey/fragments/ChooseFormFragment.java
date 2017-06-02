@@ -1,9 +1,11 @@
 package org.opendatakit.survey.fragments;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -167,6 +169,19 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DataPassListener");
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (Build.VERSION.SDK_INT < 23) {
+            try {
+                mCallback = (BeneficiaryInformationFragment.DataPassListener)activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement DataPassListener");
+            }
         }
     }
 
