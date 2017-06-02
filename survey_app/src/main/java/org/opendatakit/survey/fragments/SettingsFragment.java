@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.survey.R;
+import org.opendatakit.survey.activities.MainMenuActivity;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
@@ -44,8 +45,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         syncServerUrlEditText = (EditText) view.findViewById(R.id.sync_server_url_edit_text);
 
         // Get saved properties singleton
-        //TODO: getAppName to get properties
-        properties = CommonToolProperties.get(this.getActivity().getApplicationContext(), "default");
+        properties = CommonToolProperties.get(this.getActivity().getApplicationContext(),
+                ((MainMenuActivity)getActivity()).getAppName());
 
         //TODO: check if these values exist to prevent errors
         reporterNameEditText.setText(properties.getProperty(CommonToolProperties.KEY_REPORTER_NAME));
