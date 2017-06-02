@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.survey.R;
@@ -18,12 +19,15 @@ import org.opendatakit.survey.activities.MainMenuActivity;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
+    private static final String t = "SettingsFragment";
+
     private View view;
     private PropertiesSingleton properties;
     private EditText reporterNameEditText;
     private EditText reporterIdEditText;
     private EditText officeIdEditText;
     private EditText syncServerUrlEditText;
+    private String appName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        appName = ((MainMenuActivity)getActivity()).getAppName();
         view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         Button saveButton = (Button) view.findViewById(R.id.settings_save_button);
@@ -45,10 +50,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         syncServerUrlEditText = (EditText) view.findViewById(R.id.sync_server_url_edit_text);
 
         // Get saved properties singleton
-        properties = CommonToolProperties.get(this.getActivity().getApplicationContext(),
-                ((MainMenuActivity)getActivity()).getAppName());
+        properties = CommonToolProperties.get(this.getActivity().getApplicationContext(), appName);
 
-        //TODO: check if these values exist to prevent errors
         reporterNameEditText.setText(properties.getProperty(CommonToolProperties.KEY_REPORTER_NAME));
         reporterIdEditText.setText(properties.getProperty(CommonToolProperties.KEY_REPORTER_ID));
         officeIdEditText.setText(properties.getProperty(CommonToolProperties.KEY_OFFICE_ID));
@@ -57,6 +60,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         // Enable automatic resizing of the fragment space when the keyboard is visible so it does
         // not hide the editText fields underneath it
         this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        WebLogger.getLogger(appName).i(t, "Starting fragment view");
 
         return view;
     }
@@ -71,6 +76,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void saveSettings() {
+        WebLogger.getLogger(appName).i(t, "Start saving settings in properties");
 
         // Set properties which hold setting to be saved
         properties.setProperty(CommonToolProperties.KEY_REPORTER_NAME, reporterNameEditText.getText().toString());
@@ -85,10 +91,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(this.getActivity(),
                     getString(R.string.save_settings_success),
                     Toast.LENGTH_LONG).show();
+            WebLogger.getLogger(appName).i(t, "Settings saved");
         } catch (Exception e) {
             Toast.makeText(this.getActivity(),
                     getString(R.string.save_settings_failure),
                     Toast.LENGTH_LONG).show();
+            WebLogger.getLogger(appName).e(t, "Error while saving settings");
+            WebLogger.getLogger(appName).printStackTrace(e);
+
         }
 
         // Return to the previous view
