@@ -1,5 +1,6 @@
 package org.opendatakit.survey.fragments;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
@@ -34,14 +35,19 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
     private static final String CHOOSEN_TABLE_ID = "table_id";
+    private static final String CHOOSEN_FORM_ID = "form_id";
 
     private String firstname;
     private String lastname;
     private FormInfoListAdapter mAdapter;
     Button nextButton = null;
 
-    BeneficiaryInformationFragment.DataPassListener mCallback;
+    DataPassListener mCallback;
     PropertiesSingleton props;
+
+    public interface DataPassListener{
+        public void passData(HashMap<String, String> data);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +105,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 values.put(FIRSTNAME, firstname);
                 values.put(LASTNAME, lastname);
                 values.put(CHOOSEN_TABLE_ID, mAdapter.getSelectedTabeID());
+                values.put(CHOOSEN_FORM_ID, mAdapter.getSelectedFormID());
                 mCallback.passData(values);
                 ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUMMARY_PAGE);
                 break;
@@ -162,12 +169,13 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         }
     }
 
+    @TargetApi(23)
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         // Make sure that container activity implement the callback interface
         try {
-            mCallback = (BeneficiaryInformationFragment.DataPassListener)context;
+            mCallback = (DataPassListener)context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DataPassListener");
@@ -179,7 +187,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         super.onAttach(activity);
         if (Build.VERSION.SDK_INT < 23) {
             try {
-                mCallback = (BeneficiaryInformationFragment.DataPassListener)activity;
+                mCallback = (DataPassListener)activity;
             } catch (ClassCastException e) {
                 throw new ClassCastException(activity.toString()
                         + " must implement DataPassListener");

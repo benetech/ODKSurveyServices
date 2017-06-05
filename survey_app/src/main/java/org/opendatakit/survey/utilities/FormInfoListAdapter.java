@@ -88,4 +88,8 @@ public class FormInfoListAdapter extends BaseAdapter {
         return ((FormInfo) forms.get(selectedIndex)).tableId;
     }
 
+    public String getSelectedFormID(){
+        return ((FormInfo) forms.get(selectedIndex)).formId;
+    }
+
 }

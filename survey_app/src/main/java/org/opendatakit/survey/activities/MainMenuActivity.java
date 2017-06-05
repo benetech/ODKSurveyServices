@@ -106,7 +106,8 @@ import java.util.UUID;
  * @author mitchellsundt@gmail.com
  */
 public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity,
-        IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener, BeneficiaryInformationFragment.DataPassListener {
+        IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener, BeneficiaryInformationFragment.DataPassListener,
+        ChooseFormFragment.DataPassListener{
 
   private static final String t = "MainMenuActivity";
 
@@ -255,7 +256,6 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
    * can operate)
    */
   Bundle mConflictTables = new Bundle();
-  private Bundle beneficiaryInformation = new Bundle();
   private Bundle passedData = new Bundle();
 
   /**
@@ -1119,8 +1119,8 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new SummaryPageFragment();
-        newFragment.setArguments(beneficiaryInformation);
       }
+      newFragment.setArguments(passedData);
     } else if (newScreenType == ScreenList.SETTINGS) {
       setSubmenuPage("settings");
       newFragment = mgr.findFragmentByTag(newScreenType.name());
@@ -1874,11 +1874,4 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
   }
 
-  private void launchSettings() {
-    Intent settingsIntent = new Intent();
-    settingsIntent.setComponent(new ComponentName(IntentConsts.AppProperties.APPLICATION_NAME,
-            IntentConsts.AppProperties.ACTIVITY_NAME));
-    settingsIntent.setAction(Intent.ACTION_DEFAULT);
-    this.startActivity(settingsIntent);
-  }
 }
