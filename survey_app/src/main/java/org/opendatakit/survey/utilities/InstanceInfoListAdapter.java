@@ -121,13 +121,13 @@ public class InstanceInfoListAdapter extends BaseAdapter {
             TextView formCountView = (TextView) view.findViewById(mQuestionsLeft);
             formCountView.setText(String.valueOf(info.questionsLeft));
 
-            if (info.questionsLeft == 0) {
+            //if (info.questionsLeft == 0) {
               pg.setVisibility(View.GONE);
               cloud.setVisibility(View.VISIBLE);
-            } else {
-              cloud.setVisibility(View.GONE);
-              pg.setVisibility(View.VISIBLE);
-            }
+            //} else {
+           //   cloud.setVisibility(View.GONE);
+            //  pg.setVisibility(View.VISIBLE);
+            //}
 
             pg.setBorderColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
             pg.setBorderSize(10);
