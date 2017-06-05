@@ -1,0 +1,185 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.opendatakit.survey.fragments.SettingsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/form_list_name_header_background"
+        android:elevation="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginLeft="15dp"
+            android:background="@android:color/transparent"
+            android:text="@string/settings"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <Button android:id="@+id/settings_save_button"
+            android:background="?android:selectableItemBackground"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/save_settings" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="@string/reporter_information"
+            android:textColor="@color/black"
+            android:textSize="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="50dp">
+
+            <TextView android:id="@+id/reporter_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/reporter_name"
+                android:textColor="@color/black"
+                android:textSize="18dp"/>
+
+            <EditText android:id="@+id/reporter_name_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:inputType="text"
+                android:textSize="18dp"
+                android:labelFor="@id/reporter_name"
+                android:hint="@string/reporter_name_hint"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="50dp">
+
+            <TextView android:id="@+id/reporter_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/reporter_id"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <EditText android:id="@+id/reporter_id_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.58"
+                android:inputType="text"
+                android:textSize="18dp"
+                android:labelFor="@id/reporter_id"
+                android:hint="@string/reporter_id_hint"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="@string/select_your_office"
+                android:textColor="@color/black"
+                android:textSize="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="50dp">
+
+                <TextView android:id="@+id/office_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/office_id"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
+
+                <EditText android:id="@+id/office_id_edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="15.51"
+                    android:inputType="text"
+                    android:textSize="18dp"
+                    android:labelFor="@id/office_id"
+                    android:hint="@string/office_id_hint"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="@string/server"
+                android:textColor="@color/black"
+                android:textSize="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="50dp">
+
+                <TextView android:id="@+id/sync_server_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/server_url"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
+
+                <EditText android:id="@+id/sync_server_url_edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.04"
+                    android:inputType="text"
+                    android:textSize="18dp"
+                    android:labelFor="@id/sync_server_url"
+                    android:hint="@string/server_url_hint"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

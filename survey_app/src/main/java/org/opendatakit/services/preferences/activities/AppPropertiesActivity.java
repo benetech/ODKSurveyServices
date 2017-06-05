@@ -173,12 +173,6 @@ public class AppPropertiesActivity extends PreferenceActivity implements IOdkApp
     mAdminMode =
         this.getIntent().getBooleanExtra(IntentConsts.INTENT_KEY_SETTINGS_IN_ADMIN_MODE, false);
 
-    this.getActionBar().setTitle(
-        getString((mAdminMode ?
-            R.string.action_bar_general_settings_admin_mode :
-            R.string.action_bar_general_settings),
-            mAppName));
-
     super.onCreate(savedInstanceState);
   }
 

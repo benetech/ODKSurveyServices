@@ -130,7 +130,7 @@ public class InstanceInfoListAdapter extends BaseAdapter {
             //}
 
             pg.setBorderColor(ContextCompat.getColor(mContext, R.color.in_progress_pie_chart_background));
-            pg.setBorderSize(10);
+            pg.setBorderSize(7);
             if (pg.getSlices().size() != 2) {
               PieSlice slice = new PieSlice();
               slice.setColor(Color.WHITE);

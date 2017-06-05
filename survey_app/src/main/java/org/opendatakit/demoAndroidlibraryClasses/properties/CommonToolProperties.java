@@ -39,6 +39,8 @@ public class CommonToolProperties {
     public static final String KEY_ADMIN_PW = "common.admin_pw";
     public static final String KEY_OFFICE_ID = "common.office_id";
     public static final String LAST_FORMS_UPDATE_TIME = "common.last_forms_update_time";
+    public static final String KEY_REPORTER_NAME = "common.reporter_name";
+    public static final String KEY_REPORTER_ID = "common.reporter_id";
     private static CommonToolProperties.CommonPropertiesSingletonFactory factory = null;
 
     public CommonToolProperties() {

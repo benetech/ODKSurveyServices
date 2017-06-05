@@ -6,7 +6,7 @@
 
         <item
             android:id="@+id/settings_menuitem"
-            android:title="@string/settings"
+            android:title="@string/menu_settings"
             android:icon="@drawable/ic_settings_white_36dp"/>
 
     </group>
