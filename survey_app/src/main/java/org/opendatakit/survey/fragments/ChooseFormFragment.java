@@ -16,12 +16,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.opendatakit.demoAndroidCommonClasses.activities.IOdkDataActivity;
+import org.opendatakit.demoAndroidCommonClasses.views.ExecutorContext;
+import org.opendatakit.demoAndroidCommonClasses.views.ExecutorRequest;
+import org.opendatakit.demoAndroidCommonClasses.views.ExecutorRequestType;
 import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
+import org.opendatakit.services.database.service.OdkDatabaseServiceInterface;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.MainMenuActivity;
+import org.opendatakit.survey.utilities.DataPassListener;
 import org.opendatakit.survey.utilities.FormInfoListAdapter;
 import org.opendatakit.survey.utilities.FormListLoader;
 
@@ -29,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class ChooseFormFragment extends ListFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<ArrayList<Object>>{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,18 +47,16 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     private String firstname;
     private String lastname;
     private FormInfoListAdapter mAdapter;
-    Button nextButton = null;
+    private ExecutorContext context;
+    private Button nextButton = null;
 
     DataPassListener mCallback;
     PropertiesSingleton props;
 
-    public interface DataPassListener{
-        public void passData(HashMap<String, String> data);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.context = ExecutorContext.getContext((IOdkDataActivity)getActivity());
         if (getArguments() != null) {
             firstname = getArguments().getString(FIRSTNAME);
             lastname = getArguments().getString(LASTNAME);
@@ -107,6 +112,18 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 values.put(CHOOSEN_TABLE_ID, mAdapter.getSelectedTabeID());
                 values.put(CHOOSEN_FORM_ID, mAdapter.getSelectedFormID());
                 mCallback.passData(values);
+
+                //let's initialize the row in the database just before switching fragment TODO:add beneficiary information to row in future
+                //let's hope that not writing nayhting in picture/vieo/ets_contentType column will do the thing
+                //as the value is being overwritten anyway later
+                String tableId = mAdapter.getSelectedTabeID();
+                String rowId = "uuid:" + UUID.randomUUID().toString();
+                String username = props.getActiveUser();
+                String stringifiedJSON = "{\"_form_id\":\"" + tableId + "\",\"_savepoint_creator\":\"" + username + "\"}";
+                String callbackJSON = "3"; //looks bad but work fine
+                ExecutorRequest request = new ExecutorRequest(ExecutorRequestType.USER_TABLE_ADD_CHECKPOINT, tableId, stringifiedJSON, rowId, callbackJSON);
+                this.queueRequest(request);
+
                 ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUMMARY_PAGE);
                 break;
             case  R.id.checkForUpdatesButton:
@@ -193,6 +210,10 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                         + " must implement DataPassListener");
             }
         }
+    }
+
+    private void queueRequest(ExecutorRequest request) {
+        this.context.queueRequest(request);
     }
 
 }

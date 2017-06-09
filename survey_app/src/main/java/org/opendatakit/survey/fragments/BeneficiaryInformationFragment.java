@@ -5,11 +5,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -22,6 +19,7 @@ import android.widget.Button;
 
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.MainMenuActivity;
+import org.opendatakit.survey.utilities.DataPassListener;
 
 import java.util.HashMap;
 
@@ -35,9 +33,6 @@ public class BeneficiaryInformationFragment extends Fragment implements View.OnC
     private static final String LASTNAME = "lastname";
 
     DataPassListener mCallback;
-    public interface DataPassListener{
-        public void passData(HashMap<String, String> data);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

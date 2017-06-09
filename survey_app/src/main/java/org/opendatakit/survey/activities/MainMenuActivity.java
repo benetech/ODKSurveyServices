@@ -88,6 +88,7 @@ import org.opendatakit.survey.fragments.SummaryPageFragment;
 import org.opendatakit.survey.fragments.WebViewFragment;
 import org.opendatakit.survey.logic.FormIdStruct;
 import org.opendatakit.survey.logic.SurveyDataExecutorProcessor;
+import org.opendatakit.survey.utilities.DataPassListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -106,8 +107,7 @@ import java.util.UUID;
  * @author mitchellsundt@gmail.com
  */
 public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity,
-        IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener, BeneficiaryInformationFragment.DataPassListener,
-        ChooseFormFragment.DataPassListener{
+        IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener, DataPassListener {
 
   private static final String t = "MainMenuActivity";
 

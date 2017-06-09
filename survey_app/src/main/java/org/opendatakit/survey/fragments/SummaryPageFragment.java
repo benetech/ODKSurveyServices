@@ -18,6 +18,7 @@ import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.MainMenuActivity;
 import org.opendatakit.survey.logic.FormIdStruct;
+import org.opendatakit.survey.utilities.DataPassListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,6 @@ public class SummaryPageFragment extends Fragment {
     private String tableId;
     private HashMap<String, Object> formDef;
     private  String appName;
-    ChooseFormFragment.DataPassListener mCallback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
