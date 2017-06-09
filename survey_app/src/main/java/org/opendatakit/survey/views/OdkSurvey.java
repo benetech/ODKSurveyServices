@@ -324,26 +324,6 @@ public class OdkSurvey {
     return UUID;
   }
 
-  public void createFormSubformLocalTable() {
-    UserDbInterface userDbInterface = serviceConnectionWrapper.getDatabaseService();
-
-    List<Column> columns = new ArrayList<>();
-    columns.add(new Column(FORM_UUID_COLUMN, FORM_UUID_COLUMN, ElementDataType.string.name(), "[]"));
-    columns.add(new Column(SUBFORM_UUID_COLUMN, SUBFORM_UUID_COLUMN, ElementDataType.string.name(), "[]"));
-    columns.add(new Column(SUBFORM_TABLE_ID_COLUMN, SUBFORM_TABLE_ID_COLUMN, ElementDataType.string.name(), "[]"));
-    ColumnList columnsList = new ColumnList(columns);
-
-    try {
-      userDbInterface.createLocalOnlyTableWithColumns(
-              ODKFileUtils.getOdkDefaultAppName(),
-              userDbInterface.openDatabase(ODKFileUtils.getOdkDefaultAppName()),
-              FORM_SUBFORM_PAIRS_TABLE_ID,
-              columnsList);
-    } catch (ServicesAvailabilityException e) {
-      e.printStackTrace();
-    }
-  }
-
   public void updateFormSubformLocalTable(String formUUID, String subformUUID, String subformTableId) {
     UserDbInterface userDbInterface = serviceConnectionWrapper.getDatabaseService();
 

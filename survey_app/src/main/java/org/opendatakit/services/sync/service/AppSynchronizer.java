@@ -17,9 +17,12 @@ package org.opendatakit.services.sync.service;
 
 import android.app.Service;
 
+import org.opendatakit.aggregate.odktables.rest.ElementDataType;
+import org.opendatakit.aggregate.odktables.rest.entity.Column;
 import org.opendatakit.aggregate.odktables.rest.entity.TableResource;
 import org.opendatakit.demoAndroidlibraryClasses.application.AppAwareApplication;
 import org.opendatakit.demoAndroidlibraryClasses.database.data.BaseTable;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.ColumnList;
 import org.opendatakit.demoAndroidlibraryClasses.database.data.Row;
 import org.opendatakit.demoAndroidlibraryClasses.database.service.UserDbInterface;
 import org.opendatakit.demoAndroidlibraryClasses.exception.ServicesAvailabilityException;
@@ -301,6 +304,10 @@ public class AppSynchronizer {
         try {
           // sync the app-level files, table schemas and table-level files
           workingListOfTables = appAndTableLevelProcessor.synchronizeConfigurationAndContent(push);
+
+          // create local table to store relations between forms and subforms which is necessary
+          // to enable syncing form and its subforms at once
+          createFormSubformLocalTable(sharedContext);
         } catch (ServicesAvailabilityException e) {
           WebLogger.getLogger(appName).printStackTrace(e);
           if (syncResult.getAppLevelSyncOutcome() == SyncOutcome.WORKING) {
@@ -317,9 +324,12 @@ public class AppSynchronizer {
           // experienced a table-level sync failure in the preceeding step.
 
           try {
-            // Add subforms which are related to forms that are being synced so they can be synced as well
-            selectedFormsIds.putAll(getRelatedSubforms(sharedContext, selectedFormsIds));
-            rowDataProcessor.synchronizeDataRowsAndAttachments(workingListOfTables, attachmentState, selectedFormsIds);
+            // If user selected any form for sync launch sending of the data to the server.
+            if (!selectedFormsIds.isEmpty()) {
+              // Add subforms which are related to forms that are being synced so they can be synced as well
+              selectedFormsIds.putAll(getRelatedSubforms(sharedContext, selectedFormsIds));
+              rowDataProcessor.synchronizeDataRowsAndAttachments(workingListOfTables, attachmentState, selectedFormsIds);
+            }
           } catch (ServicesAvailabilityException e) {
             WebLogger.getLogger(appName).printStackTrace(e);
           } finally {
@@ -424,6 +434,26 @@ public class AppSynchronizer {
       }
 
       setFinalNotification(status, false, tablesWithProblems, attachmentsFailed);
+    }
+
+    private void createFormSubformLocalTable(SyncExecutionContext sharedContext) {
+      UserDbInterface userDbInterface = sharedContext.getOdkDbServiceConnection().getDatabaseService();
+
+      List<Column> columns = new ArrayList<>();
+      columns.add(new Column(FORM_UUID_COLUMN, FORM_UUID_COLUMN, ElementDataType.string.name(), "[]"));
+      columns.add(new Column(SUBFORM_UUID_COLUMN, SUBFORM_UUID_COLUMN, ElementDataType.string.name(), "[]"));
+      columns.add(new Column(SUBFORM_TABLE_ID_COLUMN, SUBFORM_TABLE_ID_COLUMN, ElementDataType.string.name(), "[]"));
+      ColumnList columnsList = new ColumnList(columns);
+
+      try {
+        userDbInterface.createLocalOnlyTableWithColumns(
+                ODKFileUtils.getOdkDefaultAppName(),
+                userDbInterface.openDatabase(ODKFileUtils.getOdkDefaultAppName()),
+                FORM_SUBFORM_PAIRS_TABLE_ID,
+                columnsList);
+      } catch (ServicesAvailabilityException e) {
+        e.printStackTrace();
+      }
     }
 
     private Map<String, List<String>> getRelatedSubforms(SyncExecutionContext sharedContext, Map<String, List<String>> selectedFormsIds) {

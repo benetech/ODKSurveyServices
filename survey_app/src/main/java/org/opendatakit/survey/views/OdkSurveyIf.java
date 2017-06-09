@@ -201,7 +201,6 @@ public class OdkSurveyIf {
     // which should be linked to the main form to which it belongs.
     String mainFormUUID = weakSurvey.get().getMainFormUUID();
     if (!instanceId.equals(mainFormUUID)) {
-      weakSurvey.get().createFormSubformLocalTable();
       updateFormSubformTable(mainFormUUID, instanceId, formId);
     }
 
