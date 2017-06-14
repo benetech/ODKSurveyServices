@@ -42,7 +42,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
     private static final String CHOOSEN_TABLE_ID = "table_id";
-    private static final String CHOOSEN_FORM_ID = "form_id";
+    private static final String INSTANCE_UUID = "instance_uuid";
 
     private String firstname;
     private String lastname;
@@ -84,8 +84,8 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         String lastUpdateTime = props.getProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME);
 
         View view = inflater.inflate(R.layout.fragment_choose_form, container, false);
-        TextView test = (TextView) view.findViewById(R.id.beneficiaryTitle);
-        test.setText(firstname + " " + lastname + " - " + currentDateandTime);
+        TextView title= (TextView) view.findViewById(R.id.beneficiaryTitle);
+        title.setText(firstname + " " + lastname + " - " + currentDateandTime);
         TextView updateTime = (TextView) view.findViewById(R.id.lastUpdateTime);
         updateTime.setText(calculateTimeFromLastUpdate(lastUpdateTime));
         Button checkForUpdatesButton = (Button) view.findViewById(R.id.checkForUpdatesButton);
@@ -106,18 +106,18 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 getActivity().onBackPressed();
                 break;
             case R.id.chooseFormNextButton:
+                String tableId = mAdapter.getSelectedTabeID();
+                String rowId = "uuid:" + UUID.randomUUID().toString();
                 HashMap<String, String> values = new HashMap<>();
                 values.put(FIRSTNAME, firstname);
                 values.put(LASTNAME, lastname);
                 values.put(CHOOSEN_TABLE_ID, mAdapter.getSelectedTabeID());
-                values.put(CHOOSEN_FORM_ID, mAdapter.getSelectedFormID());
+                values.put(INSTANCE_UUID, rowId);
                 mCallback.passData(values);
 
                 //let's initialize the row in the database just before switching fragment TODO:add beneficiary information to row in future
-                //let's hope that not writing nayhting in picture/vieo/ets_contentType column will do the thing
+                //let's hope that not writing anyhting in picture/vieo/ets_contentType column will do the thing
                 //as the value is being overwritten anyway later
-                String tableId = mAdapter.getSelectedTabeID();
-                String rowId = "uuid:" + UUID.randomUUID().toString();
                 String username = props.getActiveUser();
                 String stringifiedJSON = "{\"_form_id\":\"" + tableId + "\",\"_savepoint_creator\":\"" + username + "\"}";
                 String callbackJSON = "3"; //looks bad but work fine
@@ -175,14 +175,14 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         long minutes = seconds/60;
         long hours = minutes/60;
         long days = hours/24;
-        if(seconds < 60) {
-            return getActivity().getString(R.string.just_now);
-        } else if (minutes >= 1) {
+        if (minutes >= 1) {
             return minutes +  " " + getActivity().getString(R.string.minutes) + " " + getActivity().getString(R.string.ago);
         } else if (hours >= 1) {
             return hours + " " + getActivity().getString(R.string.hours) + " " + getActivity().getString(R.string.ago);
-        } else {
+        } else if (days >= 1){
             return days + " " + getActivity().getString(R.string.days) + " " + getActivity().getString(R.string.ago);
+        } else {
+            return getActivity().getString(R.string.just_now);
         }
     }
 
