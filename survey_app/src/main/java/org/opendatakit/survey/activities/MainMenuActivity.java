@@ -153,8 +153,8 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private static final String BACKPRESS_DIALOG_TAG = "backPressDialog";
 
   private PropertiesSingleton mProps;
-  private NavigationView mNavigationViewTop;
-  private NavigationView mNavigationViewBottom;
+  public NavigationView mNavigationViewTop;
+  public NavigationView mNavigationViewBottom;
   private DrawerLayout mDrawerLayout;
   private TextView inProgress;
   private TextView submitted;
@@ -837,6 +837,25 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
       android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(
               this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+      mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+          updateCounters();
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+        }
+      });
       mDrawerLayout.setDrawerListener(toggle);
       toggle.syncState();
 
@@ -1838,6 +1857,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     //Gravity property aligns the text
     inProgress.setText(countFormsInstances("new_row"));
     submitted.setText(countFormsInstances("submitted"));
+    mDrawerLayout.invalidate();
   }
 
   @Override
