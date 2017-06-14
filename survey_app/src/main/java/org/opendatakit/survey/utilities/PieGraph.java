@@ -153,6 +153,11 @@ public class PieGraph extends View {
         postInvalidate();
     }
 
+    public void removeSlices() {
+        mSlices.clear();
+        postInvalidate();
+    }
+
     public void setBorderColor(int color) {
         borderColor = color;
     }

@@ -4,10 +4,68 @@
     android:layout_height="match_parent"
     tools:context="org.opendatakit.survey.fragments.SummaryPageFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/listPreferredItemHeight">
+
+        <org.opendatakit.survey.utilities.PieGraph
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/summary_graph"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView android:id="@+id/instanceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/summary_graph"/>
+
+        <TextView android:id="@+id/instanceQuestionsLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/instanceTitle"
+            android:textSize="15dp"
+            android:layout_toRightOf="@id/summary_graph"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/instanceTitle"
+            android:layout_toRightOf="@id/instanceQuestionsLeft"
+            android:text=" questions left"
+            android:textSize="15dp"/>
+
+        <TextView android:id="@+id/updateDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_updated"
+            android:layout_below="@id/instanceQuestionsLeft"
+            android:layout_toRightOf="@id/summary_graph"
+            android:textSize="15dp"/>
+
+        <TextView android:id="@+id/instanceSavepointTimestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/instanceQuestionsLeft"
+            android:layout_toRightOf="@id/updateDateLabel"
+            android:textSize="15dp"/>
+
+        <Button android:id="@+id/done_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/done"
+            android:textSize="15dp"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"/>
+
+    </RelativeLayout>
 
 </FrameLayout>

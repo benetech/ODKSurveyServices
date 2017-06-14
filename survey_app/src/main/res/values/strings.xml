@@ -214,6 +214,7 @@
     <string name="minutes">minutes</string>
     <string name="hours">hours</string>
     <string name="days">days</string>
+    <string name="done">DONE</string>
 
     <!-- Sync Service and Notifications stuff -->
 

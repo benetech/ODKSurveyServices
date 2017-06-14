@@ -9,11 +9,9 @@ public class FormInfo {
     public final String updateData;
     public final int questions;
     public final String tableId;
-    public final String formId;
 
-    FormInfo(String tableId, String formId, String formDisplayName, String updateData, int questions) {
+    FormInfo(String tableId, String formDisplayName, String updateData, int questions) {
         this.tableId = tableId;
-        this.formId = formId;
         this.formDisplayName = formDisplayName;
         this.updateData = updateData;
         this.questions = questions;

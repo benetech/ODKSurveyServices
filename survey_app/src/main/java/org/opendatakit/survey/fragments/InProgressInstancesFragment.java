@@ -78,6 +78,7 @@ public class InProgressInstancesFragment extends ListFragment
     FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.newFormFloatingActionButton);
     fab.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
+        ((MainMenuActivity)getActivity()).mNavigationViewTop.setCheckedItem(R.id.new_survey_menuitem);
         ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.BENEFICIARY_INFORMATION);
       }
     });
@@ -87,6 +88,7 @@ public class InProgressInstancesFragment extends ListFragment
 
   @Override public void onResume() {
     super.onResume();
+    mAdapter.notifyDataSetChanged();
   }
 
   @Override public void onPause() {

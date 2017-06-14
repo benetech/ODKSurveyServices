@@ -20,4 +20,5 @@
     <color name="submitted_donut_char_yellow">#FFBC00</color>
     <color name="submitted_donut_char_green">#5FAD46</color>
     <color name="check_for_updates_button_background">#2196F3</color>
+    <color name="pie_graph_empty">#848484</color>
 </resources>
