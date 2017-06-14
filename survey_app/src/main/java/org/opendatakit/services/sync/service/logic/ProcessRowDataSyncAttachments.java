@@ -256,9 +256,9 @@ class ProcessRowDataSyncAttachments extends ProcessRowDataSharedBase {
                     SyncAttachmentState.DOWNLOAD :
                     attachmentState);
 
-                outcome = manifestProcessor.
-                    syncRowLevelFileAttachments(tableResource.getInstanceFilesUri(), tableId,
-                        localRow, fileAttachmentColumns, attachmentState);
+                outcome = manifestProcessor.syncRowLevelFileAttachments(
+                            sc.getUriWithServerCompatibleScheme(tableResource.getInstanceFilesUri()),
+                            tableId, localRow, fileAttachmentColumns, attachmentState);
 
                 if (outcome) {
                   if (state == SyncState.synced_pending_files) {
