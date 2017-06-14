@@ -49,6 +49,7 @@ import org.opendatakit.services.sync.service.logic.Synchronizer.SynchronizerStat
 import org.sqlite.database.sqlite.SQLiteException;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 public class SyncExecutionContext implements SynchronizerStatus {
@@ -330,6 +331,15 @@ public class SyncExecutionContext implements SynchronizerStatus {
     if ( iMajorSyncStep > nMajorSyncSteps ) {
       iMajorSyncStep = nMajorSyncSteps - 1;
     }
+  }
+
+  public String getUriWithServerCompatibleScheme(String uri) {
+    URI serverUri = URI.create(getAggregateUri());
+    URI uriToCheck = URI.create(uri);
+    if(!uriToCheck.getScheme().equals(serverUri.getScheme())) {
+      uri = serverUri.getScheme() + ":" + uriToCheck.getSchemeSpecificPart();
+    }
+    return uri;
   }
   
   @Override
