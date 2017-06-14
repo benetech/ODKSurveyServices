@@ -66,8 +66,6 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
         // currently filtering.
         Uri baseUri = Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName);
         SimpleDateFormat sdf = new SimpleDateFormat(getContext().getString(R.string
-                .formdefs_formversion));
-        SimpleDateFormat sdf2 = new SimpleDateFormat(getContext().getString(R.string
                 .european_date_format));
         ArrayList<Object> forms = new ArrayList<Object>();
         Cursor c = null;
@@ -78,7 +76,6 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
             if (c != null && c.moveToFirst() ) {
                 do {
                     int idxTableId = c.getColumnIndex(FormsColumns.TABLE_ID.getText());
-                    int idxFormId = c.getColumnIndex(FormsColumns.FORM_ID.getText());
                     int idxFormTitle = c.getColumnIndex(FormsColumns.DISPLAY_NAME.getText());
                     int idxDate = c.getColumnIndex(FormsColumns.DATE.getText());
 
@@ -101,9 +98,8 @@ public class FormListLoader extends AsyncTaskLoader<ArrayList<Object>> {
                         Date date = new Date(Long.parseLong(c.getString(idxDate)));
                         FormInfo info = new FormInfo(
                                 c.getString(idxTableId),
-                                c.getString(idxFormId),
                                 LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
-                                sdf2.format(date),
+                                sdf.format(date),
                                 questions);
 
                         forms.add(info);

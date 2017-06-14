@@ -57,23 +57,11 @@ public class InstanceListLoader extends AsyncTaskLoader<ArrayList<Object>> {
           ""
   };
 
-  private final List<String> defaultColumns;
-
-
   public InstanceListLoader(Context context, String appName, String submenuPage) {
     super(context);
     this.appName = appName;
     whereArgs[0] = submenuPage;
 
-    defaultColumns = DataTableColumns.getValues();
-    defaultColumns.addAll(ChoiceListColumns.getValues());
-    defaultColumns.addAll(ColumnDefinitionsColumns.getValues());
-    defaultColumns.addAll(FormsColumns.getValues());
-    defaultColumns.addAll(InstanceColumns.getValues());
-    defaultColumns.addAll(TableDefinitionsColumns.getValues());
-    defaultColumns.addAll(SyncETagColumns.getValues());
-    defaultColumns.addAll(SurveyConfigurationColumns.getValues());
-    defaultColumns.addAll(KeyValueStoreColumns.getValues());
   }
 
   @Override public ArrayList<Object> loadInBackground() {
@@ -140,12 +128,13 @@ public class InstanceListLoader extends AsyncTaskLoader<ArrayList<Object>> {
     return forms;
   }
 
-  private int[] countEmptyAndFilledColumns(Cursor c) {
+  public static int[] countEmptyAndFilledColumns(Cursor c) {
     int empty = 0;
     int fulfilled = 0;
 
     for (int i = 0; i < c.getColumnCount(); i++) {
-      if (!defaultColumns.contains(c.getColumnName(i))) {
+      String column = c.getColumnName(i);
+      if (!isDefaultColumn(column) && !column.contains("contentType")) {
         switch (c.getType(i)) {
           case FIELD_TYPE_NULL:
             empty++;
@@ -157,8 +146,7 @@ public class InstanceListLoader extends AsyncTaskLoader<ArrayList<Object>> {
             fulfilled++;
             break;
           case FIELD_TYPE_STRING:
-            if (!c.getColumnName(i).contains("_contentType"))
-              fulfilled++;
+            fulfilled++;
             break;
           case FIELD_TYPE_BLOB:
             fulfilled++;
@@ -170,17 +158,14 @@ public class InstanceListLoader extends AsyncTaskLoader<ArrayList<Object>> {
     return array;
   }
 
-  private int[] countStoplightAnswers(Cursor c) {
+  public static int[] countStoplightAnswers(Cursor c) {
     int red = 0;
     int yellow = 0;
     int green = 0;
     boolean isDefColumn;
 
     for (int i = 0; i < c.getColumnCount(); i++) {
-      isDefColumn = false;
-      if(defaultColumns.contains(c.getColumnName(i))) {
-        isDefColumn = true;
-      }
+      isDefColumn = isDefaultColumn(c.getColumnName(i));
       if (!isDefColumn) {
         if (c.getType(i) == FIELD_TYPE_STRING) {
             //if (!c.getColumnName(i).contains("_contentType")) here we will filter it
@@ -200,6 +185,21 @@ public class InstanceListLoader extends AsyncTaskLoader<ArrayList<Object>> {
     }
     int[] array = {red, yellow, green};
     return array;
+  }
+
+  public static boolean isDefaultColumn(String columnName) {
+    if(DataTableColumns.getValues().contains(columnName) ||
+            ChoiceListColumns.getValues().contains(columnName) ||
+            ColumnDefinitionsColumns.getValues().contains(columnName) ||
+            FormsColumns.getValues().contains(columnName) ||
+            InstanceColumns.getValues().contains(columnName) ||
+            TableDefinitionsColumns.getValues().contains(columnName) ||
+            SyncETagColumns.getValues().contains(columnName) ||
+            SurveyConfigurationColumns.getValues().contains(columnName) ||
+            KeyValueStoreColumns.getValues().contains(columnName)) {
+      return true;
+    }
+    return false;
   }
 
   @Override protected void onStartLoading() {

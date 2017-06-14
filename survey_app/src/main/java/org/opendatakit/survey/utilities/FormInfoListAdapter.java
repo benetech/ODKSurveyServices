@@ -60,15 +60,15 @@ public class FormInfoListAdapter extends BaseAdapter {
             LayoutInflater layoutInflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(layout, parent, false);
-            FormInfo info = (FormInfo) forms.get(position);
-            TextView formName = (TextView) view.findViewById(R.id.formName);
-            formName.setText(info.formDisplayName);
-            TextView updateDateView = (TextView) view.findViewById(updateDate);
-            updateDateView.setText(info.updateData);
-            TextView questionsView = (TextView) view.findViewById(questions);
-            questionsView.setText(String.valueOf(info.questions));
-
         }
+
+        FormInfo info = (FormInfo) forms.get(position);
+        TextView formName = (TextView) view.findViewById(R.id.formName);
+        formName.setText(info.formDisplayName);
+        TextView updateDateView = (TextView) view.findViewById(updateDate);
+        updateDateView.setText(info.updateData);
+        TextView questionsView = (TextView) view.findViewById(questions);
+        questionsView.setText(String.valueOf(info.questions));
 
         RadioButton rbSelect = (RadioButton) view.findViewById(R.id.formRadioButton);
         if(selectedIndex == position){
@@ -86,10 +86,6 @@ public class FormInfoListAdapter extends BaseAdapter {
 
     public String getSelectedTabeID(){
         return ((FormInfo) forms.get(selectedIndex)).tableId;
-    }
-
-    public String getSelectedFormID(){
-        return ((FormInfo) forms.get(selectedIndex)).formId;
     }
 
 }
