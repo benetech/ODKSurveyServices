@@ -45,8 +45,8 @@ public class SummaryPageFragment extends Fragment {
     private String appName;
     private Cursor instanceCursor = null;
     private int[] colors = new int[3];
-    private String questionsLeft ="DUPA";
-    private String dateFormatted = "DUPAA22";
+    private String questionsLeft;
+    private String dateFormatted;
     private SimpleDateFormat sdf;
 
     @Override
