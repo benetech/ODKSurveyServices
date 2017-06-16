@@ -215,6 +215,7 @@
     <string name="hours">hours</string>
     <string name="days">days</string>
     <string name="done">DONE</string>
+    <string name="creating_new_survey">Creating a new survey</string>
 
     <!-- Sync Service and Notifications stuff -->
 

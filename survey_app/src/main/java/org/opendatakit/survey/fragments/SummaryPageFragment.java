@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -48,6 +49,7 @@ public class SummaryPageFragment extends Fragment {
     private String questionsLeft;
     private String dateFormatted;
     private SimpleDateFormat sdf;
+    private static final String t = "SummaryPageFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,13 +88,15 @@ public class SummaryPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        android.os.SystemClock.sleep(500);
         Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
                 + tableId);
+        do{
+            WebLogger.getLogger(appName).i(t, "Waiting 100 miliseconds and checking if the new row already exists so we can read data from it");
+            android.os.SystemClock.sleep(100);
+            instanceCursor = getActivity().getContentResolver().query(formUri, null, "_id=?", new String[]{formId}, null);
+        } while (!instanceCursor.moveToFirst());
 
-        // Inflate the layout for this fragment
-        instanceCursor = getActivity().getContentResolver().query(formUri, null, "_id=?", new String[]{formId}, null);
-        if (instanceCursor != null && instanceCursor.moveToFirst()) {
+        if (instanceCursor != null) {
             colors = InstanceListLoader.countStoplightAnswers(instanceCursor);
             questionsLeft = String.valueOf(InstanceListLoader.countEmptyAndFilledColumns(instanceCursor)[0]);
             int idxSavepointTimestamp = instanceCursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());

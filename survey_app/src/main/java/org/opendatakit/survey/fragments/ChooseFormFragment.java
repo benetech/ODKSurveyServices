@@ -121,6 +121,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 String username = props.getActiveUser();
                 String stringifiedJSON = "{\"_form_id\":\"" + tableId + "\",\"_savepoint_creator\":\"" + username + "\"}";
                 String callbackJSON = "3"; //looks bad but work fine
+                Toast.makeText(getActivity(), R.string.creating_new_survey, Toast.LENGTH_SHORT).show();
                 ExecutorRequest request = new ExecutorRequest(ExecutorRequestType.USER_TABLE_ADD_CHECKPOINT, tableId, stringifiedJSON, rowId, callbackJSON);
                 this.queueRequest(request);
 
