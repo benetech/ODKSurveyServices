@@ -117,6 +117,13 @@ public class InstanceInfoListAdapter extends BaseAdapter {
 
         if (submenuPage.equals("new_row")) {
           ImageView cloud = (ImageView) view.findViewById(R.id.cloud);
+
+          cloud.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+              System.out.println("Cloud clicked!");
+            }
+          });
+
           TextView formDateView = (TextView) view.findViewById(mSavepointTimestamp);
           formDateView.setText(info.savepointTimestamp);
           TextView formCountView = (TextView) view.findViewById(mQuestionsLeft);
