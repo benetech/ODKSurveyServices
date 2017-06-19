@@ -98,6 +98,7 @@ public class InstanceListLoader extends AsyncTaskLoader<ArrayList<Object>> {
                 InstanceInfo info = new InstanceInfo(
                         c.getString(idxTableId),
                         c.getString(idxFormId),
+                        c2.getString(c2.getColumnIndex("_id")),
                         LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
                         formatter.format(new Date(TableConstants.milliSecondsFromNanos(c2.getString(c2.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()))))),
                         "Jan Kowalski",
