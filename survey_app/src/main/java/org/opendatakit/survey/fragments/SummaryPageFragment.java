@@ -1,6 +1,8 @@
 package org.opendatakit.survey.fragments;
 
-import android.app.Fragment;
+import android.app.ListFragment;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,31 +10,31 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.opendatakit.aggregate.odktables.rest.TableConstants;
+import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
-import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
+import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
 import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
-import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.survey.R;
+import org.opendatakit.survey.activities.IOdkSurveyActivity;
 import org.opendatakit.survey.activities.MainMenuActivity;
 import org.opendatakit.survey.utilities.InstanceListLoader;
 import org.opendatakit.survey.utilities.PieGraph;
 import org.opendatakit.survey.utilities.PieSlice;
+import org.opendatakit.survey.utilities.QuestionInfo;
+import org.opendatakit.survey.utilities.QuestionInfoListAdapter;
+import org.opendatakit.survey.utilities.QuestionListLoader;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
-public class SummaryPageFragment extends Fragment {
+public class SummaryPageFragment extends ListFragment
+        implements LoaderManager.LoaderCallbacks<ArrayList<Object>>  {
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
     private static final String CHOOSEN_TABLE_ID = "table_id";
@@ -42,7 +44,6 @@ public class SummaryPageFragment extends Fragment {
     private String lastname;
     private String formId;
     private String tableId;
-    private HashMap<String, Object> formDef;
     private String appName;
     private Cursor instanceCursor = null;
     private int[] colors = new int[3];
@@ -50,7 +51,9 @@ public class SummaryPageFragment extends Fragment {
     private String dateFormatted;
     private SimpleDateFormat sdf;
     private static final String t = "SummaryPageFragment";
+    private QuestionInfoListAdapter adapter;
 
+    //TODO: here pass language to loader and handle it there
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,24 +67,15 @@ public class SummaryPageFragment extends Fragment {
         sdf = new SimpleDateFormat(getActivity().getString(R.string
                 .european_date_format));
         appName = ((MainMenuActivity) getActivity()).getAppName();
-        File formDirectory = new File(ODKFileUtils.getFormFolder(appName, tableId, tableId));
-        File formDefFile = new File(formDirectory, ODKFileUtils.FORMDEF_JSON_FILENAME);
+    }
 
-        HashMap<String, Object> om = null;
-        try {
-            om = ODKFileUtils.mapper.readValue(formDefFile, HashMap.class);
-        } catch (JsonParseException e) {
-            WebLogger.getLogger(appName).printStackTrace(e);
-        } catch (JsonMappingException e) {
-            WebLogger.getLogger(appName).printStackTrace(e);
-        } catch (IOException e) {
-            WebLogger.getLogger(appName).printStackTrace(e);
-        }
-        formDef = om;
-        if (formDef == null) {
-            throw new IllegalArgumentException("File is not a json file! "
-                    + formDefFile.getAbsolutePath());
-        }
+    @Override public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        adapter = new QuestionInfoListAdapter(getActivity(), R.layout.questions_row);
+        setListAdapter(adapter);
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -145,5 +139,34 @@ public class SummaryPageFragment extends Fragment {
         formDateView.setText(dateFormatted);
 
         return view;
+    }
+
+    @Override public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        QuestionInfo info = (QuestionInfo) adapter.getItem(position);
+
+        Uri formUri = Uri.withAppendedPath(Uri.withAppendedPath(
+                Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI,
+                        ((IAppAwareActivity) getActivity()).getAppName()), tableId), formId);
+
+        ((IOdkSurveyActivity) getActivity()).chooseForm(formUri);
+    }
+
+    @Override
+    public Loader<ArrayList<Object>> onCreateLoader(int id, Bundle args) {
+        return new QuestionListLoader(getActivity(), ((IAppAwareActivity) getActivity()).getAppName(), tableId);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArrayList<Object>> loader, ArrayList<Object> data) {
+        adapter.clear();
+        adapter.addAll(data);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<Object>> loader) {
+        adapter.clear();
     }
 }

@@ -16,6 +16,7 @@ package org.opendatakit.survey.fragments;
 
 import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.IOdkSurveyActivity;
 import org.opendatakit.survey.activities.MainMenuActivity;
@@ -101,8 +102,8 @@ public class InProgressInstancesFragment extends ListFragment
     // get uri to form
     InstanceInfo info = (InstanceInfo) mAdapter.getItem(position);
     Uri formUri = Uri.withAppendedPath(Uri.withAppendedPath(
-        Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI,
-            ((IAppAwareActivity) getActivity()).getAppName()), info.tableId), info.formId);
+        Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI,
+            ((IAppAwareActivity) getActivity()).getAppName()), info.tableId), info.UUID);
 
     ((IOdkSurveyActivity) getActivity()).chooseForm(formUri);
   }
