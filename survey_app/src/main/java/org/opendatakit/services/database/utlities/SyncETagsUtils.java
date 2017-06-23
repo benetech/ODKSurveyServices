@@ -107,7 +107,7 @@ public class SyncETagsUtils {
     //@formatter:off
     b.append("DELETE FROM ")
      .append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" WHERE ")
-     .append(SyncETagColumns.URL);
+     .append(SyncETagColumns.URL.getText());
     //@formatter:on
     if ( uriPrefix == null ) {
       // i.e., delete everything
@@ -115,7 +115,7 @@ public class SyncETagsUtils {
     } else {
       // delete anything not beginning with this prefix
       b.append(" IS NULL")
-       .append(" OR length(").append(SyncETagColumns.URL).append(") < abs(?)");
+       .append(" OR length(").append(SyncETagColumns.URL.getText()).append(") < abs(?)");
       // wrap with abs() to convert the string to a numeric value
       bindArgs.add(Integer.toString(uriPrefix.length()));
 
@@ -126,7 +126,7 @@ public class SyncETagsUtils {
 
       likePrefix = likePrefix + "%";
 
-      b.append(" OR ").append(SyncETagColumns.URL).append(" NOT LIKE ? ESCAPE ?");
+      b.append(" OR ").append(SyncETagColumns.URL.getText()).append(" NOT LIKE ? ESCAPE ?");
       bindArgs.add(likePrefix);
       bindArgs.add("\\");
     }
@@ -173,10 +173,10 @@ public class SyncETagsUtils {
     //@formatter:off
     b.append("DELETE FROM ")
      .append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" WHERE ")
-     .append(SyncETagColumns.URL).append(" IS NOT NULL");
+     .append(SyncETagColumns.URL.getText()).append(" IS NOT NULL");
     // delete anything not beginning with this prefix...
     // ...long enough
-    b.append(" AND length(").append(SyncETagColumns.URL).append(") >= abs(?)");
+    b.append(" AND length(").append(SyncETagColumns.URL.getText()).append(") >= abs(?)");
     // wrap with abs() to convert the string to a numeric value
     bindArgs.add(Integer.toString(uriPrefix.length()));
     // ...shares prefix
@@ -188,7 +188,7 @@ public class SyncETagsUtils {
 
     likePrefix = likePrefix + "%";
 
-    b.append(" AND ").append(SyncETagColumns.URL).append(" LIKE ? ESCAPE ?");
+    b.append(" AND ").append(SyncETagColumns.URL.getText()).append(" LIKE ? ESCAPE ?");
     bindArgs.add(likePrefix);
     bindArgs.add("\\");
     //@formatter:on
@@ -228,7 +228,7 @@ public class SyncETagsUtils {
     }
     b.append(" AND ").append(SyncETagColumns.IS_MANIFEST.getText()).append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(true)));
-    b.append(" AND ").append(SyncETagColumns.URL).append("=?");
+    b.append(" AND ").append(SyncETagColumns.URL.getText()).append("=?");
     bindArgs.add(url);
     b.append(" ORDER BY ").append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(" DESC");
 
@@ -277,7 +277,7 @@ public class SyncETagsUtils {
     }
     b.append(" AND ").append(SyncETagColumns.IS_MANIFEST.getText()).append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(true)));
-    b.append(" AND ").append(SyncETagColumns.URL).append("=?");
+    b.append(" AND ").append(SyncETagColumns.URL.getText()).append("=?");
     bindArgs.add(url);
 
     boolean inTransaction = db.inTransaction();
@@ -294,7 +294,7 @@ public class SyncETagsUtils {
         b.append("INSERT INTO ").append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" (")
          .append(SyncETagColumns.TABLE_ID).append(",")
          .append(SyncETagColumns.IS_MANIFEST.getText()).append(",")
-         .append(SyncETagColumns.URL).append(",")
+         .append(SyncETagColumns.URL.getText()).append(",")
          .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(",")
          .append(SyncETagColumns.ETAG_MD5_HASH.getText()).append(") VALUES (");
         //@formatter:on
@@ -347,7 +347,7 @@ public class SyncETagsUtils {
     }
     b.append(" AND ").append(SyncETagColumns.IS_MANIFEST.getText()).append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(false)));
-    b.append(" AND ").append(SyncETagColumns.URL).append("=?");
+    b.append(" AND ").append(SyncETagColumns.URL.getText()).append("=?");
     bindArgs.add(url);
     b.append(" ORDER BY ").append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(" DESC");
 
@@ -402,7 +402,7 @@ public class SyncETagsUtils {
     }
     b.append(" AND ").append(SyncETagColumns.IS_MANIFEST.getText()).append("=?");
     bindArgs.add(Integer.toString(DataHelper.boolToInt(false)));
-    b.append(" AND ").append(SyncETagColumns.URL).append("=?");
+    b.append(" AND ").append(SyncETagColumns.URL.getText()).append("=?");
     bindArgs.add(url);
 
     boolean inTransaction = db.inTransaction();
@@ -419,7 +419,7 @@ public class SyncETagsUtils {
         b.append("INSERT INTO ").append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" (")
          .append(SyncETagColumns.TABLE_ID).append(",")
          .append(SyncETagColumns.IS_MANIFEST.getText()).append(",")
-         .append(SyncETagColumns.URL).append(",")
+         .append(SyncETagColumns.URL.getText()).append(",")
          .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(",")
          .append(SyncETagColumns.ETAG_MD5_HASH.getText()).append(") VALUES (");
         //@formatter:on
