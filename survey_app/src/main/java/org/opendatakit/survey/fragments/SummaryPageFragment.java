@@ -20,8 +20,8 @@ import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
 import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
 import org.opendatakit.survey.R;
-import org.opendatakit.survey.activities.IOdkSurveyActivity;
 import org.opendatakit.survey.activities.MainMenuActivity;
+import org.opendatakit.survey.logic.FormIdStruct;
 import org.opendatakit.survey.utilities.InstanceListLoader;
 import org.opendatakit.survey.utilities.PieGraph;
 import org.opendatakit.survey.utilities.PieSlice;
@@ -39,6 +39,7 @@ public class SummaryPageFragment extends ListFragment
     private static final String LASTNAME = "lastname";
     private static final String CHOOSEN_TABLE_ID = "table_id";
     private static final String INSTANCE_UUID = "instance_uuid";
+    private static final String VIEW_ONLY = "view_only";
 
     private String firstname;
     private String lastname;
@@ -52,8 +53,10 @@ public class SummaryPageFragment extends ListFragment
     private SimpleDateFormat sdf;
     private static final String t = "SummaryPageFragment";
     private QuestionInfoListAdapter adapter;
+    private boolean viewOnly;
 
     //TODO: here pass language to loader and handle it there
+    //TODO: add mainactivity class reference cause we need it pretty often
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,11 @@ public class SummaryPageFragment extends ListFragment
             lastname = getArguments().getString(LASTNAME);
             formId = getArguments().getString(INSTANCE_UUID);
             tableId = getArguments().getString(CHOOSEN_TABLE_ID);
+            String viewOnlyString = getArguments().getString(VIEW_ONLY);
+            if(viewOnlyString!=null && viewOnlyString.equals("true"))
+                viewOnly = true;
+            else
+                viewOnly = false;
         }
 
         sdf = new SimpleDateFormat(getActivity().getString(R.string
@@ -72,7 +80,7 @@ public class SummaryPageFragment extends ListFragment
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new QuestionInfoListAdapter(getActivity(), R.layout.questions_row);
+        adapter = new QuestionInfoListAdapter(getActivity(), R.layout.text_choice_types_question_row);
         setListAdapter(adapter);
 
         getLoaderManager().initLoader(0, null, this);
@@ -146,16 +154,25 @@ public class SummaryPageFragment extends ListFragment
 
         QuestionInfo info = (QuestionInfo) adapter.getItem(position);
 
-        Uri formUri = Uri.withAppendedPath(Uri.withAppendedPath(
+        Uri formUri = Uri.withAppendedPath(
                 Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI,
-                        ((IAppAwareActivity) getActivity()).getAppName()), tableId), formId);
+                        ((IAppAwareActivity) getActivity()).getAppName()), tableId);
 
-        ((IOdkSurveyActivity) getActivity()).chooseForm(formUri);
+        FormIdStruct newForm = FormIdStruct.retrieveFormIdStruct(getActivity().getContentResolver(), formUri);
+
+        Uri uri = Uri.parse(formUri.toString() + "#instanceId=" + formId + "&screenPath=" + info.path);
+
+        ((MainMenuActivity)getActivity()).transitionToFormHelper(uri, newForm);
+        ((MainMenuActivity)getActivity()).addSectionScreenState("survey/0", "whatever");
+
+        ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.WEBKIT);
+
+        //((IOdkSurveyActivity) getActivity()).chooseForm(formUri);
     }
 
     @Override
     public Loader<ArrayList<Object>> onCreateLoader(int id, Bundle args) {
-        return new QuestionListLoader(getActivity(), ((IAppAwareActivity) getActivity()).getAppName(), tableId);
+        return new QuestionListLoader(getActivity(), ((IAppAwareActivity) getActivity()).getAppName(), tableId, formId);
     }
 
     @Override

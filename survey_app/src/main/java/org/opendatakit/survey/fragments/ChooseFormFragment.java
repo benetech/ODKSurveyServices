@@ -43,6 +43,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     private static final String LASTNAME = "lastname";
     private static final String CHOOSEN_TABLE_ID = "table_id";
     private static final String INSTANCE_UUID = "instance_uuid";
+    private static final String VIEW_ONLY = "view_only";
 
     private String firstname;
     private String lastname;
@@ -111,8 +112,9 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 HashMap<String, String> values = new HashMap<>();
                 values.put(FIRSTNAME, firstname);
                 values.put(LASTNAME, lastname);
-                values.put(CHOOSEN_TABLE_ID, mAdapter.getSelectedTabeID());
+                values.put(CHOOSEN_TABLE_ID, tableId);
                 values.put(INSTANCE_UUID, rowId);
+                values.put(VIEW_ONLY, "false");
                 mCallback.passData(values);
 
                 //let's initialize the row in the database just before switching fragment TODO:add beneficiary information to row in future

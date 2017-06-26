@@ -20,8 +20,13 @@ public class QuestionInfoListAdapter extends BaseAdapter {
     private final int layout;
     private final ArrayList<Object> questions = new ArrayList<Object>();
 
-    private static final int QUESTION = 0;
-    private static final int SECTION_NAME= 1;
+
+    //TODO: to do jakiejs klasy?
+    private static final int TEXT_CHOICE_QUESTION = 0;
+    private static final int GPS_QUESTION = 1;
+    private static final int MEDIA_QUESTION = 2;
+    private static final int POVERTY_STOPLIGHT_QUESTION = 3;
+    private static final int SECTION_NAME_HEADER= 4;
 
     public QuestionInfoListAdapter(Context context, int layout) {
         this.context = context;
@@ -53,7 +58,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 5;
     }
 
     @Override
@@ -61,7 +66,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
         int type = getItemViewType(position);
 
         switch (type) {
-            case QUESTION:
+            case TEXT_CHOICE_QUESTION:
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -69,10 +74,19 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
                     TextView question = (TextView) view.findViewById(R.id.question);
                     question.setText(((QuestionInfo)getItem(position)).displayNames.get("default"));
+
+                    TextView answer = (TextView) view.findViewById(R.id.answer);
+                    answer.setText(((QuestionInfo)getItem(position)).answer);
                 }
 
                 break;
-            case SECTION_NAME:
+            case GPS_QUESTION:
+                break;
+            case MEDIA_QUESTION:
+                break;
+            case POVERTY_STOPLIGHT_QUESTION:
+                break;
+            case SECTION_NAME_HEADER:
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -92,9 +106,9 @@ public class QuestionInfoListAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         if (getItem(position) instanceof QuestionInfo) {
-            return QUESTION;
+            return ((QuestionInfo)getItem(position)).questionType;
         }
 
-        return SECTION_NAME;
+        return SECTION_NAME_HEADER;
     }
 }

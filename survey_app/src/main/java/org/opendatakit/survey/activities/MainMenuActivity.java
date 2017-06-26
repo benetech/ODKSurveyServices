@@ -335,7 +335,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
   }
 
-  private void transitionToFormHelper(Uri uri, FormIdStruct newForm) {
+  public void transitionToFormHelper(Uri uri, FormIdStruct newForm) {
     // work through switching to that form
     setAppName(newForm.appName);
     setCurrentForm(newForm);
@@ -1139,7 +1139,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       if (newFragment == null) {
         newFragment = new SummaryPageFragment();
       }
-      newFragment.setArguments(passedData);
+       newFragment.setArguments(passedData);
     } else if (newScreenType == ScreenList.SETTINGS) {
       setSubmenuPage("settings");
       newFragment = mgr.findFragmentByTag(newScreenType.name());
@@ -1346,6 +1346,24 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
           lastSection.history.clear();
         }
       }
+    }
+  }
+
+  public void addSectionScreenState(String screenPath, String state) {
+    if (screenPath == null) {
+      WebLogger.getLogger(getAppName()).e(t,
+              "addSectionScreenState: NULL currentScreen.screenPath!");
+      return;
+    } else {
+      WebLogger.getLogger(getAppName()).e(t,
+              "addSectionScreenState( " + screenPath + ", " + state + ")");
+
+      SectionScreenStateHistory lastSection;
+      sectionStateScreenHistory.add(sectionStateScreenHistory.size() - 2, new SectionScreenStateHistory());
+      lastSection = sectionStateScreenHistory.get(sectionStateScreenHistory.size() - 2);
+      lastSection.currentScreen.screenPath = screenPath;
+      lastSection.currentScreen.state = state;
+      lastSection.history.clear();
     }
   }
 
