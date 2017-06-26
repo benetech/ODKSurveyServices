@@ -37,7 +37,6 @@ import org.opendatakit.survey.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import static android.database.Cursor.FIELD_TYPE_BLOB;
@@ -98,7 +97,7 @@ public class InstanceListLoader extends AsyncTaskLoader<ArrayList<Object>> {
                 InstanceInfo info = new InstanceInfo(
                         c.getString(idxTableId),
                         c.getString(idxFormId),
-                        c2.getString(c2.getColumnIndex("_id")),
+                        c2.getString(c2.getColumnIndex(DataTableColumns.ID.getText())),
                         LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
                         formatter.format(new Date(TableConstants.milliSecondsFromNanos(c2.getString(c2.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()))))),
                         "Jan Kowalski",
