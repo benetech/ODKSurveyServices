@@ -48,7 +48,7 @@ public class SyncETagsUtils {
     //@formatter:off
     b.append("DELETE FROM ")
      .append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" WHERE ")
-     .append(SyncETagColumns.TABLE_ID);
+     .append(SyncETagColumns.TABLE_ID.getText());
     //@formatter:on
     if ( tableId == null ) {
       b.append(" IS NULL");
@@ -218,7 +218,7 @@ public class SyncETagsUtils {
     //@formatter:off
     b.append("SELECT * FROM ")
      .append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" WHERE ")
-     .append(SyncETagColumns.TABLE_ID);
+     .append(SyncETagColumns.TABLE_ID.getText());
     //@formatter:on
     if ( tableId == null ) {
       b.append(" IS NULL");
@@ -267,7 +267,7 @@ public class SyncETagsUtils {
     //@formatter:off
     b.append("DELETE FROM ")
      .append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" WHERE ")
-     .append(SyncETagColumns.TABLE_ID);
+     .append(SyncETagColumns.TABLE_ID.getText());
     //@formatter:on
     if ( tableId == null ) {
       b.append(" IS NULL");
@@ -292,7 +292,7 @@ public class SyncETagsUtils {
         bindArgs.clear();
         //@formatter:off
         b.append("INSERT INTO ").append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" (")
-         .append(SyncETagColumns.TABLE_ID).append(",")
+         .append(SyncETagColumns.TABLE_ID.getText()).append(",")
          .append(SyncETagColumns.IS_MANIFEST.getText()).append(",")
          .append(SyncETagColumns.URL.getText()).append(",")
          .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(",")
@@ -337,7 +337,7 @@ public class SyncETagsUtils {
     //@formatter:off
     b.append("SELECT * FROM ")
      .append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" WHERE ")
-     .append(SyncETagColumns.TABLE_ID);
+     .append(SyncETagColumns.TABLE_ID.getText());
     //@formatter:on
     if ( tableId == null ) {
       b.append(" IS NULL");
@@ -392,7 +392,7 @@ public class SyncETagsUtils {
     //@formatter:off
     b.append("DELETE FROM ")
      .append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" WHERE ")
-     .append(SyncETagColumns.TABLE_ID);
+     .append(SyncETagColumns.TABLE_ID.getText());
     //@formatter:on
     if ( tableId == null ) {
       b.append(" IS NULL");
@@ -417,7 +417,7 @@ public class SyncETagsUtils {
         bindArgs.clear();
         //@formatter:off
         b.append("INSERT INTO ").append(DatabaseConstants.SYNC_ETAGS_TABLE_NAME).append(" (")
-         .append(SyncETagColumns.TABLE_ID).append(",")
+         .append(SyncETagColumns.TABLE_ID.getText()).append(",")
          .append(SyncETagColumns.IS_MANIFEST.getText()).append(",")
          .append(SyncETagColumns.URL.getText()).append(",")
          .append(SyncETagColumns.LAST_MODIFIED_TIMESTAMP.getText()).append(",")
