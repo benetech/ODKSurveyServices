@@ -544,7 +544,7 @@ public class AggregateSynchronizer implements Synchronizer {
     HttpEntity entity = new GzipCompressingEntity(new StringEntity(rowListJSON,
         Charset.forName("UTF-8")));
 
-    URI uri = URI.create(resource.getDataUri());
+    URI uri = URI.create(sc.getUriWithServerCompatibleScheme(resource.getDataUri()));
     wrapper.buildJsonContentJsonResponseRequest(uri, request);
     request.setEntity(entity);
 
