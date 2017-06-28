@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +23,10 @@ import org.opendatakit.demoAndroidCommonClasses.views.ExecutorContext;
 import org.opendatakit.demoAndroidCommonClasses.views.ExecutorRequest;
 import org.opendatakit.demoAndroidCommonClasses.views.ExecutorRequestType;
 import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
+import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
+import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.services.database.service.OdkDatabaseServiceInterface;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
 import org.opendatakit.survey.R;
@@ -35,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ChooseFormFragment extends ListFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<ArrayList<Object>>{
@@ -131,7 +136,22 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 break;
             case  R.id.checkForUpdatesButton:
                 props.setProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME, new Date().toString());
-                Toast.makeText(getActivity(), "Here we should download forms and later update the Last updated indicator", Toast.LENGTH_SHORT).show();
+
+                //TODO: Skip SyncActivity and invoke service methods directly
+                //TODO: Update the "Last updated" indicator
+
+                Intent syncIntent = new Intent();
+                syncIntent.setComponent(new ComponentName(
+                        IntentConsts.Sync.APPLICATION_NAME,
+                        IntentConsts.Sync.ACTIVITY_NAME));
+                syncIntent.setAction(Intent.ACTION_DEFAULT);
+                Bundle bundle = new Bundle();
+                bundle.putString(IntentConsts.INTENT_KEY_APP_NAME, context.getAppName());
+                syncIntent.putExtras(bundle);
+
+                getActivity().startActivity(syncIntent);
+
+//              Toast.makeText(getActivity(), "Here we should download forms and later update the Last updated indicator", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

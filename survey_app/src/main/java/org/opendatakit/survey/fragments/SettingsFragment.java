@@ -1,21 +1,28 @@
 package org.opendatakit.survey.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.commons.io.FileUtils;
 import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.MainMenuActivity;
+
+import java.io.File;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
@@ -49,6 +56,40 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         officeIdEditText = (EditText) view.findViewById(R.id.office_id_edit_text);
         syncServerUrlEditText = (EditText) view.findViewById(R.id.sync_server_url_edit_text);
 
+        // Set onFocusChangeListeners to detect when to hide the soft keyboard
+        reporterNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(view);
+                }
+            }
+        });
+        reporterIdEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(view);
+                }
+            }
+        });
+        officeIdEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(view);
+                }
+            }
+        });
+        syncServerUrlEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(view);
+                }
+            }
+        });
+
         // Get saved properties singleton
         properties = CommonToolProperties.get(this.getActivity().getApplicationContext(), appName);
 
@@ -70,8 +111,49 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.settings_save_button:
-                saveSettings();
+                // Force soft keyboard to hide
+                hideKeyboard(getActivity().getCurrentFocus());
+
+                // Check if we changed the Office ID
+                String oldOfficeId = properties.getProperty(CommonToolProperties.KEY_OFFICE_ID);
+                if (!officeIdEditText.getText().toString().equals(oldOfficeId)) {
+                    showConfirmDialog();
+                } else {
+                    saveSettings();
+                }
                 break;
+        }
+    }
+
+    private void showConfirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.confirm_change_office_id);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteAllForms();
+                saveSettings();
+            }
+        });
+        builder.setCancelable(true);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void deleteAllForms() {
+        WebLogger.getLogger(appName).i(t, "Deleting all data related to the officeID: " + properties.getProperty(CommonToolProperties.KEY_OFFICE_ID));
+        File tables = new File(Environment.getExternalStorageDirectory() + "/opendatakit/" + appName + "/config/tables");
+        File data = new File(Environment.getExternalStorageDirectory() + "/opendatakit/" + appName + "/data");
+        try {
+            FileUtils.cleanDirectory(tables);
+            FileUtils.cleanDirectory(data);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -103,6 +185,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         // Return to the previous view
         getActivity().onBackPressed();
+    }
+
+    private void hideKeyboard(View view) {
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override
