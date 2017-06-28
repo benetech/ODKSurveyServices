@@ -999,7 +999,15 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         }
         dialog.show(getFragmentManager(), BACKPRESS_DIALOG_TAG);
       } else {
-        popBackStack();
+        FragmentManager mgr = getFragmentManager();
+        if (mgr.getBackStackEntryCount() > 1) {
+          WebLogger.getLogger(getAppName()).i(t, "popping backstack");
+          mgr.popBackStack();
+        } else {
+          mgr.popBackStack();
+          WebLogger.getLogger(getAppName()).i(t, "nothing on backstack, calling super");
+          super.onBackPressed();
+        }
       }
     }
   }
@@ -1169,39 +1177,31 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       throw new IllegalStateException("Unrecognized ScreenList type");
     }
 
-    boolean matchingBackStackEntry = false;
     for (int i = 0; i < mgr.getBackStackEntryCount(); ++i) {
       BackStackEntry e = mgr.getBackStackEntryAt(i);
       WebLogger.getLogger(getAppName()).i(t, "BackStackEntry["+i+"] " + e.getName());
-      if (e.getName().equals(newScreenType.name())) {
-        matchingBackStackEntry = true;
-      }
     }
 
-    if (matchingBackStackEntry) {
-      if ( trans != null ) {
-        WebLogger.getLogger(getAppName()).e(t,  "Unexpected active transaction when popping state!");
-        trans = null;
+    currentFragment = newScreenType;
+
+    if ( trans == null ) {
+      trans = mgr.beginTransaction();
+    }
+
+    //if the fragment is already active or the last at back stack is the same as new one, do not replace or add it to backstack
+    if(mgr.getBackStackEntryCount()>=1) {
+      if (!newFragment.isAdded() && !mgr.getBackStackEntryAt(mgr.getBackStackEntryCount()-1).getName().equals(currentFragment.name())) {
+        trans.replace(R.id.main_content, newFragment, currentFragment.name());
+        trans.addToBackStack(currentFragment.name());
       }
-      // flush backward, to the screen we want to go back to
-      currentFragment = newScreenType;
-      WebLogger.getLogger(getAppName()).e(t,  "[" + this.hashCode() + "] popping back stack " + currentFragment.name());
-      mgr.popBackStackImmediate(currentFragment.name(), 0);
     } else {
-      // add transaction to show the screen we want
-      if ( trans == null ) {
-        trans = mgr.beginTransaction();
-      }
-      currentFragment = newScreenType;
       trans.replace(R.id.main_content, newFragment, currentFragment.name());
-      WebLogger.getLogger(getAppName()).i(t,  "[" + this.hashCode() + "] adding to back stack " + currentFragment.name());
       trans.addToBackStack(currentFragment.name());
     }
 
-
     // and see if we should re-initialize...
     if ((currentFragment != ScreenList.INITIALIZATION_DIALOG)
-        && ((Survey) getApplication()).shouldRunInitializationTask(getAppName())) {
+            && ((Survey) getApplication()).shouldRunInitializationTask(getAppName())) {
       WebLogger.getLogger(getAppName()).i(t, "swapToFragmentView -- calling clearRunInitializationTask");
       // and immediately clear the should-run flag...
       ((Survey) getApplication()).clearRunInitializationTask(getAppName());
@@ -1228,7 +1228,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         Uri formUri = null;
 
         if (uri.getScheme().equalsIgnoreCase(uriFormsProvider.getScheme())
-            && uri.getAuthority().equalsIgnoreCase(uriFormsProvider.getAuthority())) {
+                && uri.getAuthority().equalsIgnoreCase(uriFormsProvider.getAuthority())) {
           List<String> segments = uri.getPathSegments();
           if (segments != null && segments.size() >= 2) {
             String appName = segments.get(0);
@@ -1236,13 +1236,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
             String tableId = segments.get(1);
             String formId = (segments.size() > 2) ? segments.get(2) : null;
             formUri = Uri.withAppendedPath(
-                Uri.withAppendedPath(
-                    Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName),
-                      tableId), formId);
+                    Uri.withAppendedPath(
+                            Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName),
+                            tableId), formId);
           } else {
             swapToFragmentView(ScreenList.IN_PROGRESS);
             createErrorDialog(
-                getString(R.string.invalid_uri_expecting_n_segments, uri.toString(), 2), EXIT);
+                    getString(R.string.invalid_uri_expecting_n_segments, uri.toString(), 2), EXIT);
             return;
           }
           // request specifies a specific formUri -- try to open that

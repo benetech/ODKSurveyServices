@@ -71,7 +71,7 @@ public class SubmittedInstancesFragment extends ListFragment
 
         // render total instance view
         mAdapter = new InstanceInfoListAdapter(getActivity(), R.layout.submitted_row, R.id.savepointTimestamp,
-                R.id.beneficiaryName, R.id.questionsLeft, ((MainMenuActivity)getActivity()).getSubmenuPage());
+                R.id.beneficiaryName, R.id.questionsLeft);
         setListAdapter(mAdapter);
 
         getLoaderManager().initLoader(0, null, this);
@@ -86,6 +86,8 @@ public class SubmittedInstancesFragment extends ListFragment
 
     @Override public void onResume() {
         super.onResume();
+        ((MainMenuActivity)getActivity()).setSubmenuPage("synced");
+        ((MainMenuActivity)getActivity()).mNavigationViewTop.setCheckedItem(R.id.submitted_menuitem);
     }
 
     @Override public void onPause() {

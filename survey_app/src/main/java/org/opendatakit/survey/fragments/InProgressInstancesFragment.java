@@ -66,7 +66,7 @@ public class InProgressInstancesFragment extends ListFragment
 
     // render total instance view
     mAdapter = new InstanceInfoListAdapter(getActivity(), R.layout.in_progress_row, R.id.savepointTimestamp,
-            R.id.beneficiaryName, R.id.questionsLeft, ((MainMenuActivity)getActivity()).getSubmenuPage());
+            R.id.beneficiaryName, R.id.questionsLeft);
     setListAdapter(mAdapter);
 
     getLoaderManager().initLoader(0, null, this);
@@ -89,6 +89,8 @@ public class InProgressInstancesFragment extends ListFragment
 
   @Override public void onResume() {
     super.onResume();
+    ((MainMenuActivity)getActivity()).setSubmenuPage("new_row");
+    ((MainMenuActivity)getActivity()).mNavigationViewTop.setCheckedItem(R.id.in_progress_menuitem);
     mAdapter.notifyDataSetChanged();
   }
 

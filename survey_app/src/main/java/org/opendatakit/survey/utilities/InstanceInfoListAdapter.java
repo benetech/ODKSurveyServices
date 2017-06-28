@@ -28,6 +28,7 @@ import android.widget.*;
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.survey.R;
+import org.opendatakit.survey.activities.MainMenuActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,21 +48,18 @@ public class InstanceInfoListAdapter extends BaseAdapter {
   private final int mSavepointTimestamp;
   private final int mBeneficiaryInformation;
   private final int mQuestionsLeft;
-  private final String submenuPage;
   private final ArrayList<Object> mItems = new ArrayList<Object>();
 
   private static final int INSTANCE = 0;
   private static final int TYPE_DIVIDER = 1;
 
   public InstanceInfoListAdapter(Context context, int layout, int savepoint_timestamp_id,
-                                 int beneficiary_information_id, int questions_left_id,
-                                 String submenuPage) {
+                                 int beneficiary_information_id, int questions_left_id) {
     this.mContext = context;
     this.mLayout = layout;
     this.mSavepointTimestamp = savepoint_timestamp_id;
     this.mBeneficiaryInformation = beneficiary_information_id;
     this.mQuestionsLeft = questions_left_id;
-    this.submenuPage = submenuPage;
   }
 
   public void clear() {
@@ -123,7 +121,7 @@ public class InstanceInfoListAdapter extends BaseAdapter {
         formBeneficiaryView.setText(info.beneficiaryInformation);
         PieGraph pg = (PieGraph) view.findViewById(R.id.graph);
 
-        if (submenuPage.equals("new_row")) {
+        if (((MainMenuActivity)mContext).getSubmenuPage().equals("new_row")) {
           ImageView cloud = (ImageView) view.findViewById(R.id.cloud);
 
           cloud.setOnClickListener(new View.OnClickListener() {
