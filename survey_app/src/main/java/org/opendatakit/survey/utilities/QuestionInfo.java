@@ -12,6 +12,7 @@ public class QuestionInfo {
     public final HashMap<String, String> displayNames;
     public final String path;
     public final int questionType;
+    public final boolean isChecked;
 
     public QuestionInfo(String question, HashMap<String, String> displayNames, String path, int questionType, String answer){
         this.question = question;
@@ -19,5 +20,9 @@ public class QuestionInfo {
         this.path = path;
         this.questionType = questionType;
         this.answer = answer;
+        if(answer == null || answer.isEmpty())
+            isChecked = false;
+        else
+            isChecked = true;
     }
 }

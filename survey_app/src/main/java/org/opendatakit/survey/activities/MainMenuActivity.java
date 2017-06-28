@@ -686,6 +686,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       setAppName(ODKFileUtils.getOdkDefaultAppName());
       props = ((IOdkAppPropertiesActivity)this).getProps();
       Uri uri = getIntent().getData();
+      Uri instanceUri = null;
       Uri formUri = null;
       if (uri != null) {
         // initialize to the URI, then we will customize further based upon the
@@ -701,16 +702,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
             String appName = segments.get(0);
             setAppName(appName);
             String tableId = segments.get(1);
-            String formId = (segments.size() > 2) ? segments.get(2) : null;
-            formUri = Uri.withAppendedPath(
-                Uri.withAppendedPath(Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName),
-                    tableId), formId);
-          } else {
-            createErrorDialog(getString(R.string.invalid_uri_expecting_n_segments, uri.toString(), 2), EXIT);
-            return;
+            String formId = (segments.size() == 4) ? "#" + segments.get(2) + "/" + segments.get(3) : null;
+            formUri = Uri.withAppendedPath(Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName),
+                    tableId);
+            instanceUri = Uri.parse(formUri.toString() + formId);
           }
         } else if (uri.getScheme().equals(uriWebView.getScheme()) && uri.getAuthority().equals(uriWebView.getAuthority())
-            && uri.getPort() == uriWebView.getPort()) {
+                && uri.getPort() == uriWebView.getPort()) {
           List<String> segments = uri.getPathSegments();
           if (segments != null && segments.size() == 1) {
             String appName = segments.get(0);
@@ -810,7 +808,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
           String[] pendingResponseJSON = savedInstanceState.getStringArray(RESPONSE_JSON);
           queueResponseJSON.addAll(Arrays.asList(pendingResponseJSON));
         }
-      } else if (formUri != null) {
+      } else if (instanceUri != null) {
         // request specifies a specific formUri -- try to open that
         FormIdStruct newForm = FormIdStruct.retrieveFormIdStruct(getContentResolver(), formUri);
         if (newForm == null) {
@@ -820,7 +818,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
           ((Survey) getApplication()).setRunInitializationTask(getAppName());
           currentFragment = ScreenList.WEBKIT;
         } else {
-          transitionToFormHelper(uri, newForm);
+          transitionToFormHelper(instanceUri, newForm);
         }
       }
     } catch (Exception e) {
@@ -1126,7 +1124,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         newFragment = new InProgressInstancesFragment();
       }
     } else if (newScreenType == ScreenList.SUBMITTED) {
-      setSubmenuPage("submitted");
+      setSubmenuPage("synced");
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new SubmittedInstancesFragment();
@@ -1140,18 +1138,14 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new ChooseFormFragment();
-      }
-      if (newFragment.getArguments() == null) {
         newFragment.setArguments(passedData);
       }
     } else if (newScreenType == ScreenList.SUMMARY_PAGE) {
-      newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new SummaryPageFragment();
+        newFragment.setArguments(passedData);
       }
-       newFragment.setArguments(passedData);
     } else if (newScreenType == ScreenList.SETTINGS) {
-      setSubmenuPage("settings");
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new SettingsFragment();
@@ -1201,7 +1195,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
     // and see if we should re-initialize...
     if ((currentFragment != ScreenList.INITIALIZATION_DIALOG)
-            && ((Survey) getApplication()).shouldRunInitializationTask(getAppName())) {
+        && ((Survey) getApplication()).shouldRunInitializationTask(getAppName())) {
       WebLogger.getLogger(getAppName()).i(t, "swapToFragmentView -- calling clearRunInitializationTask");
       // and immediately clear the should-run flag...
       ((Survey) getApplication()).clearRunInitializationTask(getAppName());
@@ -1228,7 +1222,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         Uri formUri = null;
 
         if (uri.getScheme().equalsIgnoreCase(uriFormsProvider.getScheme())
-                && uri.getAuthority().equalsIgnoreCase(uriFormsProvider.getAuthority())) {
+            && uri.getAuthority().equalsIgnoreCase(uriFormsProvider.getAuthority())) {
           List<String> segments = uri.getPathSegments();
           if (segments != null && segments.size() >= 2) {
             String appName = segments.get(0);
@@ -1236,13 +1230,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
             String tableId = segments.get(1);
             String formId = (segments.size() > 2) ? segments.get(2) : null;
             formUri = Uri.withAppendedPath(
-                    Uri.withAppendedPath(
-                            Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName),
-                            tableId), formId);
+                Uri.withAppendedPath(
+                    Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI, appName),
+                      tableId), formId);
           } else {
             swapToFragmentView(ScreenList.IN_PROGRESS);
             createErrorDialog(
-                    getString(R.string.invalid_uri_expecting_n_segments, uri.toString(), 2), EXIT);
+                getString(R.string.invalid_uri_expecting_n_segments, uri.toString(), 2), EXIT);
             return;
           }
           // request specifies a specific formUri -- try to open that
@@ -1876,7 +1870,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private void updateCounters(){
     //Gravity property aligns the text
     inProgress.setText(countFormsInstances("new_row"));
-    submitted.setText(countFormsInstances("submitted"));
+    submitted.setText(countFormsInstances("synced"));
     mDrawerLayout.invalidate();
   }
 

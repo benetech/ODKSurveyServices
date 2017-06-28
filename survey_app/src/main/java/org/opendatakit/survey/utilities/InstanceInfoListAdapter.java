@@ -248,15 +248,15 @@ public class InstanceInfoListAdapter extends BaseAdapter {
             pg.addSlice(slice);
           } else {
             PieSlice slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(mContext, R.color.submitted_donut_char_green));
+            slice.setColor(ContextCompat.getColor(mContext, R.color.poverty_stoplight_green));
             slice.setValue(info.greenAnswers);
             pg.addSlice(slice);
             slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(mContext, R.color.submitted_donut_char_yellow));
+            slice.setColor(ContextCompat.getColor(mContext, R.color.poverty_stoplight_yellow));
             slice.setValue(info.yellowAnswers);
             pg.addSlice(slice);
             slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(mContext, R.color.submitted_donut_char_red));
+            slice.setColor(ContextCompat.getColor(mContext, R.color.poverty_stoplight_red));
             slice.setValue(info.redAnswers);
             pg.addSlice(slice);
           }

@@ -80,7 +80,7 @@ public class SummaryPageFragment extends ListFragment
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new QuestionInfoListAdapter(getActivity(), R.layout.text_choice_types_question_row);
+        adapter = new QuestionInfoListAdapter(getActivity());
         setListAdapter(adapter);
 
         getLoaderManager().initLoader(0, null, this);
@@ -128,15 +128,15 @@ public class SummaryPageFragment extends ListFragment
             pg.addSlice(slice);
         } else {
             PieSlice slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(getActivity(), R.color.submitted_donut_char_green));
+            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_green));
             slice.setValue(colors[2]);
             pg.addSlice(slice);
             slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(getActivity(), R.color.submitted_donut_char_yellow));
+            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_yellow));
             slice.setValue(colors[1]);
             pg.addSlice(slice);
             slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(getActivity(), R.color.submitted_donut_char_red));
+            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_red));
             slice.setValue(colors[0]);
             pg.addSlice(slice);
         }
@@ -158,16 +158,8 @@ public class SummaryPageFragment extends ListFragment
                 Uri.withAppendedPath(FormsProviderAPI.CONTENT_URI,
                         ((IAppAwareActivity) getActivity()).getAppName()), tableId);
 
-        FormIdStruct newForm = FormIdStruct.retrieveFormIdStruct(getActivity().getContentResolver(), formUri);
-
-        Uri uri = Uri.parse(formUri.toString() + "#instanceId=" + formId + "&screenPath=" + info.path);
-
-        ((MainMenuActivity)getActivity()).transitionToFormHelper(uri, newForm);
-        ((MainMenuActivity)getActivity()).addSectionScreenState("survey/0", "whatever");
-
-        ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.WEBKIT);
-
-        //((IOdkSurveyActivity) getActivity()).chooseForm(formUri);
+        Uri uri = Uri.parse(formUri.toString() + "/instanceId=" + formId + "&screenPath=" + info.path);
+        ((MainMenuActivity) getActivity()).chooseForm(uri);
     }
 
     @Override
@@ -185,5 +177,9 @@ public class SummaryPageFragment extends ListFragment
     @Override
     public void onLoaderReset(Loader<ArrayList<Object>> loader) {
         adapter.clear();
+    }
+
+    @Override public void onResume() {
+        super.onResume();
     }
 }

@@ -127,11 +127,15 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
             //sooo we need to somehow switch the language we want in future TODO:different languages
             //for now return default
             for (final String sectionName : sectionNames) {
-                result.add(headersDisplayNames.get(sectionName).get("default"));
+
                 //time for sum questions, right here cause we have to maintain the order
                 Map<String, Object> section = (Map<String, Object>) sections
                         .get(sectionName);
                 //TODO: if null throw smth...
+
+                if(((Map<String, Object>)section.get("nested_sections")).size() == sections.size() -2)
+                    continue;
+                result.add(headersDisplayNames.get(sectionName).get("default"));
                 List<Map<String, Object>> prompts = (List<Map<String, Object>>) section
                         .get("prompts");
                 //TODO: if null throw smth...
@@ -158,7 +162,45 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                         //TODO: if null throw smth...
                         HashMap<String, String> text = (HashMap<String, String>) display
                                 .get("text");
-                        result.add(new QuestionInfo((String) prompt.get("name"), text, (String) prompt.get("_branch_label_enclosing_screen"), 0, instanceCursor.getString(instanceCursor.getColumnIndex((String)prompt.get("name")))));
+                        String columnName = (String) prompt.get("name");
+                        String promptType = (String) prompt.get("type");
+                        int columnNumber = -1;
+                        if (columnName != null && promptType != null) {
+                            if (promptType.equals("image") || promptType.equals("video")) {
+                                if (promptType.equals("image")) { //TODO:Handle audio
+                                    columnNumber = instanceCursor.getColumnIndex("picture_uriFragment");
+                                } else if (promptType.equals("video")) {
+                                    columnNumber = instanceCursor.getColumnIndex(promptType + "uriFragment");
+                                }
+                                if (columnNumber != -1) {
+                                    if (instanceCursor.getString(columnNumber) != null && !instanceCursor.getString(columnNumber).isEmpty()) {
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get("_branch_label_enclosing_screen"), 0, "1 Media file attached"));
+                                    } else {
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get("_branch_label_enclosing_screen"), 0, ""));
+                                    }
+                                }
+                            } else if(promptType.equals("geopoint")) {
+                                if(instanceCursor.getString(instanceCursor.getColumnIndex("location_accuracy"))!=null &&
+                                        instanceCursor.getString(instanceCursor.getColumnIndex("location_altitude"))!=null  &&
+                                        instanceCursor.getString(instanceCursor.getColumnIndex("location_latitude"))!=null  &&
+                                        instanceCursor.getString(instanceCursor.getColumnIndex("location_longitude"))!=null){
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get("_branch_label_enclosing_screen"), 0, "Location captured"));
+                                } else {
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get("_branch_label_enclosing_screen"), 0, ""));
+                                }
+
+                            } else if (instanceCursor.getColumnIndex(columnName) != -1) {
+
+                                String answer = instanceCursor.getString(instanceCursor.getColumnIndex(columnName));
+                                if (answer != null && (answer.equals("red") || answer.equals("green") || answer.equals("yellow"))) {//TODO: add column filtering to check wheter this is poverty stoplight question
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get("_branch_label_enclosing_screen"), 3, answer));
+                                } else {
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get("_branch_label_enclosing_screen"), 0, answer));
+                                }
+                            } else
+                                result.add(new QuestionInfo(columnName, text, (String) prompt.get("_branch_label_enclosing_screen"), 0, "SOMETHING WENT WRONG"));
+                        }
+
                         //result.add("\tQ: " + text.get("default"));
 
                     }
@@ -167,7 +209,6 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                 //result.add(new QuestionInfo(text.get("default"), ));
 
             }
-
         }
 
 

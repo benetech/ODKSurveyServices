@@ -20,13 +20,18 @@ import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.IOdkSurveyActivity;
 import org.opendatakit.survey.activities.MainMenuActivity;
+import org.opendatakit.survey.utilities.DataPassListener;
 import org.opendatakit.survey.utilities.InstanceInfo;
 import org.opendatakit.survey.utilities.InstanceListLoader;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -37,6 +42,7 @@ import android.widget.ListView;
 import org.opendatakit.survey.utilities.InstanceInfoListAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Fragment displaying the list of available forms to fill out.
@@ -47,13 +53,18 @@ public class InProgressInstancesFragment extends ListFragment
     implements LoaderManager.LoaderCallbacks<ArrayList<Object>> {
 
   @SuppressWarnings("unused") private static final String t = "InProgressInstancesFragment";
+  private static final String FIRSTNAME = "firstname";
+  private static final String LASTNAME = "lastname";
+  private static final String CHOOSEN_TABLE_ID = "table_id";
+  private static final String INSTANCE_UUID = "instance_uuid";
+  private static final String VIEW_ONLY = "view_only";
 
   public static final int ID = R.layout.fragment_in_progress_instances;
 
   // data to retain across orientation changes
 
   // data that is not retained
-
+  DataPassListener mCallback;
   private InstanceInfoListAdapter mAdapter;
   private View view;
 
@@ -101,13 +112,18 @@ public class InProgressInstancesFragment extends ListFragment
   @Override public void onListItemClick(ListView l, View v, int position, long id) {
     super.onListItemClick(l, v, position, id);
 
-    // get uri to form
-    InstanceInfo info = (InstanceInfo) mAdapter.getItem(position);
-    Uri formUri = Uri.withAppendedPath(Uri.withAppendedPath(
-        Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI,
-            ((IAppAwareActivity) getActivity()).getAppName()), info.tableId), info.UUID);
 
-    ((IOdkSurveyActivity) getActivity()).chooseForm(formUri);
+    String tableId = ((InstanceInfo)mAdapter.getItem(position)).tableId;
+    String rowId = ((InstanceInfo)mAdapter.getItem(position)).UUID;
+    HashMap<String, String> values = new HashMap<>();
+    values.put(FIRSTNAME, ((InstanceInfo)mAdapter.getItem(position)).beneficiaryInformation);
+    values.put(LASTNAME, ((InstanceInfo)mAdapter.getItem(position)).beneficiaryInformation);
+    values.put(CHOOSEN_TABLE_ID, tableId);
+    values.put(INSTANCE_UUID, rowId);
+    values.put(VIEW_ONLY, "true");
+    mCallback.passData(values);
+
+    ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUMMARY_PAGE);
   }
 
   @Override public Loader<ArrayList<Object>> onCreateLoader(int id, Bundle args) {
@@ -130,5 +146,31 @@ public class InProgressInstancesFragment extends ListFragment
     // above is about to be closed. We need to make sure we are no
     // longer using it.
     mAdapter.clear();
+  }
+
+  @TargetApi(23)
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    // Make sure that container activity implement the callback interface
+    try {
+      mCallback = (DataPassListener)context;
+    } catch (ClassCastException e) {
+      throw new ClassCastException(context.toString()
+              + " must implement DataPassListener");
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (Build.VERSION.SDK_INT < 23) {
+      try {
+        mCallback = (DataPassListener)activity;
+      } catch (ClassCastException e) {
+        throw new ClassCastException(activity.toString()
+                + " must implement DataPassListener");
+      }
+    }
   }
 }

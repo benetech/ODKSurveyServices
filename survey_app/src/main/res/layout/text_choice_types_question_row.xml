@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
-    android:layout_marginTop="20dp"
-    android:layout_marginBottom="20dp">
+    android:layout_width="match_parent"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <RadioButton android:id="@+id/questionRadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
         android:theme="@style/CheckBox"
         android:focusable="false"
-        android:clickable="false"/>
+        android:clickable="false"
+        android:layout_centerVertical="true"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -21,12 +24,13 @@
         <TextView android:id="@+id/answer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
 
         <TextView android:id="@+id/question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10dp"/>
+            android:textSize="13dp"/>
 
     </LinearLayout>
 

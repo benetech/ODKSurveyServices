@@ -16,9 +16,9 @@
     <color name="navigation_bar_menu_background">#FF8497B0</color>
     <color name="form_list_name_header_background">#FFF2F2F2</color>
     <color name="in_progress_pie_chart_background">#FFBBDEFB</color>
-    <color name="submitted_donut_char_red">#E73E46</color>
-    <color name="submitted_donut_char_yellow">#FFBC00</color>
-    <color name="submitted_donut_char_green">#5FAD46</color>
+    <color name="poverty_stoplight_red">#E73E46</color>
+    <color name="poverty_stoplight_yellow">#FFBC00</color>
+    <color name="poverty_stoplight_green">#5FAD46</color>
     <color name="check_for_updates_button_background">#2196F3</color>
     <color name="pie_graph_empty">#848484</color>
 </resources>
