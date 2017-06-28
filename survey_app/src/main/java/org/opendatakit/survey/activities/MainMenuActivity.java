@@ -1133,7 +1133,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       if (newFragment == null) {
         newFragment = new ChooseFormFragment();
       }
-      newFragment.setArguments(passedData);
+      if (newFragment.getArguments() == null) {
+        newFragment.setArguments(passedData);
+      }
     } else if (newScreenType == ScreenList.SUMMARY_PAGE) {
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
