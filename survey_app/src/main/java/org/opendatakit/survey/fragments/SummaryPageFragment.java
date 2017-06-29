@@ -54,6 +54,13 @@ public class SummaryPageFragment extends ListFragment
     private static final String t = "SummaryPageFragment";
     private QuestionInfoListAdapter adapter;
 
+    TextView title;
+    PieGraph pg;
+    TextView formCountView;
+    TextView formDateView;
+    View view;
+    Uri formUri;
+
     //TODO: here pass language to loader and handle it there
     //TODO: add mainactivity class reference cause we need it pretty often
     @Override
@@ -69,6 +76,9 @@ public class SummaryPageFragment extends ListFragment
         sdf = new SimpleDateFormat(getActivity().getString(R.string
                 .european_date_format));
         appName = ((MainMenuActivity) getActivity()).getAppName();
+
+        formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
+                + tableId);
     }
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
@@ -84,62 +94,9 @@ public class SummaryPageFragment extends ListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
-                + tableId);
-        do{
-            WebLogger.getLogger(appName).i(t, "Waiting 100 miliseconds and checking if the new row already exists so we can read data from it");
-            android.os.SystemClock.sleep(100);
-            instanceCursor = getActivity().getContentResolver().query(formUri, null, "_id=?", new String[]{formId}, null);
-        } while (!instanceCursor.moveToFirst());
-
-        if (instanceCursor != null) {
-            colors = InstanceListLoader.countStoplightAnswers(instanceCursor);
-            questionsLeft = String.valueOf(InstanceListLoader.countEmptyAndFilledColumns(instanceCursor)[0]);
-            int idxSavepointTimestamp = instanceCursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
-            dateFormatted = sdf.format((new Date(TableConstants.milliSecondsFromNanos(instanceCursor.getString(idxSavepointTimestamp)))));
-        }
-        if (instanceCursor != null && !instanceCursor.isClosed()) {
-            instanceCursor.close();
-        }
-
-        String currentDateandTime = sdf.format(new Date());
-
-        View view = inflater.inflate(R.layout.fragment_summary_page, container, false);
-        TextView title = (TextView) view.findViewById(R.id.instanceTitle);
-        title.setText(firstname + " " + lastname + " - " + currentDateandTime);
 
 
-        PieGraph pg = (PieGraph) view.findViewById(R.id.summary_graph);
-        int red = colors[0];
-        int yellow = colors[1];
-        int green = colors[2];
-        pg.removeSlices();
-        pg.setInnerCircleRatio(100);
-        if (red == 0 && green == 0 && yellow == 0) {
-            PieSlice slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(getActivity(), R.color.pie_graph_empty));
-            slice.setValue(1);
-            pg.addSlice(slice);
-        } else {
-            PieSlice slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_green));
-            slice.setValue(colors[2]);
-            pg.addSlice(slice);
-            slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_yellow));
-            slice.setValue(colors[1]);
-            pg.addSlice(slice);
-            slice = new PieSlice();
-            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_red));
-            slice.setValue(colors[0]);
-            pg.addSlice(slice);
-        }
-
-        TextView formCountView = (TextView) view.findViewById(R.id.instanceQuestionsLeft);
-        formCountView.setText(questionsLeft);
-        TextView formDateView = (TextView) view.findViewById(R.id.instanceSavepointTimestamp);
-        formDateView.setText(dateFormatted);
-
+        view = inflater.inflate(R.layout.fragment_summary_page, container, false);
         Button doneButtonView = (Button) view.findViewById(R.id.done_button);
         doneButtonView.setOnClickListener(this);
 
@@ -178,6 +135,59 @@ public class SummaryPageFragment extends ListFragment
 
     @Override public void onResume() {
         super.onResume();
+
+        do{
+            WebLogger.getLogger(appName).i(t, "Waiting 100 miliseconds and checking if the new row already exists so we can read data from it");
+            android.os.SystemClock.sleep(100);
+            instanceCursor = getActivity().getContentResolver().query(formUri, null, "_id=?", new String[]{formId}, null);
+        } while (!instanceCursor.moveToFirst());
+
+        if (instanceCursor != null) {
+            colors = InstanceListLoader.countStoplightAnswers(instanceCursor);
+            questionsLeft = String.valueOf(InstanceListLoader.countEmptyAndFilledColumns(instanceCursor)[0]);
+            int idxSavepointTimestamp = instanceCursor.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText());
+            dateFormatted = sdf.format((new Date(TableConstants.milliSecondsFromNanos(instanceCursor.getString(idxSavepointTimestamp)))));
+        }
+        if (instanceCursor != null && !instanceCursor.isClosed()) {
+            instanceCursor.close();
+        }
+
+        String currentDateandTime = sdf.format(new Date());
+
+        title = (TextView) view.findViewById(R.id.instanceTitle);
+        title.setText(firstname + " " + lastname + " - " + currentDateandTime);
+
+
+        pg = (PieGraph) view.findViewById(R.id.summary_graph);
+        int red = colors[0];
+        int yellow = colors[1];
+        int green = colors[2];
+        pg.removeSlices();
+        pg.setInnerCircleRatio(100);
+        if (red == 0 && green == 0 && yellow == 0) {
+            PieSlice slice = new PieSlice();
+            slice.setColor(ContextCompat.getColor(getActivity(), R.color.pie_graph_empty));
+            slice.setValue(1);
+            pg.addSlice(slice);
+        } else {
+            PieSlice slice = new PieSlice();
+            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_green));
+            slice.setValue(colors[2]);
+            pg.addSlice(slice);
+            slice = new PieSlice();
+            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_yellow));
+            slice.setValue(colors[1]);
+            pg.addSlice(slice);
+            slice = new PieSlice();
+            slice.setColor(ContextCompat.getColor(getActivity(), R.color.poverty_stoplight_red));
+            slice.setValue(colors[0]);
+            pg.addSlice(slice);
+        }
+
+        formCountView = (TextView) view.findViewById(R.id.instanceQuestionsLeft);
+        formCountView.setText(questionsLeft);
+        formDateView = (TextView) view.findViewById(R.id.instanceSavepointTimestamp);
+        formDateView.setText(dateFormatted);
     }
 
     @Override
