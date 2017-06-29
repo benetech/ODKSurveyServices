@@ -1135,6 +1135,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         newFragment = new BeneficiaryInformationFragment();
       }
     } else if (newScreenType == ScreenList.CHOOSE_FORM) {
+      setSubmenuPage("new_row"); //so after pressing done at summary page when filling in new form we would get taken to the inprogress
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new ChooseFormFragment();

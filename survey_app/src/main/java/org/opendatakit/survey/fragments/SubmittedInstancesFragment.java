@@ -50,7 +50,6 @@ public class SubmittedInstancesFragment extends ListFragment
     private static final String LASTNAME = "lastname";
     private static final String CHOOSEN_TABLE_ID = "table_id";
     private static final String INSTANCE_UUID = "instance_uuid";
-    private static final String VIEW_ONLY = "view_only";
 
     public static final int ID = R.layout.fragment_submitted_instances;
 
@@ -104,7 +103,6 @@ public class SubmittedInstancesFragment extends ListFragment
         values.put(LASTNAME, ((InstanceInfo)mAdapter.getItem(position)).beneficiaryInformation);
         values.put(CHOOSEN_TABLE_ID, tableId);
         values.put(INSTANCE_UUID, rowId);
-        values.put(VIEW_ONLY, "true");
         mCallback.passData(values);
 
         ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUMMARY_PAGE);

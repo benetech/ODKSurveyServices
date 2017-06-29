@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,12 +35,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class SummaryPageFragment extends ListFragment
-        implements LoaderManager.LoaderCallbacks<ArrayList<Object>>  {
+        implements LoaderManager.LoaderCallbacks<ArrayList<Object>>, View.OnClickListener {
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
     private static final String CHOOSEN_TABLE_ID = "table_id";
     private static final String INSTANCE_UUID = "instance_uuid";
-    private static final String VIEW_ONLY = "view_only";
 
     private String firstname;
     private String lastname;
@@ -53,7 +53,6 @@ public class SummaryPageFragment extends ListFragment
     private SimpleDateFormat sdf;
     private static final String t = "SummaryPageFragment";
     private QuestionInfoListAdapter adapter;
-    private boolean viewOnly;
 
     //TODO: here pass language to loader and handle it there
     //TODO: add mainactivity class reference cause we need it pretty often
@@ -65,11 +64,6 @@ public class SummaryPageFragment extends ListFragment
             lastname = getArguments().getString(LASTNAME);
             formId = getArguments().getString(INSTANCE_UUID);
             tableId = getArguments().getString(CHOOSEN_TABLE_ID);
-            String viewOnlyString = getArguments().getString(VIEW_ONLY);
-            if(viewOnlyString!=null && viewOnlyString.equals("true"))
-                viewOnly = true;
-            else
-                viewOnly = false;
         }
 
         sdf = new SimpleDateFormat(getActivity().getString(R.string
@@ -146,6 +140,9 @@ public class SummaryPageFragment extends ListFragment
         TextView formDateView = (TextView) view.findViewById(R.id.instanceSavepointTimestamp);
         formDateView.setText(dateFormatted);
 
+        Button doneButtonView = (Button) view.findViewById(R.id.done_button);
+        doneButtonView.setOnClickListener(this);
+
         return view;
     }
 
@@ -181,5 +178,17 @@ public class SummaryPageFragment extends ListFragment
 
     @Override public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.done_button:
+                if (((MainMenuActivity) getActivity()).getSubmenuPage().equals("synced")) {
+                    ((MainMenuActivity) getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUBMITTED);
+                } else if (((MainMenuActivity) getActivity()).getSubmenuPage().equals("new_row")){
+                ((MainMenuActivity) getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.IN_PROGRESS);
+                }
+        }
     }
 }
