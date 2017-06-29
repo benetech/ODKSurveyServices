@@ -91,6 +91,11 @@ public class QuestionInfoListAdapter extends BaseAdapter {
     }
 
     @Override
+    public boolean isEnabled(int position) {
+        return (getItemViewType(position) != SECTION_NAME_HEADER);
+    }
+
+    @Override
     public int getViewTypeCount() {
         return 5;
     }
