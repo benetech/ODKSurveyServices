@@ -241,7 +241,7 @@ public class InstanceInfoListAdapter extends BaseAdapter {
 
           pg.setInnerCircleRatio(100);
           pg.removeSlices();
-          if(info.greenAnswers == 0 && info.yellowAnswers == 0 || info.redAnswers == 0){
+          if(info.greenAnswers == 0 && info.yellowAnswers == 0 && info.redAnswers == 0){
             PieSlice slice = new PieSlice();
             slice.setColor(ContextCompat.getColor(mContext, R.color.pie_graph_empty));
             slice.setValue(1);
