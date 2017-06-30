@@ -184,7 +184,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         }
 
         // Return to the previous view
-        getActivity().onBackPressed();
+        MainMenuActivity activity = (MainMenuActivity)getActivity();
+        activity.popBackStack();
     }
 
     private void hideKeyboard(View view) {
