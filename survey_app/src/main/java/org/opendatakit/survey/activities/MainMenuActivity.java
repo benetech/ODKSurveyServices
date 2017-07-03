@@ -954,7 +954,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     mAlertDialog.show();
   }
 
-  private void popBackStack() {
+  public void popBackStack() {
     FragmentManager mgr = getFragmentManager();
     int idxLast = mgr.getBackStackEntryCount() - 2;
     if (idxLast < 0) {
