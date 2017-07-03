@@ -14,7 +14,7 @@
     <string name="accept_location">Record Location</string>
     <string name="reset_location">Clear</string>
     <string name="activity_not_found">No activity found to handle: %s</string>
-    <string name="app_name">ODK Survey</string>
+    <string name="app_name">Poverty Stoplight</string>
     <string name="cancel">Cancel</string>
     <string name="cancel_location">Cancel</string>
     <string name="change_server_url">Server URL</string>
@@ -41,7 +41,7 @@
     <string name="select_another_image">Select Another Image</string>
     <string name="use_odk_default">Use Default Image</string>
     <string name="change_splash_path">Change Image</string>
-    <string name="app_url">http://opendatakit.org</string>
+    <string name="app_url">Fundación Paraguaya</string>
     <string name="font_size">Text Font Size</string>
     <string name="change_font_size">Text Font Size</string>
     <string name="success">Success</string>
