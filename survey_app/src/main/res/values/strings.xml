@@ -10,6 +10,12 @@
 		License.
 	-->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
+    <!-- non translatable configs -->
+    <string name="default_office">chicago</string>
+    <string name="default_sync_server_url">https://povertystoplight-ws-qa.benetech.org</string>
+
+
+
     <!-- start pre restructuring -->
     <string name="accept_location">Record Location</string>
     <string name="reset_location">Clear</string>
@@ -384,7 +390,6 @@
     <string name="credential_type_none">none</string>
     <string name="credential_type_username_password">username_password</string>
     <string name="csv_file_not_found">Warning: CSV File not found: %1$s - skipped</string>
-    <string name="default_sync_server_url">https://open-data-kit.appspot.com</string>
     <string name="defining_tableid_error">Error processing table definition for tableId %1$s</string>
     <string name="form_register_failure">Failure: Defining formId %2$s for tableId %1$s</string>
     <string name="form_register_success">Success: Defining formId %2$s for tableId %1$s</string>
