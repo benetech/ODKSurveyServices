@@ -5,12 +5,11 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
-    <RadioButton android:id="@+id/questionRadioButton"
+    <android.support.v7.widget.AppCompatRadioButton android:id="@+id/questionRadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="10dp"
-        android:theme="@style/CheckBox"
         android:focusable="false"
         android:clickable="false"
         android:layout_centerVertical="true"/>

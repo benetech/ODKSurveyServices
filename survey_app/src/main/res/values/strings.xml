@@ -135,6 +135,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="permissions_not_granted">App requires some permissions that you have denied, open app again and grant them or do in the settings</string>
     <string name="no_forms_selected_for_sync">You didn\'t select any forms</string>
+    <string name="media_file_attached">1 Media file attached</string>
+    <string name="location_captured">Location captured</string>
+
 
     <!-- unique strings from services apk -->
     <string name="services_notice">ODK Services provides database, file access, and data synchronization services to all ODK 2.0 applications.</string>

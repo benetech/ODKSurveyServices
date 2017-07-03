@@ -2,6 +2,7 @@ package org.opendatakit.survey.fragments;
 
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -54,15 +55,14 @@ public class SummaryPageFragment extends ListFragment
     private static final String t = "SummaryPageFragment";
     private QuestionInfoListAdapter adapter;
 
-    TextView title;
-    PieGraph pg;
-    TextView formCountView;
-    TextView formDateView;
-    View view;
-    Uri formUri;
+    private TextView title;
+    private PieGraph pg;
+    private TextView formCountView;
+    private TextView formDateView;
+    private View view;
+    private Uri formUri;
 
     //TODO: here pass language to loader and handle it there
-    //TODO: add mainactivity class reference cause we need it pretty often
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,8 +93,6 @@ public class SummaryPageFragment extends ListFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
 
         view = inflater.inflate(R.layout.fragment_summary_page, container, false);
         Button doneButtonView = (Button) view.findViewById(R.id.done_button);
@@ -197,7 +195,7 @@ public class SummaryPageFragment extends ListFragment
                 if (((MainMenuActivity) getActivity()).getSubmenuPage().equals("synced")) {
                     ((MainMenuActivity) getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUBMITTED);
                 } else if (((MainMenuActivity) getActivity()).getSubmenuPage().equals("new_row")){
-                ((MainMenuActivity) getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.IN_PROGRESS);
+                    ((MainMenuActivity) getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.IN_PROGRESS);
                 }
         }
     }

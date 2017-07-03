@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,8 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
     //TODO: to do jakiejs klasy?
     private static final int TEXT_CHOICE_QUESTION = 0;
-    private static final int POVERTY_STOPLIGHT_QUESTION = 3;
-    private static final int SECTION_NAME_HEADER= 4;
+    private static final int POVERTY_STOPLIGHT_QUESTION = 1;
+    private static final int SECTION_NAME_HEADER= 2;
 
     ColorStateList greenColorStateList;
     ColorStateList redColorStateList;
@@ -38,30 +39,30 @@ public class QuestionInfoListAdapter extends BaseAdapter {
         this.context = context;
         greenColorStateList = new ColorStateList(
                 new int[][]{
-                        new int[]{android.R.attr.state_enabled} //enabled
+                        new int[]{android.R.attr.state_enabled}
                 },
                 new int[] {
-                        ContextCompat.getColor(context, R.color.poverty_stoplight_green) //enabled
+                        ContextCompat.getColor(context, R.color.poverty_stoplight_green)
 
                 }
         );
 
         redColorStateList = new ColorStateList(
                 new int[][]{
-                        new int[]{android.R.attr.state_enabled} //enabled
+                        new int[]{android.R.attr.state_enabled}
                 },
                 new int[] {
-                        ContextCompat.getColor(context, R.color.poverty_stoplight_red) //enabled
+                        ContextCompat.getColor(context, R.color.poverty_stoplight_red)
 
                 }
         );
 
         yellowColorStateList = new ColorStateList(
                 new int[][]{
-                        new int[]{android.R.attr.state_enabled} //enabled
+                        new int[]{android.R.attr.state_enabled}
                 },
                 new int[] {
-                        ContextCompat.getColor(context, R.color.poverty_stoplight_yellow) //enabled
+                        ContextCompat.getColor(context, R.color.poverty_stoplight_yellow)
 
                 }
         );
@@ -141,21 +142,18 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                 TextView questionView = (TextView) view.findViewById(R.id.question);
                 questionView.setText(item.displayNames.get("default"));
 
-                RadioButton radioButtonView = (RadioButton) view.findViewById(R.id.questionRadioButton);
+                AppCompatRadioButton radioButtonView = (AppCompatRadioButton) view.findViewById(R.id.questionRadioButton);
 
-                if(Build.VERSION.SDK_INT>=21)
-                {
-                    switch(((QuestionInfo) getItem(position)).answer) {
-                        case "red" :
-                            radioButtonView.setButtonTintList(redColorStateList);
-                            break;
-                        case "yellow" :
-                            radioButtonView.setButtonTintList(yellowColorStateList);
-                            break;
-                        case "green" :
-                            radioButtonView.setButtonTintList(greenColorStateList);
-                            break;
-                    }
+                switch(((QuestionInfo) getItem(position)).answer) {
+                    case "red" :
+                        radioButtonView.setSupportButtonTintList(redColorStateList);
+                        break;
+                    case "yellow" :
+                        radioButtonView.setSupportButtonTintList(yellowColorStateList);
+                        break;
+                    case "green" :
+                        radioButtonView.setSupportButtonTintList(greenColorStateList);
+                        break;
                 }
 
                 break;
@@ -167,9 +165,12 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                     view = layoutInflater.inflate(R.layout.row_header, parent, false);
                 }
 
+                //TODO: Language?
                 TextView title = (TextView) view.findViewById(R.id.headerTitle);
-                String titleString = (String) getItem(position);
-                title.setText(titleString);
+                QuestionInfo item = (QuestionInfo)getItem(position);
+                title.setText(item.displayNames.get("default"));
+                //String titleString = (String) getItem(position);
+                //title.setText(titleString);
                 break;
             }
 
@@ -184,6 +185,6 @@ public class QuestionInfoListAdapter extends BaseAdapter {
             return ((QuestionInfo)getItem(position)).questionType;
         }
 
-        return SECTION_NAME_HEADER;
+        return -1;
     }
 }
