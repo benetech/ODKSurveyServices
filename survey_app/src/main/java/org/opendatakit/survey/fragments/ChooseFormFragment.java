@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
@@ -26,8 +25,7 @@ import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
-import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
-import org.opendatakit.services.database.service.OdkDatabaseServiceInterface;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncAttachmentState;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.activities.MainMenuActivity;
@@ -39,10 +37,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class ChooseFormFragment extends ListFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<ArrayList<Object>>{
+
+    private static final String TAG = "ChooseFormFragment";
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
@@ -58,6 +58,8 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     private FormInfoListAdapter mAdapter;
     private ExecutorContext context;
     private Button nextButton = null;
+    private View view;
+    private TextView updateTime;
 
     DataPassListener mCallback;
     PropertiesSingleton props;
@@ -73,6 +75,13 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         props = ((IOdkAppPropertiesActivity) this.getActivity()).getProps();
         reporterName = props.getProperty(CommonToolProperties.KEY_REPORTER_NAME);
         reporterID = props.getProperty(CommonToolProperties.KEY_REPORTER_ID);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateTime.setText(calculateTimeFromLastUpdate(getLastUpdateTime()));
     }
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
@@ -91,14 +100,13 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
 
         SimpleDateFormat sdf = new SimpleDateFormat(getActivity().getString(R.string
                 .european_date_format));
-        String currentDateandTime = sdf.format(new Date());
-        String lastUpdateTime = props.getProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME);
+        String currentDateAndTime = sdf.format(new Date());
 
-        View view = inflater.inflate(R.layout.fragment_choose_form, container, false);
+        view = inflater.inflate(R.layout.fragment_choose_form, container, false);
         TextView title= (TextView) view.findViewById(R.id.beneficiaryTitle);
-        title.setText(firstname + " " + lastname + " - " + currentDateandTime);
-        TextView updateTime = (TextView) view.findViewById(R.id.lastUpdateTime);
-        updateTime.setText(calculateTimeFromLastUpdate(lastUpdateTime));
+        title.setText(firstname + " " + lastname + " - " + currentDateAndTime);
+        updateTime = (TextView) view.findViewById(R.id.lastUpdateTime);
+        updateTime.setText(calculateTimeFromLastUpdate(getLastUpdateTime()));
         Button checkForUpdatesButton = (Button) view.findViewById(R.id.checkForUpdatesButton);
         Button cancelButton = (Button) view.findViewById(R.id.chooseFormCancelButton);
         nextButton = (Button) view.findViewById(R.id.chooseFormNextButton);
@@ -143,21 +151,11 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
             case  R.id.checkForUpdatesButton:
                 props.setProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME, new Date().toString());
 
-                //TODO: Skip SyncActivity and invoke service methods directly
-                //TODO: Update the "Last updated" indicator
+                Intent bind_intent = new Intent();
+                bind_intent.setClassName(IntentConsts.Sync.APPLICATION_NAME,
+                        IntentConsts.Sync.SYNC_SERVICE_CLASS);
 
-                Intent syncIntent = new Intent();
-                syncIntent.setComponent(new ComponentName(
-                        IntentConsts.Sync.APPLICATION_NAME,
-                        IntentConsts.Sync.ACTIVITY_NAME));
-                syncIntent.setAction(Intent.ACTION_DEFAULT);
-                Bundle bundle = new Bundle();
-                bundle.putString(IntentConsts.INTENT_KEY_APP_NAME, context.getAppName());
-                syncIntent.putExtras(bundle);
-
-                getActivity().startActivity(syncIntent);
-
-//              Toast.makeText(getActivity(), "Here we should download forms and later update the Last updated indicator", Toast.LENGTH_SHORT).show();
+                ((MainMenuActivity)getActivity()).synchronizeWithServer(bind_intent, SyncAttachmentState.DOWNLOAD);
                 break;
         }
     }
@@ -243,6 +241,10 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
 
     private void queueRequest(ExecutorRequest request) {
         this.context.queueRequest(request);
+    }
+
+    private String getLastUpdateTime() {
+        return props.getProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME);
     }
 
 }

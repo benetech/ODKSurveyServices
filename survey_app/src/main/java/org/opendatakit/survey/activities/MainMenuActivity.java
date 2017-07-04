@@ -23,14 +23,19 @@ import android.app.FragmentManager.BackStackEntry;
 import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -73,8 +78,12 @@ import org.opendatakit.demoAndroidlibraryClasses.properties.PropertyManager;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
 import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.OdkSyncServiceInterface;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncAttachmentState;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
+import org.opendatakit.services.sync.activities.DoSyncActionCallback;
+import org.opendatakit.services.sync.activities.ISyncServiceInterfaceActivity;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.application.Survey;
 import org.opendatakit.survey.fragments.BackPressWebkitConfirmationDialogFragment;
@@ -107,7 +116,8 @@ import java.util.UUID;
  * @author mitchellsundt@gmail.com
  */
 public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity,
-        IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener, DataPassListener {
+        IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener, DataPassListener,
+        ServiceConnection, ISyncServiceInterfaceActivity {
 
   private static final String t = "MainMenuActivity";
 
@@ -151,6 +161,11 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private static final int CONFLICT_ACTIVITY_CODE = 23;
 
   private static final String BACKPRESS_DIALOG_TAG = "backPressDialog";
+
+  // odkSyncInterfaceBindComplete guards access to all of the following...
+  private OdkSyncServiceInterface odkSyncInterface;
+  private boolean mBound = false;
+  private SyncAttachmentState syncAttachmentsState;
 
   private PropertiesSingleton mProps;
   public NavigationView mNavigationViewTop;
@@ -1194,9 +1209,11 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       trans.addToBackStack(currentFragment.name());
     }
 
+    Boolean runInitializationTask = ((Survey) getApplication()).shouldRunInitializationTask(getAppName());
+    WebLogger.getLogger(getAppName()).i(t, "swapToFragmentView: Should run initialization task? " + runInitializationTask);
+
     // and see if we should re-initialize...
-    if ((currentFragment != ScreenList.INITIALIZATION_DIALOG)
-        && ((Survey) getApplication()).shouldRunInitializationTask(getAppName())) {
+    if ((currentFragment != ScreenList.INITIALIZATION_DIALOG) && runInitializationTask) {
       WebLogger.getLogger(getAppName()).i(t, "swapToFragmentView -- calling clearRunInitializationTask");
       // and immediately clear the should-run flag...
       ((Survey) getApplication()).clearRunInitializationTask(getAppName());
@@ -1909,4 +1926,113 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
   }
 
+  @Override public void onServiceConnected(ComponentName name, IBinder service) {
+    if (!name.getClassName().equals(IntentConsts.Sync.SYNC_SERVICE_CLASS)) {
+      WebLogger.getLogger(getAppName()).e(t, "[onServiceConnected] Unrecognized service");
+      return;
+    }
+
+    odkSyncInterface = (service == null) ? null : OdkSyncServiceInterface.Stub.asInterface(service);
+    setBound(true);
+    WebLogger.getLogger(getAppName()).i(t, "[onServiceConnected] Bound to sync service");
+
+    boolean syncedSuccessfully = false;
+
+    try {
+      syncedSuccessfully = syncWithServer();
+    } catch (RemoteException e) {
+      e.printStackTrace();
+    }
+
+    if (syncedSuccessfully) {
+      unbindFromSyncService();
+      Toast.makeText(this, R.string.sync_notification_success_complete_text, Toast.LENGTH_LONG).show();
+      ((Survey) getApplication()).setRunInitializationTask(getAppName());
+    } else {
+      unbindFromSyncService();
+      Toast.makeText(this, R.string.sync_notification_failure_text, Toast.LENGTH_LONG).show();
+    }
+
+    swapToFragmentView(ScreenList.INITIALIZATION_DIALOG);
+    popBackStack();
+  }
+
+  @Override public void onServiceDisconnected(ComponentName name) {
+    WebLogger.getLogger(getAppName()).i(t, "[onServiceDisconnected] Unbound to sync service");
+    setBound(false);
+  }
+
+  /**
+   * called by fragments that want to do something on the sync service connection.
+   *
+   * @param callback - callback for fragments that want to use sync service
+   */
+  public void invokeSyncInterfaceAction(DoSyncActionCallback callback) {
+    try {
+      boolean bound = getBound();
+      if (odkSyncInterface != null && callback != null && bound) {
+        callback.doAction(odkSyncInterface);
+      } else {
+        if (callback != null) {
+          callback.doAction(odkSyncInterface);
+        }
+      }
+    } catch (RemoteException e) {
+      WebLogger.getLogger(getAppName()).printStackTrace(e);
+      WebLogger.getLogger(getAppName()).e(t, "[invokeSyncInterfaceAction] exception while invoking sync service");
+      Toast.makeText(this, "[invokeSyncInterfaceAction] Exception while invoking sync service", Toast.LENGTH_LONG).show();
+    }
+  }
+
+  public void bindToSyncService (Intent intent) {
+    try {
+      WebLogger.getLogger(getAppName()).i(t, "[onCreate] Attempting bind to sync service");
+      Boolean isBinded = bindService(intent, this,
+              Context.BIND_AUTO_CREATE | ((Build.VERSION.SDK_INT >= 14) ?
+                      Context.BIND_ADJUST_WITH_ACTIVITY :
+                      0));
+
+      WebLogger.getLogger(getAppName()).i(t, "bindToSyncService - isBinded? " + isBinded);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public boolean syncWithServer() throws RemoteException {
+    WebLogger.getLogger(getAppName()).i(t, "syncWithServer - odkSyncInterface ready? " + odkSyncInterface);
+    boolean result = false;
+
+    if (odkSyncInterface != null) {
+      result = odkSyncInterface.synchronizeWithServer(getAppName(), syncAttachmentsState);
+    }
+
+    return result;
+  }
+
+  public void unbindFromSyncService() {
+
+    WebLogger.getLogger(getAppName()).i(t, "[onDestroy]");
+
+    if (getBound()) {
+      unbindService(this);
+      WebLogger.getLogger(getAppName()).i(t, "[onDestroy] Unbound to sync service");
+    } else {
+      WebLogger.getLogger(getAppName()).i(t, "[onDestroy] Nothing to unbound");
+    }
+
+  }
+
+  public void setBound (boolean bound) {
+    mBound = bound;
+  }
+
+  public boolean getBound() {
+    return mBound;
+  }
+
+  public void synchronizeWithServer(Intent intent, SyncAttachmentState syncAttachmentState) {
+    this.syncAttachmentsState = syncAttachmentState;
+
+    bindToSyncService(intent);
+  }
 }

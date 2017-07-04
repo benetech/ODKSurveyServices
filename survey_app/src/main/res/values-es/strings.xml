@@ -74,7 +74,7 @@
     <string name="select_your_office">Seleccione su oficina:</string>
     <string name="server">Configuración del servidor:</string>
     <string name="save_settings">GUARDAR</string>
-    <string name="no_forms_to_display">No hay nada que mostrar.  Intente tomando y llenando un formulario en blanco.</string>
+    <string name="no_forms_to_display">No hay nada que mostrar. Intente tomando y llenando un formulario en blanco.</string>
     <string name="submitted_surveys">Encuestas Presentadas</string>
     <string name="questions_left">" preguntas"</string>
     <string name="last_updated">última actualización:</string>
