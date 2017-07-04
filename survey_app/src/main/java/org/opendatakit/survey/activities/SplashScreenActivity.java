@@ -74,7 +74,8 @@ public class SplashScreenActivity extends Activity {
   private static final boolean EXIT = true;
 
   private static final int PERMISSION_ALL = 1;
-  String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.GET_ACCOUNTS};
+  String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION,
+          Manifest.permission.READ_PHONE_STATE, Manifest.permission.GET_ACCOUNTS, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
 
   @SuppressWarnings("deprecation")
   @Override

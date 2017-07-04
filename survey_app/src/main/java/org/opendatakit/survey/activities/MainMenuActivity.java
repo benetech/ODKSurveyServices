@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.StrictMode;
 import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -100,6 +101,7 @@ import org.opendatakit.survey.logic.SurveyDataExecutorProcessor;
 import org.opendatakit.survey.utilities.DataPassListener;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -686,6 +688,17 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    //Nasty fix, it's because we use api 24+ and we still want to use file:// intents, in future
+    //TODO: use provider in mediacaptureimageactivity to access the file
+    if(Build.VERSION.SDK_INT>=24){
+      try{
+        Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+        m.invoke(null);
+      }catch(Exception e){
+        e.printStackTrace();
+      }
+    }
 
     // android.os.Debug.waitForDebugger();
     submenuPage = getIntentExtras().getString("_sync_state");

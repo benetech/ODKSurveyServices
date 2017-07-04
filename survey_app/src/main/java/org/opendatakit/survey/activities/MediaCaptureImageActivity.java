@@ -19,7 +19,9 @@ import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore.Audio;
 import android.provider.MediaStore.Images;
 import android.widget.Toast;
@@ -34,6 +36,7 @@ import org.opendatakit.survey.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 /**
  * Simple shim for media interactions.
