@@ -46,11 +46,15 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
+    private static final String REPORTERNAME = "reporterName";
+    private static final String REPORTERID = "reporterID";
     private static final String CHOOSEN_TABLE_ID = "table_id";
     private static final String INSTANCE_UUID = "instance_uuid";
 
     private String firstname;
     private String lastname;
+    private String reporterName;
+    private String reporterID;
     private FormInfoListAdapter mAdapter;
     private ExecutorContext context;
     private Button nextButton = null;
@@ -67,6 +71,8 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
             lastname = getArguments().getString(LASTNAME);
         }
         props = ((IOdkAppPropertiesActivity) this.getActivity()).getProps();
+        reporterName = props.getProperty(CommonToolProperties.KEY_REPORTER_NAME);
+        reporterID = props.getProperty(CommonToolProperties.KEY_REPORTER_ID);
     }
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
@@ -117,6 +123,8 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 values.put(FIRSTNAME, firstname);
                 values.put(LASTNAME, lastname);
                 values.put(CHOOSEN_TABLE_ID, tableId);
+                values.put(REPORTERNAME, reporterName);
+                values.put(REPORTERID, reporterID);
                 values.put(INSTANCE_UUID, rowId);
                 mCallback.passData(values);
 
@@ -124,7 +132,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 //let's hope that not writing anyhting in picture/vieo/ets_contentType column will do the thing
                 //as the value is being overwritten anyway later
                 String username = props.getActiveUser();
-                String stringifiedJSON = "{\"_form_id\":\"" + tableId + "\",\"_savepoint_creator\":\"" + username + "\"}";
+                String stringifiedJSON = "{\"_form_id\":\"" + tableId + "\",\"_savepoint_creator\":\"" + username + "\",\"beneficiary_firstname_autodefault\":\"" + firstname + "\",\"beneficiary_lastname_autodefault\":\"" + lastname + "\",\"reporter_name_autodefault\":\"" + reporterName + "\",\"reporter_id_autodefault\":\"" + reporterID + "\"}";
                 String callbackJSON = "3"; //looks bad but work fine
                 Toast.makeText(getActivity(), R.string.creating_new_survey, Toast.LENGTH_SHORT).show();
                 ExecutorRequest request = new ExecutorRequest(ExecutorRequestType.USER_TABLE_ADD_CHECKPOINT, tableId, stringifiedJSON, rowId, callbackJSON);
