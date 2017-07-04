@@ -172,8 +172,8 @@ public class OdkSyncService extends Service {
 
       if (!extras.keySet().isEmpty()) {
         for (String key : extras.keySet()) {
-          ids.put(key, (List<String>) extras.getSerializable(key));
           WebLogger.getLogger(ODKFileUtils.getOdkDefaultAppName()).i(LOGTAG, "key: " + key + " value: " + extras.getSerializable(key));
+          ids.put(key, (List<String>) extras.getSerializable(key));
         }
       }
     }
