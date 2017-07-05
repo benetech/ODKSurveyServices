@@ -61,6 +61,8 @@ public class CommonToolProperties {
         deviceProperties.put("common.auth_credentials", "none");
         deviceProperties.put("common.account", "");
         deviceProperties.put("common.username", "");
+        deviceProperties.put("common.reporter_name", "");
+        deviceProperties.put("common.reporter_id", "");
         deviceProperties.put("common.office_id", context.getString(R.string.default_office));
         deviceProperties.put(PropertiesSingleton.toolVersionPropertyName("survey"), "");
         deviceProperties.put(PropertiesSingleton.toolVersionPropertyName("scan"), "");
