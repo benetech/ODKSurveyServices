@@ -149,11 +149,11 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
             case  R.id.checkForUpdatesButton:
                 props.setProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME, new Date().toString());
 
-                Intent bind_intent = new Intent();
-                bind_intent.setClassName(IntentConsts.Sync.APPLICATION_NAME,
+                Intent intent = new Intent();
+                intent.setClassName(IntentConsts.Sync.APPLICATION_NAME,
                         IntentConsts.Sync.SYNC_SERVICE_CLASS);
 
-                ((MainMenuActivity)getActivity()).synchronizeWithServer(bind_intent, SyncAttachmentState.DOWNLOAD);
+                ((MainMenuActivity)getActivity()).synchronizeWithServer(intent, SyncAttachmentState.DOWNLOAD);
                 break;
         }
     }

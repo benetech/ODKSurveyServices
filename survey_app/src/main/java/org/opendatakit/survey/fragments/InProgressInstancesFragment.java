@@ -15,6 +15,7 @@
 package org.opendatakit.survey.fragments;
 
 import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
+import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
 import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
 import org.opendatakit.survey.R;
@@ -170,5 +171,9 @@ public class InProgressInstancesFragment extends ListFragment
                 + " must implement DataPassListener");
       }
     }
+  }
+
+  public InstanceInfoListAdapter getAdapter() {
+    return mAdapter;
   }
 }

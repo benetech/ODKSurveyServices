@@ -168,6 +168,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private OdkSyncServiceInterface odkSyncInterface;
   private boolean mBound = false;
   private SyncAttachmentState syncAttachmentsState;
+  private boolean syncedSuccessfully = false;
 
   private PropertiesSingleton mProps;
   public NavigationView mNavigationViewTop;
@@ -1949,25 +1950,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     setBound(true);
     WebLogger.getLogger(getAppName()).i(t, "[onServiceConnected] Bound to sync service");
 
-    boolean syncedSuccessfully = false;
-
     try {
       syncedSuccessfully = syncWithServer();
     } catch (RemoteException e) {
       e.printStackTrace();
     }
 
-    if (syncedSuccessfully) {
-      unbindFromSyncService();
-      Toast.makeText(this, R.string.sync_notification_success_complete_text, Toast.LENGTH_LONG).show();
-      ((Survey) getApplication()).setRunInitializationTask(getAppName());
-    } else {
-      unbindFromSyncService();
-      Toast.makeText(this, R.string.sync_notification_failure_text, Toast.LENGTH_LONG).show();
-    }
-
-    swapToFragmentView(ScreenList.INITIALIZATION_DIALOG);
-    popBackStack();
+    unbindFromSyncService();
   }
 
   @Override public void onServiceDisconnected(ComponentName name) {
@@ -2023,7 +2012,6 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   }
 
   public void unbindFromSyncService() {
-
     WebLogger.getLogger(getAppName()).i(t, "[onDestroy]");
 
     if (getBound()) {
@@ -2033,6 +2021,8 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       WebLogger.getLogger(getAppName()).i(t, "[onDestroy] Nothing to unbound");
     }
 
+    showFinalToastMessage();
+    returnToPreviousFragmentAfterSync();
   }
 
   public void setBound (boolean bound) {
@@ -2047,5 +2037,28 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     this.syncAttachmentsState = syncAttachmentState;
 
     bindToSyncService(intent);
+  }
+
+  public void showFinalToastMessage() {
+    if (syncedSuccessfully) {
+      Toast.makeText(this, R.string.sync_notification_success_complete_text, Toast.LENGTH_LONG).show();
+    } else {
+      Toast.makeText(this, R.string.sync_notification_failure_text, Toast.LENGTH_LONG).show();
+    }
+  }
+
+  public void returnToPreviousFragmentAfterSync() {
+    if (syncAttachmentsState == SyncAttachmentState.DOWNLOAD) {
+      // After downloading form definitions from server we have to refresh the list of form
+      // definitions on the device
+      ((Survey) getApplication()).setRunInitializationTask(getAppName());
+
+      swapToFragmentView(ScreenList.CHOOSE_FORM);
+    } else {
+      swapToFragmentView(ScreenList.IN_PROGRESS);
+      InProgressInstancesFragment inProgressInstancesFragment = (InProgressInstancesFragment)
+              getFragmentManager().findFragmentByTag(ScreenList.IN_PROGRESS.name());
+      inProgressInstancesFragment.getAdapter().notifyDataSetChanged();
+    }
   }
 }
