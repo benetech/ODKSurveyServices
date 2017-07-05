@@ -142,7 +142,7 @@ public class OdkSurvey {
   public String getControllerState(String refId) {
     if (!mActivity.getRefId().equals(refId)) {
       log.w("odkSurvey", "IGNORED: getControllerState(" + refId + ")");
-      return null;
+      //return null;
     }
     log.d("odkSurvey", "DO: getControllerState(" + refId + ")");
     return mActivity.getControllerState();

@@ -1387,8 +1387,8 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
               "addSectionScreenState( " + screenPath + ", " + state + ")");
 
       SectionScreenStateHistory lastSection;
-      sectionStateScreenHistory.add(sectionStateScreenHistory.size() - 2, new SectionScreenStateHistory());
-      lastSection = sectionStateScreenHistory.get(sectionStateScreenHistory.size() - 2);
+      sectionStateScreenHistory.add(new SectionScreenStateHistory());
+      lastSection = sectionStateScreenHistory.get(sectionStateScreenHistory.size() - 1);
       lastSection.currentScreen.screenPath = screenPath;
       lastSection.currentScreen.state = state;
       lastSection.history.clear();
@@ -1398,12 +1398,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   public void clearSectionScreenState() {
     sectionStateScreenHistory.clear();
-    sectionStateScreenHistory.add(new SectionScreenStateHistory());
-    SectionScreenStateHistory lastSection = sectionStateScreenHistory.get(sectionStateScreenHistory
-        .size() - 1);
-    lastSection.currentScreen.screenPath = "initial/0";
-    lastSection.currentScreen.state = null;
-    lastSection.history.clear();
+    //sectionStateScreenHistory.add(new SectionScreenStateHistory());
+    //SectionScreenStateHistory lastSection = sectionStateScreenHistory.get(sectionStateScreenHistory
+    //    .size() - 1);
+    //lastSection.currentScreen.screenPath = "initial/0";
+    //lastSection.currentScreen.state = null;
+    //lastSection.history.clear();
+    addSectionScreenState("survey/0",null);
   }
 
   @Override
