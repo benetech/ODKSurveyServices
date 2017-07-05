@@ -100,7 +100,7 @@ public class InstanceListLoader extends AsyncTaskLoader<ArrayList<Object>> {
                         c2.getString(c2.getColumnIndex(DataTableColumns.ID.getText())),
                         LocalizationUtils.getLocalizedDisplayName(c.getString(idxFormTitle)),
                         formatter.format(new Date(TableConstants.milliSecondsFromNanos(c2.getString(c2.getColumnIndex(DataTableColumns.SAVEPOINT_TIMESTAMP.getText()))))),
-                        "Jan Kowalski",
+                        c2.getString(c2.getColumnIndex(DataTableColumns.FIRSTNAME.getText())) + " " + c2.getString(c2.getColumnIndex(DataTableColumns.LASTNAME.getText())),
                         emptyFilledColumns[0],
                         emptyFilledColumns[1],
                         spotlightAnswers[0],

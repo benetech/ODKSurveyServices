@@ -68,19 +68,11 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = ExecutorContext.getContext((IOdkDataActivity)getActivity());
-        if (getArguments() != null) {
-            firstname = getArguments().getString(FIRSTNAME);
-            lastname = getArguments().getString(LASTNAME);
-        }
-        props = ((IOdkAppPropertiesActivity) this.getActivity()).getProps();
-        reporterName = props.getProperty(CommonToolProperties.KEY_REPORTER_NAME);
-        reporterID = props.getProperty(CommonToolProperties.KEY_REPORTER_ID);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         updateTime.setText(calculateTimeFromLastUpdate(getLastUpdateTime()));
     }
 
@@ -101,7 +93,13 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         SimpleDateFormat sdf = new SimpleDateFormat(getActivity().getString(R.string
                 .european_date_format));
         String currentDateAndTime = sdf.format(new Date());
-
+        if (getArguments() != null) {
+            firstname = getArguments().getString(FIRSTNAME);
+            lastname = getArguments().getString(LASTNAME);
+        }
+        props = ((IOdkAppPropertiesActivity) this.getActivity()).getProps();
+        reporterName = props.getProperty(CommonToolProperties.KEY_REPORTER_NAME);
+        reporterID = props.getProperty(CommonToolProperties.KEY_REPORTER_ID);
         view = inflater.inflate(R.layout.fragment_choose_form, container, false);
         TextView title= (TextView) view.findViewById(R.id.beneficiaryTitle);
         title.setText(firstname + " " + lastname + " - " + currentDateAndTime);
