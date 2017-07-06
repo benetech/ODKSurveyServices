@@ -138,7 +138,9 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 //let's hope that not writing anyhting in picture/vieo/ets_contentType column will do the thing
                 //as the value is being overwritten anyway later
                 String username = props.getActiveUser();
-                String stringifiedJSON = "{\"_form_id\":\"" + tableId + "\",\"_savepoint_creator\":\"" + username + "\",\"beneficiary_firstname_autodefault\":\"" + firstname + "\",\"beneficiary_lastname_autodefault\":\"" + lastname + "\",\"reporter_name_autodefault\":\"" + reporterName + "\",\"reporter_id_autodefault\":\"" + reporterID + "\"}";
+                String stringifiedJSON = "{\"_form_id\":\"" + tableId + "\",\"_savepoint_creator\":\"" + username +
+                        "\",\"beneficiary_firstname_autodefault\":\"" + firstname + "\",\"beneficiary_lastname_autodefault\":\"" +
+                        lastname + "\",\"reporter_name_autodefault\":\"" + reporterName + "\",\"reporter_id_autodefault\":\"" + reporterID + "\"}";
                 String callbackJSON = "3"; //looks bad but work fine
                 Toast.makeText(getActivity(), R.string.creating_new_survey, Toast.LENGTH_SHORT).show();
                 ExecutorRequest request = new ExecutorRequest(ExecutorRequestType.USER_TABLE_ADD_CHECKPOINT, tableId, stringifiedJSON, rowId, callbackJSON);

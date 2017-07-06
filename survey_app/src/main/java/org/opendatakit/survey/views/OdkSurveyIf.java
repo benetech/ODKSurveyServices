@@ -199,10 +199,11 @@ public class OdkSurveyIf {
 
     // If we save a form and it is not the main form that we have opened then it is the subform
     // which should be linked to the main form to which it belongs.
-    String mainFormUUID = weakSurvey.get().getMainFormUUID();
-    if (!instanceId.equals(mainFormUUID)) {
-      updateFormSubformTable(mainFormUUID, instanceId, formId);
-    }
+    //weakSurvey.get().setMainFormData(formId, instanceId);
+    //String mainFormUUID = weakSurvey.get().getMainFormUUID();
+   // if (!instanceId.equals(mainFormUUID)) {
+   //   updateFormSubformTable(mainFormUUID, instanceId, formId);
+   // }
 
     weakSurvey.get().saveAllChangesCompleted(refId, instanceId, asComplete);
   }
