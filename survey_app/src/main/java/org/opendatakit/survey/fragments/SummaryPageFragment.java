@@ -153,7 +153,12 @@ public class SummaryPageFragment extends ListFragment
         String currentDateandTime = sdf.format(new Date());
 
         title = (TextView) view.findViewById(R.id.instanceTitle);
-        title.setText(firstname + " " + lastname + " - " + currentDateandTime);
+        //In case when we have whole beneficiary information in firstname from InProgressInstancesFragment
+        if (lastname != null) {
+            title.setText(firstname + " " + lastname + " - " + currentDateandTime);
+        } else {
+            title.setText(firstname + " - " + currentDateandTime);
+        }
 
 
         pg = (PieGraph) view.findViewById(R.id.summary_graph);

@@ -99,7 +99,15 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         }
         props = ((IOdkAppPropertiesActivity) this.getActivity()).getProps();
         reporterName = props.getProperty(CommonToolProperties.KEY_REPORTER_NAME);
+        if (reporterName == "") {
+            props.setProperty(CommonToolProperties.KEY_REPORTER_NAME, "undefined");
+            reporterName = props.getProperty(CommonToolProperties.KEY_REPORTER_NAME);
+        }
         reporterID = props.getProperty(CommonToolProperties.KEY_REPORTER_ID);
+        if (reporterID == "") {
+            props.setProperty(CommonToolProperties.KEY_REPORTER_ID, "undefined");
+            reporterID = props.getProperty(CommonToolProperties.KEY_REPORTER_ID);
+        }
         view = inflater.inflate(R.layout.fragment_choose_form, container, false);
         TextView title= (TextView) view.findViewById(R.id.beneficiaryTitle);
         title.setText(firstname + " " + lastname + " - " + currentDateAndTime);

@@ -117,7 +117,8 @@ public class InProgressInstancesFragment extends ListFragment
     String rowId = ((InstanceInfo)mAdapter.getItem(position)).UUID;
     HashMap<String, String> values = new HashMap<>();
     values.put(FIRSTNAME, ((InstanceInfo)mAdapter.getItem(position)).beneficiaryInformation);
-    values.put(LASTNAME, ((InstanceInfo)mAdapter.getItem(position)).beneficiaryInformation);
+    //This writes whole beneficiary information to FIRSTNAME, we don't want to double the information
+    //values.put(LASTNAME, ((InstanceInfo)mAdapter.getItem(position)).beneficiaryInformation);
     values.put(CHOOSEN_TABLE_ID, tableId);
     values.put(INSTANCE_UUID, rowId);
     mCallback.passData(values);
