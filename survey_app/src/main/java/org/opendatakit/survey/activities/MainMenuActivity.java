@@ -81,10 +81,9 @@ import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
 import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
 import org.opendatakit.demoAndroidlibraryClasses.sync.service.OdkSyncServiceInterface;
 import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncAttachmentState;
+import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncStatus;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.services.preferences.activities.IOdkAppPropertiesActivity;
-import org.opendatakit.services.sync.activities.DoSyncActionCallback;
-import org.opendatakit.services.sync.activities.ISyncServiceInterfaceActivity;
 import org.opendatakit.survey.R;
 import org.opendatakit.survey.application.Survey;
 import org.opendatakit.survey.fragments.BackPressWebkitConfirmationDialogFragment;
@@ -119,7 +118,7 @@ import java.util.UUID;
  */
 public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity, DatabaseConnectionListener, IAppAwareActivity,
         IOdkAppPropertiesActivity, NavigationView.OnNavigationItemSelectedListener, DataPassListener,
-        ServiceConnection, ISyncServiceInterfaceActivity {
+        ServiceConnection {
 
   private static final String t = "MainMenuActivity";
 
@@ -168,7 +167,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private OdkSyncServiceInterface odkSyncInterface;
   private boolean mBound = false;
   private SyncAttachmentState syncAttachmentsState;
-  private boolean syncedSuccessfully = false;
+  private SyncStatus syncFinalStatus;
 
   private PropertiesSingleton mProps;
   public NavigationView mNavigationViewTop;
@@ -1948,43 +1947,47 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
 
     odkSyncInterface = (service == null) ? null : OdkSyncServiceInterface.Stub.asInterface(service);
-    setBound(true);
-    WebLogger.getLogger(getAppName()).i(t, "[onServiceConnected] Bound to sync service");
 
-    try {
-      syncedSuccessfully = syncWithServer();
-    } catch (RemoteException e) {
-      e.printStackTrace();
+    if (odkSyncInterface != null) {
+      setBound(true);
+      WebLogger.getLogger(getAppName()).i(t, "[onServiceConnected] Bound to sync service");
+
+      boolean syncStarted = false;
+      syncFinalStatus = SyncStatus.NONE;
+
+      try {
+        WebLogger.getLogger(getAppName()).i(t, "syncWithServer - odkSyncInterface ready? " + odkSyncInterface);
+        if (odkSyncInterface != null) {
+          syncStarted = odkSyncInterface.synchronizeWithServer(getAppName(), syncAttachmentsState);
+        }
+      } catch (RemoteException e) {
+        e.printStackTrace();
+      }
+
+      if (syncStarted) {
+        // After successful launch of the sync process we keep on picking the service if it has
+        // terminated its work to determine the final result of the sync process.
+        while(syncFinalStatus.equals(SyncStatus.NONE) || syncFinalStatus.equals(SyncStatus.SYNCING)) {
+          try {
+            syncFinalStatus = odkSyncInterface.getSyncStatus(getAppName());
+          } catch (RemoteException e) {
+            e.printStackTrace();
+          }
+        }
+
+        WebLogger.getLogger(appName).i(t, "Sync final status: " + syncFinalStatus);
+      } else {
+        Toast.makeText(this, R.string.sync_not_started, Toast.LENGTH_LONG).show();
+      }
+
+      unbindFromSyncService();
     }
 
-    unbindFromSyncService();
   }
 
   @Override public void onServiceDisconnected(ComponentName name) {
     WebLogger.getLogger(getAppName()).i(t, "[onServiceDisconnected] Unbound to sync service");
     setBound(false);
-  }
-
-  /**
-   * called by fragments that want to do something on the sync service connection.
-   *
-   * @param callback - callback for fragments that want to use sync service
-   */
-  public void invokeSyncInterfaceAction(DoSyncActionCallback callback) {
-    try {
-      boolean bound = getBound();
-      if (odkSyncInterface != null && callback != null && bound) {
-        callback.doAction(odkSyncInterface);
-      } else {
-        if (callback != null) {
-          callback.doAction(odkSyncInterface);
-        }
-      }
-    } catch (RemoteException e) {
-      WebLogger.getLogger(getAppName()).printStackTrace(e);
-      WebLogger.getLogger(getAppName()).e(t, "[invokeSyncInterfaceAction] exception while invoking sync service");
-      Toast.makeText(this, "[invokeSyncInterfaceAction] Exception while invoking sync service", Toast.LENGTH_LONG).show();
-    }
   }
 
   public void bindToSyncService (Intent intent) {
@@ -1999,17 +2002,6 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  public boolean syncWithServer() throws RemoteException {
-    WebLogger.getLogger(getAppName()).i(t, "syncWithServer - odkSyncInterface ready? " + odkSyncInterface);
-    boolean result = false;
-
-    if (odkSyncInterface != null) {
-      result = odkSyncInterface.synchronizeWithServer(getAppName(), syncAttachmentsState);
-    }
-
-    return result;
   }
 
   public void unbindFromSyncService() {
@@ -2035,16 +2027,58 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   }
 
   public void synchronizeWithServer(Intent intent, SyncAttachmentState syncAttachmentState) {
+    WebLogger.getLogger(appName).i(t, "Starting sync with server");
     this.syncAttachmentsState = syncAttachmentState;
+
+    Toast.makeText(this, R.string.sync_started, Toast.LENGTH_SHORT).show();
 
     bindToSyncService(intent);
   }
 
   public void showFinalToastMessage() {
-    if (syncedSuccessfully) {
-      Toast.makeText(this, R.string.sync_notification_success_complete_text, Toast.LENGTH_LONG).show();
-    } else {
-      Toast.makeText(this, R.string.sync_notification_failure_text, Toast.LENGTH_LONG).show();
+    switch (syncFinalStatus) {
+      case /** earlier sync ended with socket or lower level transport or protocol error (e.g., 300's) */ NETWORK_TRANSPORT_ERROR:
+        Toast.makeText(this, R.string.sync_status_network_transport_error, Toast.LENGTH_LONG).show();
+        break;
+      case /** earlier sync ended with Authorization denied (authentication and/or access) error */ AUTHENTICATION_ERROR:
+        Toast.makeText(this, R.string.sync_status_authentication_error, Toast.LENGTH_LONG).show();
+        break;
+      case /** earlier sync ended with a 500 error from server */ SERVER_INTERNAL_ERROR:
+        Toast.makeText(this, R.string.sync_status_internal_server_error, Toast.LENGTH_LONG).show();
+        break;
+      case /** the server is not an ODK Server - bad client config */ SERVER_IS_NOT_ODK_SERVER:
+        Toast.makeText(this, R.string.sync_status_bad_gateway_or_client_config, Toast.LENGTH_LONG).show();
+        break;
+      case /** earlier sync ended with a 400 error that wasn't Authorization denied */ REQUEST_OR_PROTOCOL_ERROR:
+        Toast.makeText(this, R.string.sync_status_request_or_protocol_error, Toast.LENGTH_LONG).show();
+        break;
+      case /** no earlier sync and no active sync */ NONE:
+      case /** active sync -- get SyncProgressEvent to see current status */ SYNCING:
+      case /** error accessing or updating database */ DEVICE_ERROR:
+        Toast.makeText(this, R.string.sync_status_device_internal_error, Toast.LENGTH_LONG).show();
+        break;
+      case /** the server is not configured for this appName -- Site Admin / Preferences */ APPNAME_NOT_SUPPORTED_BY_SERVER:
+        Toast.makeText(this, R.string.sync_status_appname_not_supported_by_server, Toast.LENGTH_LONG).show();
+        break;
+      case /** the server does not have any configuration, or no configuration for this client version */ SERVER_MISSING_CONFIG_FILES:
+        Toast.makeText(this, R.string.sync_status_server_missing_config_files, Toast.LENGTH_LONG).show();
+        break;
+      case /** the device does not have any configuration to push to server */ SERVER_RESET_FAILED_DEVICE_HAS_NO_CONFIG_FILES:
+        Toast.makeText(this, R.string.sync_status_server_reset_failed_device_has_no_config_files, Toast.LENGTH_LONG).show();
+        break;
+      case /** while a sync was in progress, another device reset the app config, requiring a restart of
+               * our sync */ RESYNC_BECAUSE_CONFIG_HAS_BEEN_RESET_ERROR:
+        Toast.makeText(this, R.string.sync_status_resync_because_config_has_been_reset_error, Toast.LENGTH_LONG).show();
+        break;
+      case /** earlier sync ended with one or more tables containing row conflicts or checkpoint rows */ CONFLICT_RESOLUTION:
+        Toast.makeText(this, this.getString(R.string.sync_notification_conflicts, appName), Toast.LENGTH_LONG).show();
+        break;
+      case /** earlier sync ended successfully without conflicts and all row-level attachments sync'd */ SYNC_COMPLETE:
+        Toast.makeText(this, R.string.sync_notification_success_complete_text, Toast.LENGTH_LONG).show();
+        break;
+      case /** earlier sync ended successfully without conflicts but needs row-level attachments sync'd */ SYNC_COMPLETE_PENDING_ATTACHMENTS:
+        Toast.makeText(this, this.getString(R.string.sync_notification_success_pending_attachments, appName), Toast.LENGTH_LONG).show();
+        break;
     }
   }
 
@@ -2052,7 +2086,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     if (syncAttachmentsState == SyncAttachmentState.DOWNLOAD) {
       // After downloading form definitions from server we have to refresh the list of form
       // definitions on the device
-      ((Survey) getApplication()).setRunInitializationTask(getAppName());
+      //((Survey) getApplication()).setRunInitializationTask(getAppName());
 
       swapToFragmentView(ScreenList.CHOOSE_FORM);
     } else {

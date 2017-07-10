@@ -34,7 +34,6 @@ import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncProgressEvent;
 import org.opendatakit.demoAndroidlibraryClasses.sync.service.SyncStatus;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
 import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
-import org.opendatakit.survey.activities.MainMenuActivity;
 
 public class OdkSyncService extends Service {
 
