@@ -995,8 +995,8 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       this.setResult(RESULT_OK, result);
       finish();
     } else {
-      BackStackEntry entry = mgr.getBackStackEntryAt(idxLast);
-      swapToFragmentView(ScreenList.valueOf(entry.getName()));
+      WebLogger.getLogger(appName).i(t, "popping backstack");
+      mgr.popBackStack();
     }
   }
 
