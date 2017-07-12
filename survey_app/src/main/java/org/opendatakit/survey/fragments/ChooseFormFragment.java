@@ -142,7 +142,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 values.put(INSTANCE_UUID, rowId);
                 mCallback.passData(values);
 
-                //let's initialize the row in the database just before switching fragment TODO:add beneficiary information to row in future
+                //let's initialize the row in the database just before switching fragment
                 //let's hope that not writing anyhting in picture/vieo/ets_contentType column will do the thing
                 //as the value is being overwritten anyway later
                 String username = props.getActiveUser();
