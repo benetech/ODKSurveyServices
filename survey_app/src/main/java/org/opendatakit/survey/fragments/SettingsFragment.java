@@ -92,9 +92,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         // Get saved properties singleton
         properties = CommonToolProperties.get(this.getActivity().getApplicationContext(), appName);
-
-        reporterNameEditText.setText(properties.getProperty(CommonToolProperties.KEY_REPORTER_NAME));
-        reporterIdEditText.setText(properties.getProperty(CommonToolProperties.KEY_REPORTER_ID));
+        if (!properties.getProperty(CommonToolProperties.KEY_REPORTER_NAME).equals("undefined")) {
+            reporterNameEditText.setText(properties.getProperty(CommonToolProperties.KEY_REPORTER_NAME));
+        } else {
+            reporterNameEditText.setText("");
+        }
+        if (!properties.getProperty(CommonToolProperties.KEY_REPORTER_ID).equals("undefined")) {
+            reporterIdEditText.setText(properties.getProperty(CommonToolProperties.KEY_REPORTER_ID));
+        } else {
+            reporterIdEditText.setText("");
+        }
         officeIdEditText.setText(properties.getProperty(CommonToolProperties.KEY_OFFICE_ID));
         syncServerUrlEditText.setText(properties.getProperty(CommonToolProperties.KEY_SYNC_SERVER_URL));
 
