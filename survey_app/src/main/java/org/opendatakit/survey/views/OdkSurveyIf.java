@@ -259,4 +259,10 @@ public class OdkSurveyIf {
   public String getSubmenuPage() {
     return weakSurvey.get().getSubmenuPage();
   }
+
+  @JavascriptInterface
+  public String getNextScreenPath(String currentPath) { return weakSurvey.get().getNextScreenPath(currentPath); }
+
+  @JavascriptInterface
+  public String getPreviousScreenPath(String currentPath) { return weakSurvey.get().getPreviousScreenPath(currentPath); }
 }

@@ -80,5 +80,9 @@ public interface IOdkSurveyActivity extends IOdkCommonActivity, IOdkDataActivity
 
   public String getSubmenuPage();
 
+  public String getNextScreenPath(String currentPath);
+
+  public String getPreviousScreenPath(String currentPath);
+
 }
 

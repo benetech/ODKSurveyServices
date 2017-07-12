@@ -98,6 +98,7 @@ import org.opendatakit.survey.fragments.WebViewFragment;
 import org.opendatakit.survey.logic.FormIdStruct;
 import org.opendatakit.survey.logic.SurveyDataExecutorProcessor;
 import org.opendatakit.survey.utilities.DataPassListener;
+import org.opendatakit.survey.utilities.QuestionInfo;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -268,6 +269,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private Long trackingFormLastModifiedDate = 0L;
 
   private String submenuPage = null;
+  private ArrayList<String> availablePaths = new ArrayList<>();
   /**
    * track which tables have conflicts (these need to be resolved before Survey
    * can operate)
@@ -394,6 +396,63 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       setAuxillaryHash(null);
     }
     currentFragment = ScreenList.WEBKIT;
+  }
+
+  public void populateScreenList(ArrayList<Object> all) {
+    if(availablePaths == null)
+      availablePaths = new ArrayList<>();
+    availablePaths.clear();
+    String section ="survey/";
+    String lastsection;
+    String path = "survey/0";
+    String lastpath;
+    int j=0;
+    for(int i=0; i<all.size(); i++){
+      lastpath = path;
+      path = ((QuestionInfo) all.get(i)).path;
+        if(((QuestionInfo)all.get(i)).questionType!=2 && !path.equals(lastpath)) {
+          lastsection = section;
+          section = path.substring(0, path.indexOf("/")+1);
+          if(!section.equals(lastsection)){
+            j=0;
+            availablePaths.add(section + j++);
+          } else {
+            availablePaths.add(section + j++);
+          }
+        }
+    }
+  }
+
+  @Override
+  public String getNextScreenPath(String currnetPath){
+    String nextScreenPath = "survey/1";
+    if(availablePaths.contains(currnetPath)){
+      int currentIndex = availablePaths.indexOf(currnetPath);
+      if(currentIndex == availablePaths.size()-1){
+        nextScreenPath = "survey/0";
+      } else {
+        nextScreenPath = availablePaths.get(currentIndex + 1);
+      }
+    } else {
+      throw new IllegalStateException("No current srceen at screenlist");
+    }
+    return nextScreenPath;
+  }
+
+  @Override
+  public String getPreviousScreenPath(String currnetPath){
+    String previousScreenPath = "survey/1";
+    if(availablePaths.contains(currnetPath)){
+      int currentIndex = availablePaths.indexOf(currnetPath);
+      if(currentIndex == 0){
+        previousScreenPath = "survey/0";
+      } else {
+        previousScreenPath = availablePaths.get(currentIndex - 1);
+      }
+    } else {
+      throw new IllegalStateException("No current srceen at screenlist");
+    }
+    return previousScreenPath;
   }
 
   @Override
@@ -702,6 +761,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
     // android.os.Debug.waitForDebugger();
     submenuPage = getIntentExtras().getString("_sync_state");
+    availablePaths = getIntentExtras().getStringArrayList("availablePaths");
     try {
       // ensure that we have a BackgroundTaskFragment...
       // create it programmatically because if we place it in the
@@ -951,6 +1011,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   public void chooseForm(Uri formUri) {
     Intent i = new Intent(Intent.ACTION_EDIT, formUri, this, MainMenuActivity.class);
     i.putExtra("_sync_state", submenuPage);
+    i.putExtra("availablePaths", availablePaths);
     startActivityForResult(i, INTERNAL_ACTIVITY_CODE);
   }
 
@@ -1397,13 +1458,6 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   public void clearSectionScreenState() {
     sectionStateScreenHistory.clear();
-    //sectionStateScreenHistory.add(new SectionScreenStateHistory());
-    //SectionScreenStateHistory lastSection = sectionStateScreenHistory.get(sectionStateScreenHistory
-    //    .size() - 1);
-    //lastSection.currentScreen.screenPath = "initial/0";
-    //lastSection.currentScreen.state = null;
-    //lastSection.history.clear();
-    addSectionScreenState("survey/0",null);
   }
 
   @Override

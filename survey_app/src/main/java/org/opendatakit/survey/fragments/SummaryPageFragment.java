@@ -124,6 +124,7 @@ public class SummaryPageFragment extends ListFragment
         adapter.clear();
         adapter.addAll(data);
         adapter.notifyDataSetChanged();
+        ((MainMenuActivity) getActivity()).populateScreenList(adapter.getAll());
     }
 
     @Override

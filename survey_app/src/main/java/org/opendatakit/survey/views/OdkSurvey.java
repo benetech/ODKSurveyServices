@@ -421,4 +421,12 @@ public class OdkSurvey {
 
     return result;
   }
+
+  public String getNextScreenPath(String currentPath) {
+    return mActivity.getNextScreenPath(currentPath);
+  }
+
+  public String getPreviousScreenPath(String currentPath) {
+    return mActivity.getPreviousScreenPath(currentPath);
+  }
 }

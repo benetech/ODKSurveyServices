@@ -76,6 +76,10 @@ public class QuestionInfoListAdapter extends BaseAdapter {
         questions.addAll(items);
     }
 
+    public ArrayList<Object> getAll() {
+        return questions;
+    }
+
     @Override
     public int getCount() {
         return questions.size();

@@ -25,22 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.opendatakit.survey.utilities.FormDefSections.FORMDEF_SETTINGS_SUBSECTION;
+
 /**
  * Created by user on 16.06.17.
  */
 public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
-
-    private static final String FORMDEF_SETTINGS_SUBSECTION = "settings";
-    private static final String FORMDEF_SPECIFICATION_SECTION = "specification";
-    private static final String FORMDEF_SECTION_NAMES = "section_names";
-    private static final String FORMDEF_CHOICES = "choices";
-    private static final String FORMDEF_SECTIONS = "sections";
-    private static final String FORMDEF_DISPLAY = "display";
-    private static final String FORMDEF_TITLE = "title";
-    private static final String FORMDEF_TEXT = "text";
-    private static final String FORMDEF_NESTED_SECTIONS = "nested_sections";
-    private static final String FORMDEF_PROMPTS = "prompts";
-    private static final String PATH = "_branch_label_enclosing_screen";
 
     private final String appName;
     private final String tableId;
@@ -83,34 +73,52 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
         }
 
         Map<String, Object> specification = (Map<String, Object>) formDef
-                .get(FORMDEF_SPECIFICATION_SECTION);
+                .get(FormDefSections.FORMDEF_SPECIFICATION_SECTION.getText());
         if (specification == null) {
             throw new IllegalArgumentException("File is not a formdef json file! No specification element."
                     + formDefFile.getAbsolutePath());
         }
 
         Map<String, Object> settings = (Map<String, Object>) specification
-                .get(FORMDEF_SETTINGS_SUBSECTION);
+                .get(FORMDEF_SETTINGS_SUBSECTION.getText());
         if (settings == null) {
             throw new IllegalArgumentException("File is not a formdef json file! No settings section inside specification element."
                     + formDefFile.getAbsolutePath());
         }
 
         Map<String, Object> choices = (Map<String, Object>) specification
-                .get(FORMDEF_CHOICES);
+                .get(FormDefSections.FORMDEF_CHOICES.getText());
         if (choices == null) {
             throw new IllegalArgumentException("File is not a formdef json file! No choices section inside specification element."
                     + formDefFile.getAbsolutePath());
         }
 
-        //we have a list of sections
-        sectionNames = (List<String>) specification.get(FORMDEF_SECTION_NAMES);
-        if (sectionNames == null) {
-            throw new IllegalArgumentException("File is not a formdef json file! No section names inside specification element."
+        Map<String, Object> sections = (Map<String, Object>) specification
+                .get(FormDefSections.FORMDEF_SECTIONS.getText());
+        if (sections == null) {
+            throw new IllegalArgumentException("File is not a formdef json file! No sections section inside specification element."
                     + formDefFile.getAbsolutePath());
         }
 
-        sectionNames.remove("initial");
+        Map<String, Object> surveySection = (Map<String, Object>) sections
+                .get(FormDefSections.SURVEY.getText());
+        if (surveySection == null) {
+            throw new IllegalArgumentException("File is not a formdef json file! No surveySection inside specification element."
+                    + formDefFile.getAbsolutePath());
+        }
+
+        Map<String, Object> nestedSections = (Map<String, Object>) surveySection
+                .get("nested_sections");
+        if (nestedSections == null) {
+            throw new IllegalArgumentException("File is not a formdef json file! No nestedSections inside specification element."
+                    + formDefFile.getAbsolutePath());
+        }
+
+        sectionNames = new ArrayList<>();
+
+        for (Map.Entry<String, Object> nestedSection : nestedSections.entrySet()) {
+            sectionNames.add(nestedSection.getKey());
+        }
 
         //now lets store somewhere displaynames of those for different languages
         for(String sectionName : sectionNames){
@@ -121,18 +129,18 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                         + formDefFile.getAbsolutePath());
             }
             Map<String, Object> display = (Map<String, Object>) settingsOfSeciotn
-                    .get(FORMDEF_DISPLAY);
+                    .get(FormDefSections.FORMDEF_DISPLAY.getText());
             if (display == null) {
                 throw new IllegalArgumentException("File is not a formdef json file! No display section inside settings of section element."
                         + formDefFile.getAbsolutePath());
             }
-            if(display.get(FORMDEF_TITLE) instanceof  String){
+            if(display.get(FormDefSections.FORMDEF_TITLE.getText()) instanceof  String){
                 throw new IllegalArgumentException("File is not a formdef json file! Make sure that elements are properly translated."
                         + formDefFile.getAbsolutePath());
 
             }
             HashMap<String, String> titles = (HashMap<String, String>) display
-                    .get(FORMDEF_TITLE);
+                    .get(FormDefSections.FORMDEF_TITLE.getText());
             if (titles == null) {
                 throw new IllegalArgumentException("File is not a formdef json file! No titles section inside display section element."
                         + formDefFile.getAbsolutePath());
@@ -141,12 +149,6 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
             headersDisplayNames.put(sectionName, titles);
         }
 
-        Map<String, Object> sections = (Map<String, Object>) specification
-                .get(FORMDEF_SECTIONS);
-        if (sections == null) {
-            throw new IllegalArgumentException("File is not a formdef json file! No sections section inside specification element."
-                    + formDefFile.getAbsolutePath());
-        }
 
         Uri formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
                 + tableId);
@@ -162,14 +164,14 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                 }
 
                 //if this is a section that contains all of the others, let's call it menu, we don't want to display it here
-                if(((Map<String, Object>)section.get(FORMDEF_NESTED_SECTIONS)).size() == sections.size() -2)
+                if(((Map<String, Object>)section.get(FormDefSections.FORMDEF_NESTED_SECTIONS.getText())).size() == sections.size() -2)
                     continue;
 
                 result.add(new QuestionInfo(null, headersDisplayNames.get(sectionName), null, 2, null));
 
 
                 List<Map<String, Object>> prompts = (List<Map<String, Object>>) section
-                        .get(FORMDEF_PROMPTS);
+                        .get(FormDefSections.FORMDEF_PROMPTS.getText());
                 if (prompts == null) {
                     throw new IllegalArgumentException("File is not a formdef json file! No prompts section inside section element."
                             + formDefFile.getAbsolutePath());
@@ -195,17 +197,17 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                     if (hide != true) {
 
                         Map<String, Object> display = (Map<String, Object>) prompt
-                                .get(FORMDEF_DISPLAY);
+                                .get(FormDefSections.FORMDEF_DISPLAY.getText());
                         if (display == null) {
                             throw new IllegalArgumentException("File is not a formdef json file! No display section inside prompt element."
                                     + formDefFile.getAbsolutePath());
                         }
-                        if(display.get(FORMDEF_TEXT) instanceof  String){
+                        if(display.get(FormDefSections.FORMDEF_TEXT.getText()) instanceof  String){
                             throw new IllegalArgumentException("File is not a formdef json file! Make sure that elements are properly translated."
                                     + formDefFile.getAbsolutePath());
                         }
                         HashMap<String, String> text = (HashMap<String, String>) display
-                                .get(FORMDEF_TEXT);
+                                .get(FormDefSections.FORMDEF_TEXT.getText());
                         if (text == null) {
                             throw new IllegalArgumentException("File is not a formdef json file! No display text inside prompt element."
                                     + formDefFile.getAbsolutePath());
@@ -222,9 +224,9 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                                 }
                                 if (columnNumber != -1) {
                                     if (instanceCursor.getString(columnNumber) != null && !instanceCursor.getString(columnNumber).isEmpty()) {
-                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 0,  context.getResources().getString(R.string.media_file_attached)));
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 0,  context.getResources().getString(R.string.media_file_attached)));
                                     } else {
-                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 0, null));
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 0, null));
                                     }
                                 }
                             } else if(promptType.equals("geopoint")) {
@@ -232,9 +234,9 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                                         instanceCursor.getString(instanceCursor.getColumnIndex("location_altitude"))!=null  &&
                                         instanceCursor.getString(instanceCursor.getColumnIndex("location_latitude"))!=null  &&
                                         instanceCursor.getString(instanceCursor.getColumnIndex("location_longitude"))!=null){
-                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 0, context.getResources().getString(R.string.location_captured)));
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 0, context.getResources().getString(R.string.location_captured)));
                                 } else {
-                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 0, null));
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 0, null));
                                 }
 
                             }  else if(promptType.equals("select_one_dropdown")) {
@@ -253,31 +255,31 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                                                 if(field.getValue().equals(answer))
                                                    write = true;
                                             }
-                                            if (field.getKey().equals(FORMDEF_DISPLAY) && write) {
+                                            if (field.getKey().equals(FormDefSections.FORMDEF_DISPLAY.getText()) && write) {
                                                 HashMap<String, Object> textMap = (HashMap<String, Object>)field.getValue();
-                                                HashMap<String, String> translations = (HashMap<String, String>)textMap.get(FORMDEF_TEXT);
+                                                HashMap<String, String> translations = (HashMap<String, String>)textMap.get(FormDefSections.FORMDEF_TEXT.getText());
                                                 if (translations == null) {
                                                     throw new IllegalArgumentException("File is not a formdef json file! No  text inside possible answer element."
                                                             + formDefFile.getAbsolutePath());
                                                 }
                                                 String answerDisplayName = translations.get("default");
-                                                result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 0, answerDisplayName)); //TODO:translate this as well
+                                                result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 0, answerDisplayName)); //TODO:translate this as well
                                             }
                                         }
                                     }
                                 } else {
-                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 0, null));
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 0, null));
                                 }
                             } else if (instanceCursor.getColumnIndex(columnName) != -1) {
 
                                 String answer = instanceCursor.getString(instanceCursor.getColumnIndex(columnName));
                                 if (answer != null && (answer.equals("red") || answer.equals("green") || answer.equals("yellow"))) {//TODO: add column filtering to check wheter this is poverty stoplight question
-                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 1, answer));
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 1, answer));
                                 } else {
-                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 0, answer));
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 0, answer));
                                 }
                             } else
-                                result.add(new QuestionInfo(columnName, text, (String) prompt.get(PATH), 0, "SOMETHING WENT WRONG"));
+                                result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), 0, "SOMETHING WENT WRONG"));
                         }
                     }
                 }
