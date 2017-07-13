@@ -20,11 +20,22 @@ import android.preference.PreferenceActivity;
 import android.support.annotation.StringRes;
 
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
+import org.opendatakit.demoAndroidlibraryClasses.fragment.AboutMenuFragment;
 import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.services.sync.activities.VerifyServerSettingsFragment;
 import org.opendatakit.survey.R;
 import org.opendatakit.services.sync.activities.VerifyServerSettingsActivity;
+import org.opendatakit.survey.fragments.BackPressWebkitConfirmationDialogFragment;
+import org.opendatakit.survey.fragments.BeneficiaryInformationFragment;
+import org.opendatakit.survey.fragments.ChooseFormFragment;
+import org.opendatakit.survey.fragments.InProgressInstancesFragment;
+import org.opendatakit.survey.fragments.InitializationFragment;
+import org.opendatakit.survey.fragments.SettingsFragment;
+import org.opendatakit.survey.fragments.SubmittedInstancesFragment;
+import org.opendatakit.survey.fragments.SummaryPageFragment;
+import org.opendatakit.survey.fragments.WebViewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +157,21 @@ public class AppPropertiesActivity extends PreferenceActivity implements IOdkApp
 
   @Override
   protected boolean isValidFragment(String fragmentName) {
-    return true;
+    if(BackPressWebkitConfirmationDialogFragment.class.getName().equals(fragmentName) ||
+            BeneficiaryInformationFragment.class.getName().equals(fragmentName) ||
+            ChooseFormFragment.class.getName().equals(fragmentName) ||
+            InitializationFragment.class.getName().equals(fragmentName) ||
+            InProgressInstancesFragment.class.getName().equals(fragmentName) ||
+            SettingsFragment.class.getName().equals(fragmentName) ||
+            SubmittedInstancesFragment.class.getName().equals(fragmentName) ||
+            SummaryPageFragment.class.getName().equals(fragmentName) ||
+            WebViewFragment.class.getName().equals(fragmentName) ||
+            AboutMenuFragment.class.getName().equals(fragmentName) ||
+            VerifyServerSettingsFragment.class.getName().equals(fragmentName) ||
+            AboutMenuFragment.class.getName().equals(fragmentName))
+      return true;
+    else
+      return false;
   }
 
   public PropertiesSingleton getProps() {
