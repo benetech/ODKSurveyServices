@@ -424,7 +424,10 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   }
 
   @Override
-  public String getNextScreenPath(String currnetPath){
+  public String getNextScreenPath(String currnetPath) {
+    // Save all changes made in the form before switching to a new screen
+    saveAllAsIncomplete();
+
     String nextScreenPath = "survey/1";
     if(availablePaths.contains(currnetPath)){
       int currentIndex = availablePaths.indexOf(currnetPath);
@@ -434,13 +437,16 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         nextScreenPath = availablePaths.get(currentIndex + 1);
       }
     } else {
-      throw new IllegalStateException("No current srceen at screenlist");
+      throw new IllegalStateException("No current screen at screenlist");
     }
     return nextScreenPath;
   }
 
   @Override
   public String getPreviousScreenPath(String currnetPath){
+    // Save all changes made in the form before switching to a new screen
+    saveAllAsIncomplete();
+
     String previousScreenPath = "survey/1";
     if(availablePaths.contains(currnetPath)){
       int currentIndex = availablePaths.indexOf(currnetPath);
@@ -450,7 +456,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         previousScreenPath = availablePaths.get(currentIndex - 1);
       }
     } else {
-      throw new IllegalStateException("No current srceen at screenlist");
+      throw new IllegalStateException("No current screen at screenlist");
     }
     return previousScreenPath;
   }
@@ -1099,10 +1105,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
   }
 
-  // for back press suppression
-  // trigger save of everything...
-  @Override
-  public void saveAllAsIncompleteThenPopBackStack() {
+  public void saveAllAsIncomplete() {
     String tableId = this.getCurrentForm().tableId;
     String rowId = this.getInstanceId();
 
@@ -1111,9 +1114,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       try {
         dbHandleName = this.getDatabase().openDatabase(getAppName());
         OrderedColumns cols = this.getDatabase()
-            .getUserDefinedColumns(getAppName(), dbHandleName, tableId);
+                .getUserDefinedColumns(getAppName(), dbHandleName, tableId);
         UserTable table = this.getDatabase()
-            .saveAsIncompleteMostRecentCheckpointRowWithId(getAppName(), dbHandleName, tableId, cols, rowId);
+                .saveAsIncompleteMostRecentCheckpointRowWithId(getAppName(), dbHandleName, tableId, cols, rowId);
         // this should not be possible, but if somehow we exit before anything is written
         // clear instanceId if the row no longer exists
         if ( table.getNumberOfRows() == 0 ) {
@@ -1122,7 +1125,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       } catch (ActionNotAuthorizedException e) {
         WebLogger.getLogger(getAppName()).printStackTrace(e);
         Toast.makeText(this, R.string.database_authorization_error_occured, Toast.LENGTH_LONG)
-            .show();
+                .show();
       } catch (ServicesAvailabilityException e) {
         WebLogger.getLogger(getAppName()).printStackTrace(e);
         Toast.makeText(this, R.string.database_error_occured, Toast.LENGTH_LONG).show();
@@ -1137,6 +1140,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         }
       }
     }
+  }
+
+  // for back press suppression
+  // trigger save of everything...
+  @Override
+  public void saveAllAsIncompleteThenPopBackStack() {
+    saveAllAsIncomplete();
     popBackStack();
   }
 
