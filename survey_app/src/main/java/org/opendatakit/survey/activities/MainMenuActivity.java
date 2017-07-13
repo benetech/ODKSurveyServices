@@ -819,6 +819,17 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
               uriFormsProvider.toString()), EXIT);
           return;
         }
+      } else {
+        try {
+          String appName = getAppName();
+          if (appName != null && appName.length() != 0) {
+            ODKFileUtils.verifyExternalStorageAvailability();
+            ODKFileUtils.assertDirectoryStructure(appName);
+          }
+        } catch (RuntimeException e) {
+          createErrorDialog(e.getMessage(), EXIT);
+          return;
+        }
       }
 
       if (savedInstanceState != null) {
@@ -832,16 +843,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         }
       }
 
-      try {
-        String appName = getAppName();
-        if (appName != null && appName.length() != 0) {
-          ODKFileUtils.verifyExternalStorageAvailability();
-          ODKFileUtils.assertDirectoryStructure(appName);
-        }
-      } catch (RuntimeException e) {
-        createErrorDialog(e.getMessage(), EXIT);
-        return;
-      }
+
 
       WebLogger.getLogger(getAppName()).i(t, "Starting up, creating directories");
 
@@ -974,7 +976,6 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       submitted.setGravity(Gravity.CENTER_VERTICAL);
       submitted.setTypeface(null, Typeface.BOLD);
       submitted.setTextColor(getResources().getColor(R.color.white));
-      updateCounters();
 
       TextView office_id_name = (TextView) mNavigationViewTop.getHeaderView(0).findViewById(R.id.office_id_name);
       String office_id = props.getProperty(CommonToolProperties.KEY_OFFICE_ID);
