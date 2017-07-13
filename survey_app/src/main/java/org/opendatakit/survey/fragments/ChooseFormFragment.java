@@ -7,6 +7,7 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     private Button nextButton = null;
     private View view;
     private TextView updateTime;
+    private SharedPreferences sharedPref;
 
     DataPassListener mCallback;
     PropertiesSingleton props;
@@ -68,6 +70,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = ExecutorContext.getContext((IOdkDataActivity)getActivity());
+        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -157,7 +160,10 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 ((MainMenuActivity)getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUMMARY_PAGE);
                 break;
             case  R.id.checkForUpdatesButton:
-                props.setProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME, new Date().toString());
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(CommonToolProperties.LAST_FORMS_UPDATE_TIME, new Date().toString());
+                editor.commit();
+
 
                 Intent intent = new Intent();
                 intent.setClassName(IntentConsts.Sync.APPLICATION_NAME,
@@ -252,7 +258,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     }
 
     private String getLastUpdateTime() {
-        return props.getProperty(CommonToolProperties.LAST_FORMS_UPDATE_TIME);
+        return sharedPref.getString(CommonToolProperties.LAST_FORMS_UPDATE_TIME, "");
     }
 
 }
