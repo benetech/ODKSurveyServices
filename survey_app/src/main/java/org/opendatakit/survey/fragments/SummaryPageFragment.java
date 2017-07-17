@@ -211,7 +211,7 @@ public class SummaryPageFragment extends ListFragment
             WebLogger.getLogger(appName).i(t, "Waiting 100 miliseconds and checking if the new row already exists so we can read data from it");
             android.os.SystemClock.sleep(100);
             instanceCursor = getActivity().getContentResolver().query(formUri, null, "_id=?", new String[]{formId}, null);
-        } while (!instanceCursor.moveToFirst());
+        } while (instanceCursor != null && !instanceCursor.moveToFirst());
 
         if (instanceCursor != null) {
             colors = InstanceListLoader.countStoplightAnswers(instanceCursor);
