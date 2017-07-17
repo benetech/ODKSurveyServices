@@ -429,4 +429,8 @@ public class OdkSurvey {
   public String getPreviousScreenPath(String currentPath) {
     return mActivity.getPreviousScreenPath(currentPath);
   }
+
+  public String getLocale(){
+    return mActivity.getLocale();
+  }
 }

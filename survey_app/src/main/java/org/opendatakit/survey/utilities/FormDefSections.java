@@ -8,19 +8,23 @@ import java.util.List;
  */
 
 public enum FormDefSections {
-    FORMDEF_SETTINGS_SUBSECTION("settings"),
-    FORMDEF_SPECIFICATION_SECTION("specification"),
-    FORMDEF_SECTION_NAMES("section_names"),
-    FORMDEF_CHOICES("choices"),
-    FORMDEF_SECTIONS("sections"),
-    FORMDEF_DISPLAY("display"),
-    FORMDEF_TITLE("title"),
-    FORMDEF_TEXT("text"),
-    FORMDEF_NESTED_SECTIONS("nested_sections"),
-    FORMDEF_PROMPTS("prompts"),
+    SETTINGS_SUBSECTION("settings"),
+    SPECIFICATION_SECTION("specification"),
+    SECTION_NAMES("section_names"),
+    CHOICES("choices"),
+    SECTIONS("sections"),
+    DISPLAY("display"),
+    TITLE("title"),
+    TEXT("text"),
+    NESTED_SECTIONS("nested_sections"),
+    PROMPTS("prompts"),
     PATH("_branch_label_enclosing_screen"),
     SURVEY("survey"),
-    OPERATIONS("operations");
+    OPERATIONS("operations"),
+    DEFAULT("default"),
+    NAME("name"),
+    LOCALES("_locales"),
+    VALUE("value");
 
     private final String text;
 

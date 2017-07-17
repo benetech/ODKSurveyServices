@@ -269,6 +269,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private Long trackingFormLastModifiedDate = 0L;
 
   private String submenuPage = null;
+  private String locale = null;
   private ArrayList<String> availablePaths = new ArrayList<>();
   /**
    * track which tables have conflicts (these need to be resolved before Survey
@@ -2161,4 +2162,14 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       inProgressInstancesFragment.getAdapter().notifyDataSetChanged();
     }
   }
+
+  @Override
+  public String getLocale(){
+    return this.locale;
+  }
+
+  public void setLocale(String locale){
+    this.locale = locale;
+  }
+
 }

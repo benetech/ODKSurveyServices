@@ -133,6 +133,7 @@
     <string name="office_id">Office ID:</string>
     <string name="office_id_hint">Enter office ID…</string>
     <string name="change_office_id">Change Office ID</string>
+    <string name="language">Language</string>
 
     <string name="sync">Sync</string>
     <string name="poverty">poverty</string>

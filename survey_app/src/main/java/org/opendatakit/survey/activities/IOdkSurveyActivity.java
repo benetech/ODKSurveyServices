@@ -84,5 +84,7 @@ public interface IOdkSurveyActivity extends IOdkCommonActivity, IOdkDataActivity
 
   public String getPreviousScreenPath(String currentPath);
 
+  public String getLocale();
+
 }
 

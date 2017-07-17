@@ -14,29 +14,25 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.opendatakit.survey.R;
+import org.opendatakit.survey.fragments.SummaryPageFragment;
 
 import java.util.ArrayList;
 
-/**
- * Created by user on 16.06.17.
- */
 public class QuestionInfoListAdapter extends BaseAdapter {
 
     private final Context context;
     private final ArrayList<Object> questions = new ArrayList<Object>();
+    private ColorStateList greenColorStateList;
+    private ColorStateList redColorStateList;
+    private ColorStateList yellowColorStateList;
+    private String language;
+    private SummaryPageFragment fragment;
 
 
-    //TODO: to do jakiejs klasy?
-    private static final int TEXT_CHOICE_QUESTION = 0;
-    private static final int POVERTY_STOPLIGHT_QUESTION = 1;
-    private static final int SECTION_NAME_HEADER= 2;
-
-    ColorStateList greenColorStateList;
-    ColorStateList redColorStateList;
-    ColorStateList yellowColorStateList;
-
-    public QuestionInfoListAdapter(Context context) {
+    public QuestionInfoListAdapter(Context context, SummaryPageFragment fragment) {
         this.context = context;
+        this.fragment = fragment;
+        this.language = fragment.getLanguage();
         greenColorStateList = new ColorStateList(
                 new int[][]{
                         new int[]{android.R.attr.state_enabled}
@@ -97,7 +93,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
     @Override
     public boolean isEnabled(int position) {
-        return (getItemViewType(position) != SECTION_NAME_HEADER);
+        return (getItemViewType(position) != QuestionTypes.SECTION_NAME_HEADER);
     }
 
     @Override
@@ -110,7 +106,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
         int type = getItemViewType(position);
 
         switch (type) {
-            case TEXT_CHOICE_QUESTION: {
+            case QuestionTypes.TEXT_QUESTION: {
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -118,7 +114,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                 }
                 QuestionInfo item = (QuestionInfo)getItem(position);
                 TextView questionView = (TextView) view.findViewById(R.id.question);
-                questionView.setText(item.displayNames.get("default"));
+                questionView.setText(item.displayNames.get(language));
 
                 final RadioButton radioButtonView = (RadioButton) view.findViewById(R.id.questionRadioButton);
 
@@ -131,12 +127,36 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                     }
                 });
 
-                answerView.setText(((QuestionInfo)getItem(position)).answer);
-
-
+                answerView.setText(item.answer);
                 break;
             }
-            case POVERTY_STOPLIGHT_QUESTION: {
+            case QuestionTypes.CHOICE_QUESTION: {
+                if (view == null) {
+                    LayoutInflater layoutInflater =
+                            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    view = layoutInflater.inflate(R.layout.text_choice_types_question_row, parent, false);
+                }
+                QuestionInfo item = (QuestionInfo)getItem(position);
+                TextView questionView = (TextView) view.findViewById(R.id.question);
+                questionView.setText(item.displayNames.get(language));
+
+                final RadioButton radioButtonView = (RadioButton) view.findViewById(R.id.questionRadioButton);
+
+                TextView answerView = (TextView) view.findViewById(R.id.answer);
+                radioButtonView.setChecked(item.isChecked);
+                radioButtonView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        radioButtonView.setSelected(isChecked);
+                    }
+                });
+
+                if(item.answer != null && !item.answer.isEmpty()) {
+                    answerView.setText(item.translatedChoiceTypeAnswers.get(item.answer).get(language));
+                }
+                break;
+            }
+            case QuestionTypes.POVERTY_STOPLIGHT_QUESTION: {
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -144,7 +164,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                 }
                 QuestionInfo item = (QuestionInfo)getItem(position);
                 TextView questionView = (TextView) view.findViewById(R.id.question);
-                questionView.setText(item.displayNames.get("default"));
+                questionView.setText(item.displayNames.get(language));
 
                 AppCompatRadioButton radioButtonView = (AppCompatRadioButton) view.findViewById(R.id.questionRadioButton);
 
@@ -162,19 +182,16 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
                 break;
             }
-            case SECTION_NAME_HEADER: {
+            case QuestionTypes.SECTION_NAME_HEADER: {
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     view = layoutInflater.inflate(R.layout.row_header, parent, false);
                 }
 
-                //TODO: Language?
                 TextView title = (TextView) view.findViewById(R.id.headerTitle);
                 QuestionInfo item = (QuestionInfo)getItem(position);
-                title.setText(item.displayNames.get("default"));
-                //String titleString = (String) getItem(position);
-                //title.setText(titleString);
+                title.setText(item.displayNames.get(language));
                 break;
             }
 
@@ -191,4 +208,10 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
         return -1;
     }
+
+
+    public void setLanguage(String language){
+        this.language = language;
+    }
+
 }
