@@ -62,6 +62,7 @@ import org.opendatakit.demoAndroidCommonClasses.webkitserver.utilities.UrlUtils;
 import org.opendatakit.demoAndroidlibraryClasses.activities.IAppAwareActivity;
 import org.opendatakit.demoAndroidlibraryClasses.consts.IntentConsts;
 import org.opendatakit.demoAndroidlibraryClasses.database.data.OrderedColumns;
+import org.opendatakit.demoAndroidlibraryClasses.database.data.Row;
 import org.opendatakit.demoAndroidlibraryClasses.database.data.UserTable;
 import org.opendatakit.demoAndroidlibraryClasses.database.service.DbHandle;
 import org.opendatakit.demoAndroidlibraryClasses.database.service.TableHealthInfo;
@@ -76,6 +77,7 @@ import org.opendatakit.demoAndroidlibraryClasses.properties.CommonToolProperties
 import org.opendatakit.demoAndroidlibraryClasses.properties.DynamicPropertiesCallback;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertiesSingleton;
 import org.opendatakit.demoAndroidlibraryClasses.properties.PropertyManager;
+import org.opendatakit.demoAndroidlibraryClasses.provider.DataTableColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsColumns;
 import org.opendatakit.demoAndroidlibraryClasses.provider.FormsProviderAPI;
 import org.opendatakit.demoAndroidlibraryClasses.provider.InstanceProviderAPI;
@@ -544,6 +546,16 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   public void databaseAvailable() {
     if ( getAppName() != null ) {
       resolveAnyConflicts();
+    }
+    if (currentForm == null) {
+      // Check form tables if there are multiple rows with the same uuid. These would mean that
+      // the normal process of filling the form was interrupted (e.g. force close of the app) which
+      // might result in multiple instances of the same form within the database which would be
+      // reflected on the UI with multiple elements in the "In Progress" screen list. In fact all of
+      // them are connected with the same form. If there is such situation, save the unsaved changes
+      // in forms which would ensure that there is only one row for one form with the most recent
+      // values in columns. As this is launched when the app starts, the current form is null.
+      saveUnsavedChangesInFormTables();
     }
     FragmentManager mgr = this.getFragmentManager();
     if ( currentFragment != null ) {
@@ -1066,6 +1078,61 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     } else {
       WebLogger.getLogger(appName).i(t, "popping backstack");
       mgr.popBackStack();
+    }
+  }
+
+  public void saveUnsavedChangesInFormTables() {
+    WebLogger.getLogger(getAppName()).i(t, "Checking if the there are unsaved forms in database...");
+    UserDbInterface userDbInterface = this.getDatabase();
+    DbHandle dbHandleName = null;
+    boolean reloadData = false;
+
+    try {
+      dbHandleName = userDbInterface.openDatabase(getAppName());
+      userDbInterface.getAllTableIds(appName, dbHandleName);
+
+      List<String> tableIds = userDbInterface.getAllTableIds(getAppName(), dbHandleName);
+
+      for (String tableId : tableIds) {
+        List<Row> rows = userDbInterface.simpleQuery(
+                getAppName(),
+                dbHandleName,
+                tableId,
+                null, null, null, null, null, null, null, null).getRows();
+
+        for (Row row : rows) {
+          String rowId = row.getDataByKey(DataTableColumns._ID);
+          Integer numberOfRowsWithSameId = userDbInterface.getRowsWithId(getAppName(), dbHandleName, tableId, null, rowId).getNumberOfRows();
+
+          if (numberOfRowsWithSameId > 1) {
+            WebLogger.getLogger(getAppName()).i(t, "Found " + numberOfRowsWithSameId + " instances with " + rowId + " in table " + tableId);
+            reloadData = true;
+            try {
+              WebLogger.getLogger(getAppName()).i(t, "Saving unsaved changes in form instance with id: " + rowId);
+              userDbInterface.saveAsCompleteMostRecentCheckpointRowWithId(getAppName(), dbHandleName, tableId, null, rowId);
+            } catch (ActionNotAuthorizedException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+      }
+    } catch (ServicesAvailabilityException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if ( dbHandleName != null ) {
+          userDbInterface.closeDatabase(getAppName(), dbHandleName);
+        }
+      } catch (ServicesAvailabilityException e) {
+        WebLogger.getLogger(getAppName()).printStackTrace(e);
+      }
+    }
+
+    if (reloadData) {
+      WebLogger.getLogger(getAppName()).i(t, "Relaunching loader of the In Progress instances");
+      InProgressInstancesFragment inProgressInstancesFragment = (InProgressInstancesFragment)this.getFragmentManager().findFragmentByTag(ScreenList.IN_PROGRESS.name());
+      inProgressInstancesFragment.setListAdapter(inProgressInstancesFragment.getAdapter());
+      inProgressInstancesFragment.getLoaderManager().restartLoader(0, null, inProgressInstancesFragment);
     }
   }
 
