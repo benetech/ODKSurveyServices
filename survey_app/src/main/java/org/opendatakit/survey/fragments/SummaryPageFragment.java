@@ -93,6 +93,9 @@ public class SummaryPageFragment extends ListFragment
         sdf = new SimpleDateFormat(getActivity().getString(R.string
                 .european_date_format));
         appName = ((MainMenuActivity) getActivity()).getAppName();
+        if (appName == null || appName.length() == 0) {
+            appName = ODKFileUtils.getOdkDefaultAppName();
+        }
 
         formUri = Uri.withAppendedPath(InstanceProviderAPI.CONTENT_URI, appName + "/"
                 + tableId);
