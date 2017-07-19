@@ -2272,8 +2272,10 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       return "default";
     else if (locales.containsKey(locale))
       return locales.get(locale);
-    else
+    else {
+      setLocale("default");
       return "default";
+    }
   }
 
 }
