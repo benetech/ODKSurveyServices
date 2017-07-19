@@ -141,6 +141,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private static final String DISPATCH_STRING_WAITING_FOR_DATA = "dispatchStringWaitingForData";
   private static final String ACTION_WAITING_FOR_DATA = "actionWaitingForData";
 
+  private static final String SUBMENU_PAGE = "submenuPage";
   private static final String FORM_URI = "formUri";
   private static final String UPLOAD_TABLE_ID = "uploadTableId";
   private static final String INSTANCE_ID = "instanceId";
@@ -307,6 +308,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     // TODO Auto-generated method stub
     super.onSaveInstanceState(outState);
 
+    if (submenuPage != null) {
+      outState.putString(SUBMENU_PAGE, submenuPage);
+    }
     if (dispatchStringWaitingForData != null) {
       outState.putString(DISPATCH_STRING_WAITING_FOR_DATA, dispatchStringWaitingForData);
     }
@@ -779,7 +783,11 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
 
     // android.os.Debug.waitForDebugger();
-    submenuPage = getIntentExtras().getString("_sync_state");
+    if (savedInstanceState != null) {
+      if (savedInstanceState.getString("submenuPage") != null) {
+        submenuPage = savedInstanceState.getString("submenuPage");
+      }
+    }
     availablePaths = getIntentExtras().getStringArrayList("availablePaths");
     locales = (HashMap<String, String>) getIntentExtras().get("locales");
     if(locales == null)
