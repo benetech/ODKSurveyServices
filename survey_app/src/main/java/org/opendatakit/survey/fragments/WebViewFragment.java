@@ -113,15 +113,21 @@ public class WebViewFragment extends Fragment implements DatabaseConnectionListe
   }
 
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    String currentLocale = ((MainMenuActivity)getActivity()).getLocale();
     for (Map.Entry<String, String> field : ((MainMenuActivity)getActivity()).getLocales().entrySet()) {
-      menu.add(field.getKey());
+      MenuItem item = menu.add(field.getKey());
+      if(field.getValue().equals(currentLocale))
+        item.setChecked(true);
     }
+    menu.setGroupCheckable(Menu.NONE, true, true);
+    super.onCreateOptionsMenu(menu, inflater);
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     // Handle item selection
     ((MainMenuActivity)getActivity()).setLocale(item.getTitle().toString());
+    item.setChecked(true);
     getWebKit().loadPage();
     return super.onOptionsItemSelected(item);
   }

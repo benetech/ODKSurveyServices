@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -146,10 +147,16 @@ public class SummaryPageFragment extends ListFragment
         ((MainMenuActivity)getActivity()).setLocales(localesMap);
     }
 
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        String currentLocale = ((MainMenuActivity)getActivity()).getLocale();
         for (Map.Entry<String, String> field : ((MainMenuActivity)getActivity()).getLocales().entrySet()) {
-           menu.add(field.getKey());
+            MenuItem item = menu.add(field.getKey());
+            if(field.getValue().equals(currentLocale))
+                item.setChecked(true);
         }
+        menu.setGroupCheckable(Menu.NONE, true, true);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
@@ -285,6 +292,7 @@ public class SummaryPageFragment extends ListFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         ((MainMenuActivity)getActivity()).setLocale(item.getTitle().toString());
+        item.setChecked(true);
         adapter.setLanguage(((MainMenuActivity)getActivity()).getLocale());
         adapter.notifyDataSetChanged();
         return super.onOptionsItemSelected(item);
