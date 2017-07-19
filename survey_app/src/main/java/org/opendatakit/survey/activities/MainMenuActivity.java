@@ -552,13 +552,6 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       resolveAnyConflicts();
     }
     if (currentForm == null) {
-      // Check form tables if there are multiple rows with the same uuid. These would mean that
-      // the normal process of filling the form was interrupted (e.g. force close of the app) which
-      // might result in multiple instances of the same form within the database which would be
-      // reflected on the UI with multiple elements in the "In Progress" screen list. In fact all of
-      // them are connected with the same form. If there is such situation, save the unsaved changes
-      // in forms which would ensure that there is only one row for one form with the most recent
-      // values in columns. As this is launched when the app starts, the current form is null.
       saveUnsavedChangesInFormTables();
     }
     FragmentManager mgr = this.getFragmentManager();
@@ -1094,7 +1087,14 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   }
 
   public void saveUnsavedChangesInFormTables() {
-    WebLogger.getLogger(getAppName()).i(t, "Checking if the there are unsaved forms in database...");
+    // Check form tables if there are multiple rows with the same uuid. These would mean that
+    // the normal process of filling the form was interrupted (e.g. force close of the app) which
+    // might result in multiple instances of the same form within the database which would be
+    // reflected on the UI with multiple elements in the "In Progress" screen list. In fact all of
+    // them are connected with the same form. If there is such situation, save the unsaved changes
+    // in forms which would ensure that there is only one row for one form with the most recent
+    // values in columns. As this is launched when the app starts, the current form is null.
+    WebLogger.getLogger(getAppName()).i(t, "Checking if there are unsaved forms in database...");
     UserDbInterface userDbInterface = this.getDatabase();
     DbHandle dbHandleName = null;
     boolean reloadData = false;
@@ -1143,8 +1143,10 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     if (reloadData) {
       WebLogger.getLogger(getAppName()).i(t, "Relaunching loader of the In Progress instances");
       InProgressInstancesFragment inProgressInstancesFragment = (InProgressInstancesFragment)this.getFragmentManager().findFragmentByTag(ScreenList.IN_PROGRESS.name());
-      inProgressInstancesFragment.setListAdapter(inProgressInstancesFragment.getAdapter());
-      inProgressInstancesFragment.getLoaderManager().restartLoader(0, null, inProgressInstancesFragment);
+      if (inProgressInstancesFragment != null) {
+        inProgressInstancesFragment.setListAdapter(inProgressInstancesFragment.getAdapter());
+        inProgressInstancesFragment.getLoaderManager().restartLoader(0, null, inProgressInstancesFragment);
+      }
     }
   }
 
@@ -1309,6 +1311,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       newFragment = mgr.findFragmentByTag(newScreenType.name());
       if (newFragment == null) {
         newFragment = new InProgressInstancesFragment();
+      }
+      if (mIOdkDataDatabaseListener != null) {
+        saveUnsavedChangesInFormTables();
       }
     } else if (newScreenType == ScreenList.SUBMITTED) {
       setSubmenuPage("synced");
