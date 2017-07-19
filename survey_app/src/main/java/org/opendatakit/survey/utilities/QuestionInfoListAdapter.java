@@ -2,7 +2,6 @@ package org.opendatakit.survey.utilities;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.opendatakit.survey.R;
+import org.opendatakit.survey.activities.MainMenuActivity;
 import org.opendatakit.survey.fragments.SummaryPageFragment;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
     public QuestionInfoListAdapter(Context context, SummaryPageFragment fragment) {
         this.context = context;
         this.fragment = fragment;
-        this.language = fragment.getLanguage();
+        this.language = ((MainMenuActivity)context).getLocale();
         greenColorStateList = new ColorStateList(
                 new int[][]{
                         new int[]{android.R.attr.state_enabled}

@@ -14,9 +14,13 @@
 
 package org.opendatakit.survey.fragments;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import org.opendatakit.demoAndroidCommonClasses.listener.DatabaseConnectionListener;
 import org.opendatakit.survey.R;
+import org.opendatakit.survey.activities.MainMenuActivity;
 import org.opendatakit.survey.application.Survey;
 
 import android.app.Fragment;
@@ -25,6 +29,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import org.opendatakit.survey.views.OdkSurveyWebView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Fragment that doesn't actually render -- the activity will make the WebKit
@@ -36,6 +43,12 @@ import org.opendatakit.survey.views.OdkSurveyWebView;
 public class WebViewFragment extends Fragment implements DatabaseConnectionListener {
 
   private static final int ID = R.layout.web_view_container;
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
 
   @Override
   public View onCreateView(
@@ -97,5 +110,19 @@ public class WebViewFragment extends Fragment implements DatabaseConnectionListe
       setWebKitVisibility();
       getWebKit().setForceLoadDuringReload();
     }
+  }
+
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    for (Map.Entry<String, String> field : ((MainMenuActivity)getActivity()).getLocales().entrySet()) {
+      menu.add(field.getKey());
+    }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle item selection
+    ((MainMenuActivity)getActivity()).setLocale(item.getTitle().toString());
+    getWebKit().loadPage();
+    return super.onOptionsItemSelected(item);
   }
 }

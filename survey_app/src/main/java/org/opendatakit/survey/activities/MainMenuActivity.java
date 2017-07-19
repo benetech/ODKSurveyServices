@@ -35,8 +35,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.StrictMode;
 import android.os.RemoteException;
+import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -271,7 +271,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   private Long trackingFormLastModifiedDate = 0L;
 
   private String submenuPage = null;
-  private String locale = null;
+  private HashMap<String, String> locales;
   private ArrayList<String> availablePaths = new ArrayList<>();
   /**
    * track which tables have conflicts (these need to be resolved before Survey
@@ -781,6 +781,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     // android.os.Debug.waitForDebugger();
     submenuPage = getIntentExtras().getString("_sync_state");
     availablePaths = getIntentExtras().getStringArrayList("availablePaths");
+    locales = (HashMap<String, String>) getIntentExtras().get("locales");
+    if(locales == null)
+      locales = new HashMap<>();
     try {
       // ensure that we have a BackgroundTaskFragment...
       // create it programmatically because if we place it in the
@@ -1032,6 +1035,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     Intent i = new Intent(Intent.ACTION_EDIT, formUri, this, MainMenuActivity.class);
     i.putExtra("_sync_state", submenuPage);
     i.putExtra("availablePaths", availablePaths);
+    i.putExtra("locales", locales);
     startActivityForResult(i, INTERNAL_ACTIVITY_CODE);
   }
 
@@ -1209,6 +1213,13 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         }
       }
     }
+
+    Intent result = new Intent();
+    result.putExtra("instanceId", instanceId);
+    result.putExtra("savepoint_type", "COMPLETE");
+    // TODO: unclear what to put in the result intent...
+    this.setResult(RESULT_OK, result);
+    finish();
   }
 
   // for back press suppression
@@ -1216,7 +1227,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   public void saveAllAsIncompleteThenPopBackStack() {
     saveAllAsIncomplete();
-    popBackStack();
+   // popBackStack();
   }
 
   // trigger resolve UI...
@@ -2067,6 +2078,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
 
   @Override
   public void passData(HashMap<String, String> keyValues) {
+    if(passedData == null){
+      passedData = new Bundle();
+    }
     passedData.clear();
     for(Map.Entry<String, String> pair : keyValues.entrySet()){
       passedData.putString(pair.getKey(), pair.getValue());
@@ -2230,13 +2244,28 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
   }
 
-  @Override
-  public String getLocale(){
-    return this.locale;
+  public HashMap<String, String> getLocales(){
+    return this.locales;
   }
 
   public void setLocale(String locale){
-    this.locale = locale;
+    props.setProperty(CommonToolProperties.KEY_LOCALE, locale);
+    props.writeProperties();
+  }
+
+  public void setLocales(HashMap<String, String> locales){
+    this.locales = locales;
+  }
+
+  @Override
+  public String getLocale(){
+    String locale = props.getProperty(CommonToolProperties.KEY_LOCALE);
+    if(locale == null || locale.isEmpty())
+      return "default";
+    else if (locales.containsKey(locale))
+      return locales.get(locale);
+    else
+      return "default";
   }
 
 }

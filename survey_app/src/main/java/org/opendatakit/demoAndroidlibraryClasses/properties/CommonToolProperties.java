@@ -41,6 +41,7 @@ public class CommonToolProperties {
     public static final String LAST_FORMS_UPDATE_TIME = "common.last_forms_update_time";
     public static final String KEY_REPORTER_NAME = "common.reporter_name";
     public static final String KEY_REPORTER_ID = "common.reporter_id";
+    public static final String KEY_LOCALE = "common.locale";
     private static CommonToolProperties.CommonPropertiesSingletonFactory factory = null;
 
     public CommonToolProperties() {
@@ -58,6 +59,7 @@ public class CommonToolProperties {
         generalProperties.put("common.change_font_size", "true");
         generalProperties.put("common.change_splash_settings", "true");
         generalProperties.put("common.last_forms_update_time", "");
+        generalProperties.put("common.locale", "default");
         deviceProperties.put("common.auth_credentials", "none");
         deviceProperties.put("common.account", "");
         deviceProperties.put("common.username", "");

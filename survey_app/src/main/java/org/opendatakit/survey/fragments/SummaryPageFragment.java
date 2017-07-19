@@ -64,7 +64,6 @@ public class SummaryPageFragment extends ListFragment
     private SimpleDateFormat sdf;
     private static final String t = "SummaryPageFragment";
     private QuestionInfoListAdapter adapter;
-    private HashMap<String, String> languages;
 
     private TextView title;
     private PieGraph pg;
@@ -72,15 +71,12 @@ public class SummaryPageFragment extends ListFragment
     private TextView formDateView;
     private View view;
     private Uri formUri;
-    private MenuItem menu;
-    private String language;
 
-    //TODO: here pass language to loader and handle it there
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        HashMap<String, String> localesMap = new HashMap<>();
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        ((MainMenuActivity)getActivity()).setLocale(getLanguage());
 
         if (getArguments() != null) {
             firstname = getArguments().getString(FIRSTNAME);
@@ -89,7 +85,6 @@ public class SummaryPageFragment extends ListFragment
             tableId = getArguments().getString(CHOOSEN_TABLE_ID);
         }
 
-        languages = new HashMap<>();
         sdf = new SimpleDateFormat(getActivity().getString(R.string
                 .european_date_format));
         appName = ((MainMenuActivity) getActivity()).getAppName();
@@ -146,13 +141,14 @@ public class SummaryPageFragment extends ListFragment
                 throw new IllegalArgumentException("File is not a formdef json file! No text section inside display element."
                         + formDefFile.getAbsolutePath());
             }
-            languages.put((String) text.get(FormDefSections.DEFAULT.getText()), (String)locale.get(FormDefSections.NAME.getText()));
+            localesMap.put((String) text.get(FormDefSections.DEFAULT.getText()), (String)locale.get(FormDefSections.NAME.getText()));
         }
+        ((MainMenuActivity)getActivity()).setLocales(localesMap);
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        for (Map.Entry<String, String> field : languages.entrySet()) {
-            this.menu = menu.add(field.getKey());
+        for (Map.Entry<String, String> field : ((MainMenuActivity)getActivity()).getLocales().entrySet()) {
+           menu.add(field.getKey());
         }
     }
 
@@ -267,12 +263,16 @@ public class SummaryPageFragment extends ListFragment
         formCountView.setText(questionsLeft);
         formDateView = (TextView) view.findViewById(R.id.instanceSavepointTimestamp);
         formDateView.setText(dateFormatted);
+
+        adapter.setLanguage(((MainMenuActivity)getActivity()).getLocale());
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.done_button:
+                ((MainMenuActivity) getActivity()).setLocale("default");
                 if (((MainMenuActivity) getActivity()).getSubmenuPage().equals("synced")) {
                     ((MainMenuActivity) getActivity()).swapToFragmentView(MainMenuActivity.ScreenList.SUBMITTED);
                 } else if (((MainMenuActivity) getActivity()).getSubmenuPage().equals("new_row")){
@@ -284,17 +284,9 @@ public class SummaryPageFragment extends ListFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        this.language = item.getTitle().toString();
-        ((MainMenuActivity)getActivity()).setLocale(getLanguage());
-        adapter.setLanguage(getLanguage());
+        ((MainMenuActivity)getActivity()).setLocale(item.getTitle().toString());
+        adapter.setLanguage(((MainMenuActivity)getActivity()).getLocale());
         adapter.notifyDataSetChanged();
         return super.onOptionsItemSelected(item);
-    }
-
-    public String getLanguage(){
-        if(language == null || language.isEmpty())
-            return "default";
-        else
-            return languages.get(language);
     }
 }
