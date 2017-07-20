@@ -71,7 +71,7 @@ public interface IOdkSurveyActivity extends IOdkCommonActivity, IOdkDataActivity
 
   // for back press suppression
   // trigger save...
-  public void saveAllAsIncompleteThenPopBackStack();
+  public void saveAllAsCompleteThenPopBackStack();
 
   // trigger resolve...
   public void resolveAllCheckpointsThenPopBackStack();

@@ -436,7 +436,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   public String getNextScreenPath(String currnetPath) {
     // Save all changes made in the form before switching to a new screen
-    saveAllAsIncomplete();
+    saveAllAsComplete();
 
     String nextScreenPath;
     if(availablePaths.contains(currnetPath)){
@@ -455,7 +455,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   public String getPreviousScreenPath(String currnetPath){
     // Save all changes made in the form before switching to a new screen
-    saveAllAsIncomplete();
+    saveAllAsComplete();
 
     String previousScreenPath = "survey/1";
     if(availablePaths.contains(currnetPath)){
@@ -1191,7 +1191,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     }
   }
 
-  public void saveAllAsIncomplete() {
+  public void saveAllAsComplete() {
     String tableId = this.getCurrentForm().tableId;
     String rowId = this.getInstanceId();
 
@@ -1202,7 +1202,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         OrderedColumns cols = this.getDatabase()
                 .getUserDefinedColumns(getAppName(), dbHandleName, tableId);
         UserTable table = this.getDatabase()
-                .saveAsIncompleteMostRecentCheckpointRowWithId(getAppName(), dbHandleName, tableId, cols, rowId);
+                .saveAsCompleteMostRecentCheckpointRowWithId(getAppName(), dbHandleName, tableId, cols, rowId);
         // this should not be possible, but if somehow we exit before anything is written
         // clear instanceId if the row no longer exists
         if ( table.getNumberOfRows() == 0 ) {
@@ -1231,8 +1231,8 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   // for back press suppression
   // trigger save of everything...
   @Override
-  public void saveAllAsIncompleteThenPopBackStack() {
-    saveAllAsIncomplete();
+  public void saveAllAsCompleteThenPopBackStack() {
+    saveAllAsComplete();
    // popBackStack();
   }
 

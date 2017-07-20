@@ -37,7 +37,7 @@ public class BackPressWebkitConfirmationDialogFragment extends DialogFragment {
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-    DialogInterface.OnClickListener saveAsIncompleteButtonListener = new DialogInterface
+    DialogInterface.OnClickListener saveAsCompleteButtonListener = new DialogInterface
         .OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -46,7 +46,7 @@ public class BackPressWebkitConfirmationDialogFragment extends DialogFragment {
         // user code should dismiss the dialog
         // since this is a cancellation action...
         // dialog.dismiss();
-        BackPressWebkitConfirmationDialogFragment.this.saveAllAsIncompleteOutcomeDialog();
+        BackPressWebkitConfirmationDialogFragment.this.saveAllAsCompleteOutcomeDialog();
       }
     };
 
@@ -79,7 +79,7 @@ public class BackPressWebkitConfirmationDialogFragment extends DialogFragment {
         .setMessage(R.string.backpress_warning)
         .setIcon(android.R.drawable.ic_dialog_info)
         .setCancelable(false)
-        .setPositiveButton(R.string.backpress_save_all_incomplete_exit, saveAsIncompleteButtonListener)
+        .setPositiveButton(R.string.backpress_save_all_complete_exit, saveAsCompleteButtonListener)
         .setNeutralButton(R.string.backpress_discard_all_checkpoints_exit, discardChangesButtonListener)
         .setNegativeButton(R.string.backpress_ignore, cancelButtonListener).create();
 
@@ -88,13 +88,13 @@ public class BackPressWebkitConfirmationDialogFragment extends DialogFragment {
     return alertDialog;
   }
 
-  public void saveAllAsIncompleteOutcomeDialog() {
+  public void saveAllAsCompleteOutcomeDialog() {
     this.getDialog().dismiss();
     // trigger save AFTER dismiss is complete...
     handler.post(new Runnable() {
       @Override public void run() {
         ((IOdkSurveyActivity) BackPressWebkitConfirmationDialogFragment.this.getActivity())
-            .saveAllAsIncompleteThenPopBackStack();
+            .saveAllAsCompleteThenPopBackStack();
       }
     });
   }
