@@ -1226,13 +1226,6 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
         }
       }
     }
-
-    Intent result = new Intent();
-    result.putExtra("instanceId", instanceId);
-    result.putExtra("savepoint_type", "COMPLETE");
-    // TODO: unclear what to put in the result intent...
-    this.setResult(RESULT_OK, result);
-    finish();
   }
 
   // for back press suppression
