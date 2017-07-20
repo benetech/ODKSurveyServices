@@ -205,7 +205,7 @@ public class InstanceInfoListAdapter extends BaseAdapter {
           if (view == null) {
             LayoutInflater layoutInflater =
                     (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.row_header, parent, false);
+            view = layoutInflater.inflate(R.layout.row_header_form, parent, false);
           }
           TextView title = (TextView) view.findViewById(R.id.headerTitle);
           String titleString = (String) getItem(position);

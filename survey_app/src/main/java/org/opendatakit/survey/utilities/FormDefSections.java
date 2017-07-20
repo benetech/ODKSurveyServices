@@ -11,6 +11,7 @@ public enum FormDefSections {
     SETTINGS_SUBSECTION("settings"),
     SPECIFICATION_SECTION("specification"),
     SECTION_NAMES("section_names"),
+    SECTION_NAME("section_name"),
     CHOICES("choices"),
     SECTIONS("sections"),
     DISPLAY("display"),

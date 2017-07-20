@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@color/form_list_name_header_background"
+    android:elevation="2dp">
+
+    <TextView
+        android:id="@+id/headerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a header"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_alignParentBottom="true">
+        <!-- this framelayout is a hack for progressbar not being aligned to the bottom -->
+        <android.support.v4.widget.ContentLoadingProgressBar android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:scaleY="2"
+            android:layout_gravity="center"
+            android:progressTint="@color/tool_bar_background"
+            android:progressBackgroundTint="@color/tool_bar_background"
+            android:progressBackgroundTintMode="src_atop"/>
+
+    </FrameLayout>
+
+</RelativeLayout>

@@ -150,6 +150,7 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
         Cursor instanceCursor = context.getContentResolver().query(formUri, null, "_id=?", new String[]{formId}, null);
 
         if(instanceCursor!=null && instanceCursor.moveToFirst()) {
+            SectionHeaderInfo currentSection;
             for (final String sectionName : sectionNames) {
                 Map<String, Object> section = (Map<String, Object>) sections
                         .get(sectionName);
@@ -159,10 +160,16 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                 }
 
                 //if this is a section that contains all of the others, let's call it menu, we don't want to display it here
-                if(((Map<String, Object>)section.get(FormDefSections.NESTED_SECTIONS.getText())).size() == sections.size() -2)
+                if((section.get(FormDefSections.SECTION_NAME.getText())).equals("survey"))
                     continue;
 
-                result.add(new QuestionInfo(null, headersDisplayNames.get(sectionName), null, QuestionTypes.SECTION_NAME_HEADER, null, null));
+                if(sectionName.startsWith("stoplight")) {
+                    result.add(new SectionHeaderInfo(headersDisplayNames.get(sectionName), QuestionSectionTypes.POVERTY_STOPLIGHT_SECTION_NAME_HEADER));
+                }
+                else {
+                    result.add(new SectionHeaderInfo(headersDisplayNames.get(sectionName), QuestionSectionTypes.SECTION_NAME_HEADER));
+                }
+                currentSection = (SectionHeaderInfo) result.get(result.size()-1);
 
 
                 List<Map<String, Object>> prompts = (List<Map<String, Object>>) section
@@ -219,9 +226,11 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                                 }
                                 if (columnNumber != -1) {
                                     if (instanceCursor.getString(columnNumber) != null && !instanceCursor.getString(columnNumber).isEmpty()) {
-                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.TEXT_QUESTION,  context.getResources().getString(R.string.media_file_attached), null));
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.TEXT_QUESTION,  context.getResources().getString(R.string.media_file_attached), null));
+                                        currentSection.answeredQuestions++;
                                     } else {
-                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.TEXT_QUESTION, null, null));
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.TEXT_QUESTION, null, null));
+                                        currentSection.emptyQuestions++;
                                     }
                                 }
                             } else if(promptType.equals("geopoint")) {
@@ -229,9 +238,11 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                                         instanceCursor.getString(instanceCursor.getColumnIndex("location_altitude"))!=null  &&
                                         instanceCursor.getString(instanceCursor.getColumnIndex("location_latitude"))!=null  &&
                                         instanceCursor.getString(instanceCursor.getColumnIndex("location_longitude"))!=null){
-                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.TEXT_QUESTION, context.getResources().getString(R.string.location_captured), null));
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.TEXT_QUESTION, context.getResources().getString(R.string.location_captured), null));
+                                    currentSection.answeredQuestions++;
                                 } else {
-                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.TEXT_QUESTION, null, null));
+                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.TEXT_QUESTION, null, null));
+                                    currentSection.emptyQuestions++;
                                 }
 
                             }  else if (instanceCursor.getColumnIndex(columnName) != -1) {
@@ -260,22 +271,39 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                                                         throw new IllegalArgumentException("File is not a formdef json file! No  text inside possible answer element."
                                                                 + formDefFile.getAbsolutePath());
                                                     }
-                                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.CHOICE_QUESTION, answer, translatedChoiceTypeAnswers)); //TODO:translate this as well
+                                                    result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.CHOICE_QUESTION, answer, translatedChoiceTypeAnswers));
+                                                    currentSection.answeredQuestions++;
                                                 }
                                             }
                                         }
                                     } else {
-                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.CHOICE_QUESTION, null, null));
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.CHOICE_QUESTION, null, null));
+                                        currentSection.emptyQuestions++;
                                     }
                                 } else{
                                     if (answer != null && (answer.equals("red") || answer.equals("green") || answer.equals("yellow"))) {//TODO: add column filtering to check wheter this is poverty stoplight question
-                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.POVERTY_STOPLIGHT_QUESTION, answer, null));
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.POVERTY_STOPLIGHT_QUESTION, answer, null));
+                                        switch (answer){
+                                            case "red": currentSection.redAnswers++;
+                                                break;
+                                            case "green": currentSection.greenAnswers++;
+                                                break;
+                                            case "yellow": currentSection.yellowAnswers++;
+                                                break;
+                                        }
+                                        currentSection.answeredQuestions++; //in case we would need it in future and for tha sake of consistency
                                     } else {
-                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.TEXT_QUESTION, answer, null));
+                                        result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.TEXT_QUESTION, answer, null));
+                                        if(answer == null || answer.isEmpty()){
+                                            currentSection.emptyQuestions++;
+                                        } else {
+                                            currentSection.answeredQuestions++;
+                                        }
                                     }
                                 }
                             } else
-                                result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionTypes.TEXT_QUESTION, "SOMETHING WENT WRONG", null));
+                                result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.TEXT_QUESTION, "SOMETHING WENT WRONG", null));
+                                //we should never reach that
                         }
                     }
                 }

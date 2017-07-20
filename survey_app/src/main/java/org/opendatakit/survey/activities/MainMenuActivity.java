@@ -101,6 +101,7 @@ import org.opendatakit.survey.logic.FormIdStruct;
 import org.opendatakit.survey.logic.SurveyDataExecutorProcessor;
 import org.opendatakit.survey.utilities.DataPassListener;
 import org.opendatakit.survey.utilities.QuestionInfo;
+import org.opendatakit.survey.utilities.QuestionSectionTypes;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -409,23 +410,25 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     if(availablePaths == null)
       availablePaths = new ArrayList<>();
     availablePaths.clear();
-    String section ="survey/";
+    String section = "survey/";
     String lastsection;
     String path = "survey/0";
     String lastpath;
-    int j=0;
-    for(int i=0; i<all.size(); i++){
-      lastpath = path;
-      path = ((QuestionInfo) all.get(i)).path;
-        if(((QuestionInfo)all.get(i)).questionType!=2 && !path.equals(lastpath)) {
-          lastsection = section;
-          section = path.substring(0, path.indexOf("/")+1);
-          if(!section.equals(lastsection)){
-            j=0;
-            availablePaths.add(section + j++);
-          } else {
-            availablePaths.add(section + j++);
-          }
+    int j = 0;
+    for(int i = 0; i < all.size(); i++){
+        if(all.get(i) instanceof QuestionInfo) {
+            lastpath = path;
+            path = ((QuestionInfo) all.get(i)).path;
+            if (!path.equals(lastpath)) {
+                lastsection = section;
+                section = path.substring(0, path.indexOf("/") + 1);
+                if (!section.equals(lastsection)) {
+                    j = 0;
+                    availablePaths.add(section + j++);
+                } else {
+                    availablePaths.add(section + j++);
+                }
+            }
         }
     }
   }
@@ -435,10 +438,10 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     // Save all changes made in the form before switching to a new screen
     saveAllAsIncomplete();
 
-    String nextScreenPath = "survey/1";
+    String nextScreenPath;
     if(availablePaths.contains(currnetPath)){
       int currentIndex = availablePaths.indexOf(currnetPath);
-      if(currentIndex == availablePaths.size()-1){
+      if(currentIndex == availablePaths.size() - 1){
         nextScreenPath = "survey/0";
       } else {
         nextScreenPath = availablePaths.get(currentIndex + 1);

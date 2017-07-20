@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -93,7 +95,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
     @Override
     public boolean isEnabled(int position) {
-        return (getItemViewType(position) != QuestionTypes.SECTION_NAME_HEADER);
+        return (getItemViewType(position) != QuestionSectionTypes.SECTION_NAME_HEADER);
     }
 
     @Override
@@ -106,7 +108,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
         int type = getItemViewType(position);
 
         switch (type) {
-            case QuestionTypes.TEXT_QUESTION: {
+            case QuestionSectionTypes.TEXT_QUESTION: {
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -130,7 +132,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                 answerView.setText(item.answer);
                 break;
             }
-            case QuestionTypes.CHOICE_QUESTION: {
+            case QuestionSectionTypes.CHOICE_QUESTION: {
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -156,7 +158,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                 }
                 break;
             }
-            case QuestionTypes.POVERTY_STOPLIGHT_QUESTION: {
+            case QuestionSectionTypes.POVERTY_STOPLIGHT_QUESTION: {
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -182,20 +184,42 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
                 break;
             }
-            case QuestionTypes.SECTION_NAME_HEADER: {
+            case QuestionSectionTypes.SECTION_NAME_HEADER: {
                 if (view == null) {
                     LayoutInflater layoutInflater =
                             (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    view = layoutInflater.inflate(R.layout.row_header, parent, false);
+                    view = layoutInflater.inflate(R.layout.row_header_section, parent, false);
                 }
 
                 TextView title = (TextView) view.findViewById(R.id.headerTitle);
-                QuestionInfo item = (QuestionInfo)getItem(position);
+                SectionHeaderInfo item = (SectionHeaderInfo) getItem(position);
                 title.setText(item.displayNames.get(language));
+                ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+                double percent = (double) item.answeredQuestions / (item.emptyQuestions + item.answeredQuestions) * 100;
+                progressBar.setProgress((int) percent);
                 break;
             }
+            case QuestionSectionTypes.POVERTY_STOPLIGHT_SECTION_NAME_HEADER: {
+                if (view == null) {
+                    LayoutInflater layoutInflater =
+                            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    view = layoutInflater.inflate(R.layout.row_poverty_stoplight_section_header, parent, false);
+                }
 
-
+                TextView title = (TextView) view.findViewById(R.id.headerTitle);
+                SectionHeaderInfo item = (SectionHeaderInfo) getItem(position);
+                title.setText(item.displayNames.get(language));
+                float sum = item.emptyQuestions + item.answeredQuestions;
+                ProgressBar progressBarGreen = (ProgressBar) view.findViewById(R.id.progressBarGreen);
+                progressBarGreen.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, item.greenAnswers/sum));
+                ProgressBar progressBarYellow = (ProgressBar) view.findViewById(R.id.progressBarYellow);
+                progressBarYellow.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, item.yellowAnswers/sum));
+                ProgressBar progressBarRed = (ProgressBar) view.findViewById(R.id.progressBarRed);
+                progressBarRed.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, item.redAnswers/sum));
+                ProgressBar progressBarGrey = (ProgressBar) view.findViewById(R.id.progressBarGrey);
+                progressBarGrey.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, item.emptyQuestions/sum));
+                break;
+            }
         }
         return view;
     }
@@ -204,6 +228,8 @@ public class QuestionInfoListAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         if (getItem(position) instanceof QuestionInfo) {
             return ((QuestionInfo)getItem(position)).questionType;
+        } else if (getItem(position) instanceof SectionHeaderInfo){
+            return ((SectionHeaderInfo)getItem(position)).sectionType;
         }
 
         return -1;
