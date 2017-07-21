@@ -2021,8 +2021,9 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
             String[] whereArgs = new String[] {
                     arg
             };
-
-            Cursor f = getContentResolver().query(formUri, null, "_sync_state=?", whereArgs, null);
+            String[] projection= { "DISTINCT _id"};
+            
+            Cursor f = getContentResolver().query(formUri, projection, "_sync_state=?", whereArgs, null);
             if(f!=null) {
               counter += f.getCount();
             }
