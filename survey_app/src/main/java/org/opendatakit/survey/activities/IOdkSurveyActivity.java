@@ -86,5 +86,8 @@ public interface IOdkSurveyActivity extends IOdkCommonActivity, IOdkDataActivity
 
   public String getLocale();
 
+  public String getCurrentPage(String path);
+
+  public String getPagesAmount();
 }
 

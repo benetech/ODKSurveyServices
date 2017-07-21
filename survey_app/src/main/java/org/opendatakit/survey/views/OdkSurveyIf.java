@@ -267,6 +267,12 @@ public class OdkSurveyIf {
   public String getPreviousScreenPath(String currentPath) { return weakSurvey.get().getPreviousScreenPath(currentPath); }
 
   @JavascriptInterface
+  public String getCurrentPage(String path) { return weakSurvey.get().getCurrentPage(path); }
+
+  @JavascriptInterface
+  public String getPagesAmount() { return weakSurvey.get().getPagesAmount(); }
+
+  @JavascriptInterface
   public String getLocale() {
     return weakSurvey.get().getLocale();
   }

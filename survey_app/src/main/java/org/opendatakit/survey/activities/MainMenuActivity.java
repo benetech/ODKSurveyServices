@@ -2022,7 +2022,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
                     arg
             };
             String[] projection= { "DISTINCT _id"};
-            
+
             Cursor f = getContentResolver().query(formUri, projection, "_sync_state=?", whereArgs, null);
             if(f!=null) {
               counter += f.getCount();
@@ -2278,6 +2278,16 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       setLocale("default");
       return "default";
     }
+  }
+
+  @Override
+  public String getCurrentPage(String path){
+    return Integer.toString(availablePaths.indexOf(path) + 1);
+  }
+
+  @Override
+  public String getPagesAmount(){
+    return Integer.toString(availablePaths.size());
   }
 
 }

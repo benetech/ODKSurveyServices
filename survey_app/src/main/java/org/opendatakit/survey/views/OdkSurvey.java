@@ -433,4 +433,12 @@ public class OdkSurvey {
   public String getLocale(){
     return mActivity.getLocale();
   }
+
+  public String getCurrentPage(String path) {
+    return mActivity.getCurrentPage(path);
+  }
+
+  public String getPagesAmount() {
+    return mActivity.getPagesAmount();
+  }
 }
