@@ -50,18 +50,6 @@ public class BackPressWebkitConfirmationDialogFragment extends DialogFragment {
       }
     };
 
-    DialogInterface.OnClickListener discardChangesButtonListener = new DialogInterface
-        .OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-
-        // user code should dismiss the dialog
-        // since this is a cancellation action...
-        // dialog.dismiss();
-        BackPressWebkitConfirmationDialogFragment.this.resolveAllCheckpointsOutcomeDialog();
-      }
-    };
-
     DialogInterface.OnClickListener cancelButtonListener = new DialogInterface
         .OnClickListener() {
       @Override
@@ -80,7 +68,6 @@ public class BackPressWebkitConfirmationDialogFragment extends DialogFragment {
         .setIcon(android.R.drawable.ic_dialog_info)
         .setCancelable(false)
         .setPositiveButton(R.string.backpress_save_all_complete_exit, saveAsCompleteButtonListener)
-        .setNeutralButton(R.string.backpress_discard_all_checkpoints_exit, discardChangesButtonListener)
         .setNegativeButton(R.string.backpress_ignore, cancelButtonListener).create();
 
     alertDialog.setCanceledOnTouchOutside(false);
@@ -95,17 +82,6 @@ public class BackPressWebkitConfirmationDialogFragment extends DialogFragment {
       @Override public void run() {
         ((IOdkSurveyActivity) BackPressWebkitConfirmationDialogFragment.this.getActivity())
             .saveAllAsCompleteThenPopBackStack();
-      }
-    });
-  }
-
-  public void resolveAllCheckpointsOutcomeDialog() {
-    this.getDialog().dismiss();
-    // trigger ignore AFTER dismiss is complete...
-    handler.post(new Runnable() {
-      @Override public void run() {
-        ((IOdkSurveyActivity) BackPressWebkitConfirmationDialogFragment.this.getActivity())
-            .resolveAllCheckpointsThenPopBackStack();
       }
     });
   }

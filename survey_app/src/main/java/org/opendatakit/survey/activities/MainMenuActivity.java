@@ -1233,7 +1233,7 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
   @Override
   public void saveAllAsCompleteThenPopBackStack() {
     saveAllAsComplete();
-   // popBackStack();
+    popBackStack();
   }
 
   // trigger resolve UI...
