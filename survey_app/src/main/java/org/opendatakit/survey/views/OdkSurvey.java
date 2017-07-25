@@ -441,4 +441,8 @@ public class OdkSurvey {
   public String getPagesAmount() {
     return mActivity.getPagesAmount();
   }
+
+  public void saveAllAsCompleteThenPopBackStack() {
+    mActivity.saveAllAsCompleteThenPopBackStack();
+  }
 }

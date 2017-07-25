@@ -197,6 +197,7 @@ public class OdkSurveyIf {
     Log.i( "Saving - refId: " + refId + ", formId: " + formId + ", instanceId: " + instanceId);
     if (isInactive()) return;
 
+    //TODO: FIX SUBFORMS WHEN NEEDED HERE
     // If we save a form and it is not the main form that we have opened then it is the subform
     // which should be linked to the main form to which it belongs.
     //weakSurvey.get().setMainFormData(formId, instanceId);
@@ -275,5 +276,10 @@ public class OdkSurveyIf {
   @JavascriptInterface
   public String getLocale() {
     return weakSurvey.get().getLocale();
+  }
+
+  @JavascriptInterface
+  public void saveAllAsCompleteThenPopBackStack() {
+    weakSurvey.get().saveAllAsCompleteThenPopBackStack();
   }
 }
