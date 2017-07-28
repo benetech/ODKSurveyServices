@@ -21,4 +21,5 @@
     <color name="poverty_stoplight_green">#5FAD46</color>
     <color name="check_for_updates_button_background">#2196F3</color>
     <color name="pie_graph_empty">#848484</color>
+    <color name="progress_bar_background">#D5DBE4</color>
 </resources>

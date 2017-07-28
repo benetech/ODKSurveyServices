@@ -2,7 +2,10 @@ package org.opendatakit.survey.utilities;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -197,6 +200,11 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                 ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
                 double percent = (double) item.answeredQuestions / (item.emptyQuestions + item.answeredQuestions) * 100;
                 progressBar.setProgress((int) percent);
+                if(item.answeredQuestions > 0) {
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
                 break;
             }
             case QuestionSectionTypes.POVERTY_STOPLIGHT_SECTION_NAME_HEADER: {
@@ -212,12 +220,32 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                 float sum = item.emptyQuestions + item.answeredQuestions;
                 ProgressBar progressBarGreen = (ProgressBar) view.findViewById(R.id.progressBarGreen);
                 progressBarGreen.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, item.greenAnswers/sum));
+                if(item.greenAnswers > 0) {
+                    progressBarGreen.setVisibility(View.VISIBLE);
+                } else {
+                    progressBarGreen.setVisibility(View.INVISIBLE);
+                }
                 ProgressBar progressBarYellow = (ProgressBar) view.findViewById(R.id.progressBarYellow);
                 progressBarYellow.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, item.yellowAnswers/sum));
+                if(item.yellowAnswers > 0) {
+                    progressBarYellow.setVisibility(View.VISIBLE);
+                } else {
+                    progressBarYellow.setVisibility(View.INVISIBLE);
+                }
                 ProgressBar progressBarRed = (ProgressBar) view.findViewById(R.id.progressBarRed);
                 progressBarRed.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, item.redAnswers/sum));
+                if(item.redAnswers > 0) {
+                    progressBarRed.setVisibility(View.VISIBLE);
+                } else {
+                    progressBarRed.setVisibility(View.INVISIBLE);
+                }
                 ProgressBar progressBarGrey = (ProgressBar) view.findViewById(R.id.progressBarGrey);
                 progressBarGrey.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, item.emptyQuestions/sum));
+                if(item.greenAnswers > 0 || item.redAnswers > 0 || item.yellowAnswers > 0) {
+                    progressBarGrey.setVisibility(View.VISIBLE);
+                } else {
+                    progressBarGrey.setVisibility(View.INVISIBLE);
+                }
                 break;
             }
         }
