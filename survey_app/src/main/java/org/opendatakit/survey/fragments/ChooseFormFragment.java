@@ -34,10 +34,13 @@ import org.opendatakit.survey.utilities.DataPassListener;
 import org.opendatakit.survey.utilities.FormInfoListAdapter;
 import org.opendatakit.survey.utilities.FormListLoader;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.UUID;
 
 public class ChooseFormFragment extends ListFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<ArrayList<Object>>{
@@ -51,6 +54,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
     private static final String REPORTERID = "reporterID";
     private static final String CHOOSEN_TABLE_ID = "table_id";
     private static final String INSTANCE_UUID = "instance_uuid";
+    private static final DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
 
     private String firstname;
     private String lastname;
@@ -161,7 +165,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
                 break;
             case  R.id.checkForUpdatesButton:
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(CommonToolProperties.LAST_FORMS_UPDATE_TIME, new Date().toString());
+                editor.putString(CommonToolProperties.LAST_FORMS_UPDATE_TIME, Long.toString(new Date().getTime()));
                 editor.commit();
 
 
@@ -209,7 +213,7 @@ public class ChooseFormFragment extends ListFragment implements View.OnClickList
         if(lastUpdateTime == null || lastUpdateTime.isEmpty()) {
             return getActivity().getString(R.string.never);
         }
-        Date lastUpdate = new Date(lastUpdateTime);
+        Date lastUpdate = new Date(Long.parseLong(lastUpdateTime));
         Date currentTime = new Date();
         long diff = currentTime.getTime() - lastUpdate.getTime();
         long seconds = diff/1000;
