@@ -145,4 +145,12 @@ public class OdkDataIf {
             ((OdkData)this.weakData.get()).deleteLastCheckpoint(tableId, rowId, callbackJSON);
         }
     }
+
+    @JavascriptInterface
+    public String getSubmenuPage() {
+        if(!this.isInactive()) {
+            return ((OdkData)this.weakData.get()).getSubmenuPage();
+        }
+        return "synced";
+    }
 }

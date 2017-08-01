@@ -142,6 +142,20 @@ public abstract class ExecutorProcessor implements Runnable {
 
     }
 
+    private void cleanUp() {
+        try {
+            this.dbInterface.closeDatabase(this.context.getAppName(), this.dbHandle);
+        } catch (Exception var6) {
+            WebLogger.getLogger(this.context.getAppName()).printStackTrace(var6);
+            WebLogger.getLogger(this.context.getAppName()).w("ExecutorProcessor", "error while releasing database conneciton");
+        } finally {
+            this.context.removeActiveConnection(this.transId);
+            this.context.reportError(this.request.callbackJSON, (String)null, "");
+            this.context.popRequest(true);
+        }
+
+    }
+
     private void reportSuccessAndCleanUp(ArrayList<List<Object>> data, Map<String, Object> metadata) {
         boolean successful = false;
         String exceptionString = null;
@@ -657,6 +671,10 @@ public abstract class ExecutorProcessor implements Runnable {
     }
 
     private void addCheckpoint() throws ServicesAvailabilityException, ActionNotAuthorizedException {
+        if(this.request.tableId.equals("synced")){ //dirty hack so we won;t create unnecessary checkpoints when in submitted read only insatances
+            this.cleanUp();
+            return;
+        }
         if(this.request.tableId == null) {
             this.reportErrorAndCleanUp(IllegalArgumentException.class.getName() + ": tableId cannot be null");
         } else if(this.request.rowId == null) {

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import org.opendatakit.demoAndroidCommonClasses.activities.IOdkDataActivity;
 import org.opendatakit.demoAndroidlibraryClasses.logging.WebLogger;
 import org.opendatakit.demoAndroidlibraryClasses.utilities.ODKFileUtils;
+import org.opendatakit.services.MainActivity;
+import org.opendatakit.survey.activities.MainMenuActivity;
 
 public class OdkData {
     public static final String descOrder = "DESC";
@@ -184,6 +186,10 @@ public class OdkData {
         this.logDebug("deleteLastCheckpoint: " + tableId + " _id: " + rowId);
         ExecutorRequest request = new ExecutorRequest(ExecutorRequestType.USER_TABLE_DELETE_LAST_CHECKPOINT, tableId, (String)null, rowId, callbackJSON);
         this.queueRequest(request);
+    }
+
+    public String getSubmenuPage(){
+        return ((MainMenuActivity)mActivity).getSubmenuPage();
     }
 
     public static class IntentKeys {
