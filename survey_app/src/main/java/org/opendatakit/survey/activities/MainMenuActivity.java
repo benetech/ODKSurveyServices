@@ -356,6 +356,10 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       outState.putBundle(CONFLICT_TABLES, mConflictTables);
     }
 
+    outState.putString("_sync_state", submenuPage);
+    outState.putStringArrayList("availablePaths", availablePaths);
+    outState.putSerializable("locales", locales);
+
   }
 
   public void transitionToFormHelper(Uri uri, FormIdStruct newForm) {
@@ -774,10 +778,18 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
       }
     }
 
-    // android.os.Debug.waitForDebugger();
     submenuPage = getIntentExtras().getString("_sync_state");
     availablePaths = getIntentExtras().getStringArrayList("availablePaths");
     locales = (HashMap<String, String>) getIntentExtras().get("locales");
+    // android.os.Debug.waitForDebugger();
+    if (savedInstanceState != null) {
+      submenuPage = savedInstanceState.getString("_sync_state");
+      availablePaths = savedInstanceState.getStringArrayList("availablePaths");
+      locales = savedInstanceState.getParcelable("locales");
+    }
+
+
+
     if(locales == null)
       locales = new HashMap<>();
     try {
