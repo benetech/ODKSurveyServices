@@ -1240,6 +1240,21 @@ public class MainMenuActivity extends BaseActivity implements IOdkSurveyActivity
     popBackStack();
   }
 
+  @Override
+  public void redrawWebViewthenSaveAllAsCompleteThenPopBackStack() {
+    final ODKWebView webView = (ODKWebView) findViewById(R.id.webkit);
+    if (webView != null) {
+      WebLogger.getLogger(getAppName()).i(t, "[" + this.hashCode() + "][WebView: " + webView.hashCode() + "] signalResponseAvailable webView.loadUrl will be called");
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          webView.loadUrl("javascript:document.activeElement.blur()");
+          webView.loadUrl("javascript:document.getElementById('odk-nav-exit-button').click()");
+        }
+      });
+    }
+  }
+
   // trigger resolve UI...
   @Override
   public void resolveAllCheckpointsThenPopBackStack() {

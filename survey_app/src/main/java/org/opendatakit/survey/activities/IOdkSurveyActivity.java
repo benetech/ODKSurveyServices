@@ -89,5 +89,7 @@ public interface IOdkSurveyActivity extends IOdkCommonActivity, IOdkDataActivity
   public String getCurrentPage(String path);
 
   public String getPagesAmount();
+
+  public void redrawWebViewthenSaveAllAsCompleteThenPopBackStack();
 }
 

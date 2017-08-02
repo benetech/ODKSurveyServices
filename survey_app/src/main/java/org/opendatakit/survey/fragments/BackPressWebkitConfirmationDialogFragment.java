@@ -81,7 +81,7 @@ public class BackPressWebkitConfirmationDialogFragment extends DialogFragment {
     handler.post(new Runnable() {
       @Override public void run() {
         ((IOdkSurveyActivity) BackPressWebkitConfirmationDialogFragment.this.getActivity())
-            .saveAllAsCompleteThenPopBackStack();
+            .redrawWebViewthenSaveAllAsCompleteThenPopBackStack();
       }
     });
   }
