@@ -233,7 +233,7 @@ public class SummaryPageFragment extends ListFragment
 
         title = (TextView) view.findViewById(R.id.instanceTitle);
         //In case when we have whole beneficiary information in firstname from InProgressInstancesFragment
-        if (lastname != null) {
+        if (lastname != null && !lastname.equals(firstname)) {
             title.setText(firstname + " " + lastname + " - " + currentDateandTime);
         } else {
             title.setText(firstname + " - " + currentDateandTime);
