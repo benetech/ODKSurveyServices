@@ -30,6 +30,7 @@ public class QuestionInfoListAdapter extends BaseAdapter {
     private ColorStateList greenColorStateList;
     private ColorStateList redColorStateList;
     private ColorStateList yellowColorStateList;
+    private ColorStateList greyColorStateList;
     private String language;
     private SummaryPageFragment fragment;
 
@@ -64,6 +65,16 @@ public class QuestionInfoListAdapter extends BaseAdapter {
                 },
                 new int[] {
                         ContextCompat.getColor(context, R.color.poverty_stoplight_yellow)
+
+                }
+        );
+
+        greyColorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_enabled}
+                },
+                new int[] {
+                        ContextCompat.getColor(context, R.color.pie_graph_empty)
 
                 }
         );
@@ -173,16 +184,22 @@ public class QuestionInfoListAdapter extends BaseAdapter {
 
                 AppCompatRadioButton radioButtonView = (AppCompatRadioButton) view.findViewById(R.id.questionRadioButton);
 
-                switch(((QuestionInfo) getItem(position)).answer) {
-                    case "red" :
-                        radioButtonView.setSupportButtonTintList(redColorStateList);
-                        break;
-                    case "yellow" :
-                        radioButtonView.setSupportButtonTintList(yellowColorStateList);
-                        break;
-                    case "green" :
-                        radioButtonView.setSupportButtonTintList(greenColorStateList);
-                        break;
+                if (((QuestionInfo) getItem(position)).answer != null) {
+                    questionView.setTextColor(context.getResources().getColor(R.color.black));
+                    switch (((QuestionInfo) getItem(position)).answer) {
+                        case "red":
+                            radioButtonView.setSupportButtonTintList(redColorStateList);
+                            break;
+                        case "yellow":
+                            radioButtonView.setSupportButtonTintList(yellowColorStateList);
+                            break;
+                        case "green":
+                            radioButtonView.setSupportButtonTintList(greenColorStateList);
+                            break;
+                    }
+                } else {
+                    radioButtonView.setSupportButtonTintList(greyColorStateList);
+                    questionView.setTextColor(context.getResources().getColor(R.color.pie_graph_empty));
                 }
 
                 break;

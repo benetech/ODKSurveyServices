@@ -280,30 +280,38 @@ public class QuestionListLoader  extends AsyncTaskLoader<ArrayList<Object>> {
                                         result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.CHOICE_QUESTION, null, null));
                                         currentSection.emptyQuestions++;
                                     }
-                                } else{
-                                    if (answer != null && (answer.equals("red") || answer.equals("green") || answer.equals("yellow"))) {//TODO: add column filtering to check wheter this is poverty stoplight question
+                                } else if (promptType.equals("select_one_slider")){
+                                   // if (answer != null && (answer.equals("red") || answer.equals("green") || answer.equals("yellow"))) {//TODO: add column filtering to check wheter this is poverty stoplight question
                                         result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.POVERTY_STOPLIGHT_QUESTION, answer, null));
-                                        switch (answer){
-                                            case "red": currentSection.redAnswers++;
-                                                break;
-                                            case "green": currentSection.greenAnswers++;
-                                                break;
-                                            case "yellow": currentSection.yellowAnswers++;
-                                                break;
+                                        if (answer != null) {
+                                            currentSection.answeredQuestions++;
+                                            switch (answer) {
+                                                case "red":
+                                                    currentSection.redAnswers++;
+                                                    break;
+                                                case "green":
+                                                    currentSection.greenAnswers++;
+                                                    break;
+                                                case "yellow":
+                                                    currentSection.yellowAnswers++;
+                                                    break;
+                                            }
+                                        } else {
+                                            currentSection.emptyQuestions++;
                                         }
-                                        currentSection.answeredQuestions++; //in case we would need it in future and for tha sake of consistency
-                                    } else {
+                                } else {
                                         result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.TEXT_QUESTION, answer, null));
-                                        if(answer == null || answer.isEmpty()){
+                                        if (answer == null || answer.isEmpty()) {
                                             currentSection.emptyQuestions++;
                                         } else {
                                             currentSection.answeredQuestions++;
                                         }
-                                    }
                                 }
-                            } else
+
+                            } else {
                                 result.add(new QuestionInfo(columnName, text, (String) prompt.get(FormDefSections.PATH.getText()), QuestionSectionTypes.TEXT_QUESTION, "SOMETHING WENT WRONG", null));
                                 //we should never reach that
+                            }
                         }
                     }
                 }
